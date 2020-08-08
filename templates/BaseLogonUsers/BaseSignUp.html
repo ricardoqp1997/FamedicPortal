@@ -1,0 +1,48 @@
+{% extends 'BaseTemplate/BaseTemplateFamedic.html' %}
+
+<title>Registro de Usuario</title>
+
+{% block page_content_view %}
+
+    <style type="text/css">
+
+		.ingresorad_register{
+			width: 55%;
+			height: 50%;
+			margin-left: 24%;
+			background: rgba(242, 242, 238, 0.75);
+			border-radius: 3px;
+			margin-top: 8%;
+            text-align: left;
+            padding-left: 10px;
+            padding-top: 30px;
+
+            -webkit-box-shadow: 0 2px 15px 2px rgba(22,37,76,1);
+            -moz-box-shadow: 0 2px 15px 2px rgba(22,37,76,1);
+            box-shadow: 0 2px 15px 2px rgba(22,37,76,1);
+		}
+	</style>
+
+     <!-- Estructura del bloque de contenido Django -->
+	<div class="row justify-content-center ingresorad_register">
+        <div class="col-md-8">
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          {% block contenido_registro %}
+
+              <!-- Aqui va el contenido del formulario de registro (Registro.html) -->
+
+          {% endblock %}
+        </div>
+    </div>
+
+{% endblock %}
+
+
+

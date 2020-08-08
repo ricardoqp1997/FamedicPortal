@@ -1,0 +1,138 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<link rel="stylesheet" href= "{% static '/style.css' %}">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" integrity="sha384-VCmXjywReHh4PwowAiWNagnWcLhlEJLA5buUprzK8rxFgeH0kww/aWY76TfkUoSX" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Extra+Condensed&display=swap" rel="stylesheet">
+
+	<meta charset="utf-8">
+
+	<title>{{ page_title }}</title>
+
+	<style type="text/css">
+
+        /* Estilos generales para la pagina */
+		*{
+            padding: 0;
+            margin: 0;
+            font-family: 'Fira Sans Extra Condensed', sans-serif;
+
+        }
+
+        html{
+            height: 100%;
+        }
+        body{
+			color: #16254C;
+			justify-content: center;
+			text-align: center;
+            background-image: url("{% static '/resouces/LoginBackground.jpg' %}");
+            background-size: cover;
+            background-repeat:no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+		}
+
+        h1, h2{
+			text-align: center;
+		}
+        h3{
+            text-align: left;
+            margin-left: 27.5%;
+			margin-bottom: 10px;
+		}
+
+        /* Estilos para el Nav Bar */
+		.navBar_adicionales{
+            background-color: #16254c;
+
+            -webkit-box-shadow: 0 2px 15px 2px rgba(22, 37, 76,1);
+            -moz-box-shadow: 0 2px 15px 2px rgba(22,37,76,1);
+            box-shadow: 0 2px 15px 2px rgba(22,37,76,1);
+        }
+        .icono_NavBar{
+            padding-left: 30px;
+        }
+
+        /* Estilos para el Footer */
+        .footer {
+            margin-top: auto;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            line-height: 60px;
+            background-color: #f5f5f5;
+            -webkit-tap-highlight-color: transparent;
+            background-color: rgba(22, 37, 76, 0.8);
+
+        }
+        .text_footer{
+            color: rgba(255, 255, 255, 1);
+        }
+
+	</style>
+</head>
+
+<body>
+
+	<!-- Nav Bar Bootstrap para toda la pagina -->
+    <nav class="navbar fixed-top navbar-light navBar_adicionales" >
+        <!-- Navbar content -->
+        <a class="navbar-brand icono_NavBar" href="{% url 'index' %}">
+            <img src="{% static '/resouces/Logo-Famedic1b.png' %}" width="155" height="55" style="margin-left: 47%" class="d-inline-block align-top" alt="">
+        </a>
+
+
+        <div class="form-inline" id="navbarNavAltMarkup" >
+
+            {% if user.is_authenticated %}
+
+                <a class="nav-link disabled" type="button" href="#" style="color: #FFFFFF">Perfil</a>
+                <a class="nav-link disabled" type="button" href="#" style="color: #FFFFFF">Opciones</a>
+                <a class="nav-link disabled" type="button" href="#" style="color: #FFFFFF">Radicar</a>
+                <a class="nav-link disabled" type="button" href="#" style="color: #FFFFFF">Lista de radicados</a>
+                <a class="nav-link" type="button" href="{% url 'logout' %}" style="color: #FFFFFF">Cerrar Sesion</a>
+
+            {% else %}
+
+                <a class="nav-link" type="button" href="{% url 'login' %}" style="color: #ffffff">Iniciar Sesion</a>
+                <a class="nav-link" type="button" href="{% url 'register' %}" style="color: #FFFFFF">Registrarse</a>
+
+            {% endif %}
+
+        </div>
+
+    </nav>
+
+    <!-- Espacio de contenido para toda la pagina -->
+    {% block page_content_view %}
+
+        <!-- Aqui irá el contenido de la pagina -->
+
+    {% endblock %}
+
+    <br><br>
+
+    <!-- Footer Bootstrap para toda la pagina -->
+    <section id="footer" class="footer">
+         <div>
+             <div style="text-align: center; margin-left: 0">
+                <span class="text_footer">&copy; 2020. Famedic IPS</span>
+             </div>
+         </div>
+    </section>
+</body>
+</html>
