@@ -84,7 +84,7 @@ def login_famedic(request):
         print(otp)
 
         account_sid = 'AC87661e5cf909a34afc46401f943466b8'
-        auth_token = '626d52267fa60f71224372dcb158e20e'
+        auth_token = '42c8e8dda0ed20b0a6cee6461e979f1e'
         client = Client(account_sid, auth_token)
 
         message = client.messages \
@@ -144,7 +144,7 @@ def resend_token(request):
     print(otp)
 
     account_sid = 'AC87661e5cf909a34afc46401f943466b8'
-    auth_token = '626d52267fa60f71224372dcb158e20e'
+    auth_token = '42c8e8dda0ed20b0a6cee6461e979f1e'
     client = Client(account_sid, auth_token)
 
     message = client.messages \
