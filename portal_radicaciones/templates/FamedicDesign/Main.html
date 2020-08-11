@@ -25,7 +25,7 @@
     <button type="button" class="btn btn-primary btn-lg botones_panel">Radicado 2</button>
     <button type="button" class="btn btn-primary btn-lg botones_panel">Radicado 3</button>
 
-    <a class="btn btn-link boton_radicados" role="button" href="{% url 'index' %}">Ver todos los radicados</a>
+    <a class="btn btn-link boton_radicados" role="button" href="{% url 'radicados_list' %}">Ver todos los radicados</a>
 
 {% endblock %}
 
@@ -84,11 +84,34 @@
 
     <!-- Botones de acceso rapido -->
     <div class="contenedorbtna">
-        <button class="btn btn-primary btn-lg btnini"><img class="imgbtn" src="{% static '/resouces/usuario.png' %}" alt=""><br>PERFIL</button>
-        <button class="btn btn-primary btn-lg btnini"><img class="imgbtn" src="{% static '/resouces/documento.png' %}" alt=""><br>RADICAR</button>
-        <button class="btn btn-primary btn-lg btnini"><img class="imgbtn" src="{% static '/resouces/documentocheck.png' %}" alt=""><br>RADICADOS</button>
-        <button class="btn btn-primary btn-lg btnini"><img class="imgbtn" src="{% static '/resouces/buscar.png' %}" alt=""><br>BUSCAR RADICADOS</button>
+        <button class="btn btn-primary btn-lg btnini" id="btnUsuario"><img class="imgbtn" src="{% static '/resouces/usuario.png' %}" alt=""><br>PERFIL</button>
+        <button class="btn btn-primary btn-lg btnini" id="btnRadicar"><img class="imgbtn" src="{% static '/resouces/documento.png' %}" alt=""><br>RADICAR</button>
+        <button class="btn btn-primary btn-lg btnini" id="btnRadicados"><img class="imgbtn" src="{% static '/resouces/documentocheck.png' %}" alt=""><br>RADICADOS</button>
+        <button class="btn btn-primary btn-lg btnini" id="btnBuscar"><img class="imgbtn" src="{% static '/resouces/buscar.png' %}" alt=""><br>BUSCAR RADICADOS</button>
     </div>
+
+    <script type="text/javascript">
+
+        // Navegación a la ventana de usuario
+        document.getElementById("btnUsuario").onclick = function(){
+            location.href = "{% url 'profile' %}"
+        }
+
+        // Navegación a la ventana de radicación
+        document.getElementById("btnRadicar").onclick = function(){
+            location.href = "{% url 'radicar' %}"
+        }
+
+        // Navegación a la ventana de lista de radicados
+        document.getElementById("btnRadicados").onclick = function(){
+            location.href = "{% url 'radicados_list' %}"
+        }
+
+        // Navegación a la ventana de búsqueda de radicados
+        document.getElementById("btnBuscar").onclick = function(){
+            location.href = "{% url 'profile' %}"
+        }
+    </script>
 
     <!-- Carrusel de contenido del sitio principal -->
     <div id="FamedicMainCarousel" class="carousel slide rectangulo_prueba1" data-ride="carousel">

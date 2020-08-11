@@ -5,10 +5,10 @@
 
         /*Estilos para el hr de la tarjeta 1n*/
         hr.hr_style{
+            border-top: 1px solid #000A26;
             margin-left: 5%;
             margin-right: 5%;
-            height: 2%;
-            color: #000A26;
+            margin-bottom: 5%;
         }
 
         /*Estilos para los textos del main*/
@@ -85,16 +85,16 @@
 
                         <ul class="nav flex-column menu_contenido_tarjeta1">
                             <li class="nav-item">
-                                <a class="nav-link active boton_radicados" href="#">Perfil</a>
+                                <a class="nav-link active boton_radicados" href="{% url 'profile' %}">Perfil</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link boton_radicados" href="#">Opciones</a>
+                                <a class="nav-link boton_radicados" href="{% url 'settings' %}">Opciones</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link boton_radicados" href="#">Radicar</a>
+                                <a class="nav-link boton_radicados" href="{% url 'radicar' %}">Radicar</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link boton_radicados" href="#">Lista de radicados</a>
+                                <a class="nav-link boton_radicados" href="{% url 'radicados_list' %}">Lista de radicados</a>
                             </li>
                         </ul>
 

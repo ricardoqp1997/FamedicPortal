@@ -53,3 +53,18 @@ class TokenAccessForm(forms.Form):
         label='Token de autenticación',
         required=True
     )
+
+
+# Form de radicacion de facturas
+
+class RadicacionForm(forms.Form):
+    monto_factura = forms.CharField(
+        widget=forms.NumberInput(attrs={'placeholder': ' Ingrese un monto'}),
+        required=True
+    )
+
+    file_factura = forms.FileField()
+    file_aportes = forms.FileField()
+    file_soporte = forms.FileField()
+
+    observaciones = forms.TextInput()

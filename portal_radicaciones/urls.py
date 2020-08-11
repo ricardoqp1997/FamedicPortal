@@ -16,6 +16,10 @@ urlpatterns = [
     path('login/', views.login_famedic, name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='FamedicDesign/LogOut.html'), name='logout'),
 
-    # Vista a menú principal de la aplicación después de haber iniciado sesión de forma correcta
-    path('main/', views.hola_mundo, name='main')
+    # Vistas del menú principal de la aplicación después de haber iniciado sesión de forma correcta
+    path('main/', views.hola_mundo, name='main'),
+    path('main/perfil/', views.perfil, name='profile'),
+    path('main/opciones/', views.opciones, name='settings'),
+    path('main/radicar/', views.radicacion, name='radicar'),
+    path('main/historial/', views.list_radicados, name='radicados_list'),
 ]

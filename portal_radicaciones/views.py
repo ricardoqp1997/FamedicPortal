@@ -10,7 +10,8 @@ from django.contrib.auth.decorators import login_required
 from .forms import (
     UserRegisterForm,
     TokenAccessForm,
-    UserLoginForm
+    UserLoginForm,
+    RadicacionForm
 )
 
 # Librería para la manipulación de usuarios
@@ -177,22 +178,49 @@ def hola_mundo(request):
 # sección de perfil del usuario
 @login_required(redirect_field_name='login')
 def perfil(request):
-    return render(request, 'FamedicDesign/PerfilUsuario.html', user)
+    form_profile = {
+        'page_title': 'Perfil del usuario'
+    }
+    return render(request, 'FamedicDesign/PerfilUsuario.html', form_profile)
 
 
 # sección de opciones de sitio
 @login_required(redirect_field_name='login')
 def opciones(request):
-    return render(request, 'FamedicDesign/OpcionesSitio.html', user)
+    form_settings = {
+        'page_title': 'Opciones del sitio'
+    }
+    return render(request, 'FamedicDesign/OpcionesSitio.html', form_settings)
 
 
 # sección de radicación
 @login_required(redirect_field_name='login')
 def radicacion(request):
-    return render(request, 'FamedicDesign/RadicadosSite.html', user)
+    form = RadicacionForm(request.POST or None)
+    form_rad = {
+        'page_title': 'Radicación de facturas',
+        'user_name': request.user.first_name,
+        'form': form,
+        'num_rad': 100000
+    }
+    return render(request, 'FamedicDesign/RadicadosSite.html', form_rad)
 
 
 # sección de lista de radicados
 @login_required(redirect_field_name='login')
 def list_radicados(request):
-    return render(request, 'FamedicDesign/ListaRadicados.html', user)
+    form_list_rad = {
+        'page_title': 'Lista de radicados',
+        'user_name': request.user.first_name
+    }
+    return render(request, 'FamedicDesign/ListaRadicados.html', form_list_rad)
+
+
+# sección de lista de radicados
+@login_required(redirect_field_name='login')
+def search_radicados(request):
+    form_search_rad = {
+        'page_title': 'Búsqueda de radicados',
+        'user_name': request.user.first_name
+    }
+    return render(request, 'FamedicDesign/ListaRadicados.html', form_search_rad)

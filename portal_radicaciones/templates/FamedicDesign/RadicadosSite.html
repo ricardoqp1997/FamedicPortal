@@ -1,36 +1,151 @@
 {% extends 'BaseMainPage/BaseMain.html' %}
 {% load static %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
 
 <!-- Bloque de contenido para la tarjeta 1 (izquierda)-->
 {% block hist_radicados %}
 
 
-<style>
-       .rectangulo_prueba2{
+    <style>
 
-           margin: 5%;
-           width: 310px;
-           height: 300px;
-           background-color: #26000f;
+       .botones_panel{
+           margin-left: 5%;
+           margin-right: 5%;
+           margin-bottom: 5%;
+           height: 60px;
+           color: #ffffff;
+           background-color: #000A26;
+       }
+       .boton_radicados{
+           color: #000A26;
+           padding-bottom: 15px;
        }
     </style>
 
-    <div class="rectangulo_prueba2"></div>
+    <button type="button" class="btn btn-primary btn-lg botones_panel">Radicado 1</button>
+    <button type="button" class="btn btn-primary btn-lg botones_panel">Radicado 2</button>
+    <button type="button" class="btn btn-primary btn-lg botones_panel">Radicado 3</button>
+
+    <a class="btn btn-link boton_radicados" role="button" href="{% url 'radicados_list' %}">Ver todos los radicados</a>
+
 {% endblock %}
 
 <!-- Bloque de contenido para la tarjeta 2 (derecha)-->
 {% block panel_main %}
 
     <style>
-       .rectangulo_prueba1{
 
+       .rectangulo_prueba1{
            margin: 5%;
            width: 655px;
-           height: 400px;
-           background-color: #000A26;
+           height: auto;
+           background-color: #c8ced9;
+           -webkit-box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
+           -moz-box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
+           box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
        }
+       .id_factura{
+           text-align: left;
+           margin-top: 15px;
+           margin-left: 15px;
+           font-weight: bold;
+       }
+       hr.radicacion{
+           border-top: 3px solid #16254C;
+           width: 200px;
+           margin-left: 15px;
+       }
+
+       .monto_content{
+           padding-left: 1px;
+       }
+       .monto_field{
+           width: 45%;
+       }
+       .btnini{
+           vertical-align: text-top;
+           content: "";
+			background-color: #16254C;
+			color: #fff;
+			border:3px;
+			border-radius: 3px;
+      		border: none;
+      		font-size: 13px;
+      		width: 20%;
+			height: 65px;
+			margin: 1%;
+           display: block;
+
+       }
+       .imgbtn{
+            float: left;
+			width: 30%;
+			display: inline;
+       }
+       .upload_buttons{
+           margin-left: 20px;
+       }
+
+       .label_textarea{
+           text-align: left;
+           margin-right: 15px;
+           margin-left: 15px;
+       }
+       .boton_registrar{
+           background-color: #000A26;
+           float: right;
+           margin-top: 5px;
+           margin-right: 15px;
+       }
+
     </style>
 
-    <div class="rectangulo_prueba1"></div>
+    <!--  -->
+    <div class="rectangulo_prueba1">
+        <form method="POST">
+            {% csrf_token %}
+
+            <button class="btn btn-primary btn-lg boton_registrar" type="submit">Radicar</button>
+            <h5 class="id_factura">Factura No. {{ num_rad }}</h5>
+            <hr class="radicacion">
+            <br>
+
+            <div class="monto_content row">
+                <label for="colFormLabel" class="col-sm-3 col-form-label">Monto de la factura</label>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text">$</span>
+                </div>
+                <div class="monto_field input-group-append">
+                    {{ form.monto_factura }}
+                </div>
+
+
+            </div>
+            <br>
+            <br>
+
+            <div class="monto_content row">
+
+                <div class="row upload_buttons">
+                    <button class="btn btn-primary btn-lg btnini" id="uploadFacturas"><img class="imgbtn" src="{% static '/resouces/documento.png' %}" alt=""><br>FACTURAS</button>
+                    <button class="btn btn-primary btn-lg btnini" id="uploadAportes"><img class="imgbtn" src="{% static '/resouces/documento.png' %}" alt=""><br>APORTES</button>
+                    <button class="btn btn-primary btn-lg btnini" id="uploadSoportes"><img class="imgbtn" src="{% static '/resouces/documento.png' %}" alt=""><br>SOPORTES</button>
+                    <button class="btn btn-primary btn-lg btnini" id="uploadSoportes"><img class="imgbtn" src="{% static '/resouces/documento.png' %}" alt=""><br>RIBS</button>
+                </div>
+            </div>
+            <br>
+
+            <div class="form-group label_textarea">
+                <label for="exampleFormControlTextarea1" class="">Observaciones</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="8"></textarea>
+            </div>
+
+        </form>
+    </div>
+
+
+
 
 {% endblock %}
