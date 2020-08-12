@@ -58,13 +58,71 @@ class TokenAccessForm(forms.Form):
 # Form de radicacion de facturas
 
 class RadicacionForm(forms.Form):
+
     monto_factura = forms.CharField(
-        widget=forms.NumberInput(attrs={'placeholder': ' Ingrese un monto'}),
+        widget=forms.NumberInput(attrs={'placeholder': 'Ingrese un monto', 'class': 'form-control'}),
         required=True
     )
 
-    file_factura = forms.FileField()
-    file_aportes = forms.FileField()
-    file_soporte = forms.FileField()
+    file_factura = forms.FileField(
+        allow_empty_file=False,
+        widget=forms.FileInput(
+            attrs={
+                'type': 'file',
+                'class': 'custom-file-input',
+                'id': 'customFileLang',
+                'lang': 'es'
+            }
+        ),
+        label='Factura',
+        required=True
+    )
+    file_aportes = forms.FileField(
+        allow_empty_file=False,
+        widget=forms.FileInput(
+            attrs={
+                'type': 'file',
+                'class': 'custom-file-input',
+                'id': 'customFileLang',
+                'lang': 'es'
+            }
+        ),
+        label='Aportes',
+        required=True
+    )
+    file_soporte = forms.FileField(
+        allow_empty_file=False,
+        widget=forms.FileInput(
+            attrs={
+                'type': 'file',
+                'class': 'custom-file-input',
+                'id': 'customFileLang',
+                'lang': 'es'
+            }
+        ),
+        label='Soportes',
+        required=True
+    )
+    file_ribs = forms.FileField(
+        allow_empty_file=False,
+        widget=forms.FileInput(
+            attrs={
+                'type': 'file',
+                'class': 'custom-file-input',
+                'id': 'customFileLang',
+                'lang': 'es'
+            }
+        ),
+        label='Ribs',
+        required=True
+    )
 
-    observaciones = forms.TextInput()
+    observaciones = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control',
+                'id': 'exampleFormControlTextarea1',
+                'rows': '8'
+            }
+        )
+    )

@@ -158,7 +158,7 @@ def resend_token(request):
     print(message.sid)
 
     messages.success(request, f'Se envió un nuevo token para el acceso')
-    return redirect('/verificacion')
+    return redirect('/verificacion/')
 
 
 # ingreso al  portal principal
@@ -196,12 +196,19 @@ def opciones(request):
 # sección de radicación
 @login_required(redirect_field_name='login')
 def radicacion(request):
+
+    factura_repetida = False
+    num_factura = 100000
+
+    if factura_repetida:
+        num_factura = num_factura + 1
+
     form = RadicacionForm(request.POST or None)
     form_rad = {
         'page_title': 'Radicación de facturas',
         'user_name': request.user.first_name,
         'form': form,
-        'num_rad': 100000
+        'num_rad': num_factura
     }
     return render(request, 'FamedicDesign/RadicadosSite.html', form_rad)
 
