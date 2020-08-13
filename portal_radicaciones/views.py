@@ -26,7 +26,7 @@ from django.contrib.auth import (
 import secrets
 from twilio.rest import Client
 
-
+loged_user = False
 email_login = ""
 password_login = ""
 phone_number_login = ""
@@ -36,9 +36,12 @@ num_factura = 0
 
 # redireccionamiento desde index hasta la ventana de login
 def index(request):
+    global loged_user
     if request.user.is_authenticated:
         return redirect('main/')
     else:
+
+        loged_user = False
         logout(request)
         return redirect('login/')
 
@@ -68,6 +71,7 @@ def login_famedic(request):
 
     form = UserLoginForm(request.POST or None)
 
+    global loged_user
     global email_login
     global password_login
     global phone_number_login
@@ -98,6 +102,7 @@ def login_famedic(request):
 
         print(message.sid)
 
+        loged_user = True
         return redirect('/verificacion/')
 
     login_form = {
@@ -113,28 +118,35 @@ def token_famedic(request):
 
     form = TokenAccessForm(request.POST or None)
 
+    global loged_user
     global email_login
     global password_login
     global phone_number_login
     global otp
 
-    if form.is_valid():
-        token_number = form.cleaned_data.get('token')
+    if request.user.is_authenticated:
+        return redirect('/main/')
+    else:
+        if loged_user:
+            if form.is_valid():
+                token_number = form.cleaned_data.get('token')
 
-        if token_number == otp:
-            user = authenticate(username=email_login, password=password_login)
-            login(request, user)
-            return redirect('/main/')
+                if token_number == otp:
+                    user = authenticate(username=email_login, password=password_login)
+                    login(request, user)
+                    return redirect('/main/')
+                else:
+                    messages.error(request, 'Error en validación del token. Vuelva a ingresarlo.')
+                    return redirect('/verificacion/')
+
+            token_form = {
+                'page_title': 'Validación de ingreso',
+                'form': form,
+            }
+
+            return render(request, 'FamedicDesign/TokenAccess.html', token_form)
         else:
-            messages.error(request, 'Error en validación del token. Vuelva a ingresarlo.')
-            return redirect('/verificacion/')
-
-    token_form = {
-        'page_title': 'Validación de ingreso',
-        'form': form,
-    }
-
-    return render(request, 'FamedicDesign/TokenAccess.html', token_form)
+            return redirect('/login/')
 
 
 # envío de nuevo del token
@@ -163,7 +175,7 @@ def resend_token(request):
 
 
 # ingreso al  portal principal
-@login_required(redirect_field_name='login')
+@login_required(login_url='/login/')
 def hola_mundo(request):
 
     if request.user.is_authenticated:
@@ -177,7 +189,7 @@ def hola_mundo(request):
 
 
 # sección de perfil del usuario
-@login_required(redirect_field_name='login')
+@login_required(login_url='/login/')
 def perfil(request):
     form_profile = {
         'page_title': 'Perfil del usuario'
@@ -186,7 +198,7 @@ def perfil(request):
 
 
 # sección de opciones de sitio
-@login_required(redirect_field_name='login')
+@login_required(login_url='/login/')
 def opciones(request):
     form_settings = {
         'page_title': 'Opciones del sitio'
@@ -195,7 +207,7 @@ def opciones(request):
 
 
 # sección de radicación
-@login_required(redirect_field_name='login')
+@login_required(login_url='/login/')
 def radicacion(request):
 
     global num_factura
@@ -217,7 +229,7 @@ def radicacion(request):
 
 
 # sección de lista de radicados
-@login_required(redirect_field_name='login')
+@login_required(login_url='/login/')
 def list_radicados(request):
     form_list_rad = {
         'page_title': 'Lista de radicados',
@@ -227,7 +239,7 @@ def list_radicados(request):
 
 
 # sección de lista de radicados
-@login_required(redirect_field_name='login')
+@login_required(login_url='/login/')
 def search_radicados(request):
     form_search_rad = {
         'page_title': 'Búsqueda de radicados',
