@@ -31,6 +31,7 @@ email_login = ""
 password_login = ""
 phone_number_login = ""
 otp = ""
+num_factura = 0
 
 
 # redireccionamiento desde index hasta la ventana de login
@@ -196,6 +197,8 @@ def opciones(request):
 # sección de radicación
 @login_required(redirect_field_name='login')
 def radicacion(request):
+
+    global num_factura
 
     factura_repetida = False
     num_factura = 100000

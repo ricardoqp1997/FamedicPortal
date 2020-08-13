@@ -60,7 +60,13 @@ class TokenAccessForm(forms.Form):
 class RadicacionForm(forms.Form):
 
     monto_factura = forms.CharField(
-        widget=forms.NumberInput(attrs={'placeholder': 'Ingrese un monto', 'class': 'form-control'}),
+        widget=forms.NumberInput(
+            attrs={
+                'placeholder': 'Ingrese un monto',
+                'class': 'form-control monto_field',
+                'aria-label': 'Amount (to the nearest dollar)'
+            }
+        ),
         required=True
     )
 

@@ -120,16 +120,15 @@
             <hr class="radicacion">
             <br>
 
-            <div class="monto_content row">
+            <div class="monto_content row input-group">
                 <label for="colFormLabel" class="col-sm-3 col-form-label">Monto de la factura*</label>
 
                 <div class="input-group-prepend">
                     <span class="input-group-text">$</span>
                 </div>
 
-                <div class="monto_field input-group-append">
-                    {{ form.monto_factura }}
-                </div>
+                {{ form.monto_factura }}
+
             </div>
             <br>
             <br>
@@ -172,8 +171,6 @@
                     </div>
                 </div>
             </div>
-
-
             <br>
 
             <div class="form-group label_textarea">
