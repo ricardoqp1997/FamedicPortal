@@ -6,12 +6,18 @@ from django.contrib import messages
 # Librería para restricción de vistas con autenticación realizada
 from django.contrib.auth.decorators import login_required
 
-# Librería con los formilarios requeridos para el C.R.U.D
+# Librería con los formularios requeridos para el C.R.U.D
 from .forms import (
     UserRegisterForm,
     TokenAccessForm,
     UserLoginForm,
     RadicacionForm
+)
+
+# Librería con los models requeridos para los formularios
+from famedic_users.models import (
+    FamedicUser,
+    UserManager
 )
 
 # Librería para la manipulación de usuarios
@@ -27,7 +33,8 @@ import secrets
 from twilio.rest import Client
 
 loged_user = False
-username_login = ""
+id_login = ""
+email_login = ""
 password_login = ""
 phone_number_login = ""
 otp = ""
@@ -72,17 +79,20 @@ def login_famedic(request):
     form = UserLoginForm(request.POST or None)
 
     global loged_user
-    global username_login
+    global id_login
+    global email_login
     global password_login
     global phone_number_login
     global otp
 
     if form.is_valid():
-        username_login = form.cleaned_data.get('id_number')
+
+        id_login = form.cleaned_data.get('id')
+        email_login = form.cleaned_data.get('email')
         password_login = form.cleaned_data.get('password')
 
-        user = authenticate(username=username_login, password=password_login)
-        phone_number_login = '+57' + user.get_username()
+        user = authenticate(email=email_login, id=id_login, password=password_login)
+        phone_number_login = '+57' + user.get_phone()
         print(phone_number_login)
 
         secret_otp = secrets.SystemRandom()
@@ -119,7 +129,8 @@ def token_famedic(request):
     form = TokenAccessForm(request.POST or None)
 
     global loged_user
-    global username_login
+    global id_login
+    global email_login
     global password_login
     global phone_number_login
     global otp
@@ -132,7 +143,7 @@ def token_famedic(request):
                 token_number = form.cleaned_data.get('token')
 
                 if token_number == otp:
-                    user = authenticate(username=username_login, password=password_login)
+                    user = authenticate(email=email_login, id=id_login, password=password_login)
                     login(request, user)
                     return redirect('/main/')
                 else:

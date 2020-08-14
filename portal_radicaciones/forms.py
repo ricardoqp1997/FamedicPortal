@@ -11,7 +11,7 @@ from famedic_users.models import (
 # Form de inicio de sesión para usuarios
 class UserLoginForm(forms.Form):
     email = forms.CharField(label='Correo electrónico')
-    id = forms.CharField(label='Cédula', widget=forms.NumberInput, max_length=10)
+    id = forms.CharField(label='Cédula/NIT', widget=forms.NumberInput, max_length=10)
     password = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
 
     def clean(self, *args, **kwargs):
@@ -22,6 +22,8 @@ class UserLoginForm(forms.Form):
         if email and id and password:
             user = authenticate(email=email, id=id, password=password)
 
+            if user.get_id() != id:
+                raise forms.ValidationError('Por favor verifique los datos de usuario ingresados.')
             if not user:
                 raise forms.ValidationError('Por favor verifique los datos de usuario ingresados.')
             if not user.check_password(password):
@@ -59,7 +61,7 @@ class UserRegisterForm(UserCreationForm):
 class TokenAccessForm(forms.Form):
 
     token = forms.CharField(
-        widget=forms.NumberInput,
+        widget=forms.PasswordInput,
         label='Token de autenticación',
         required=True
     )
