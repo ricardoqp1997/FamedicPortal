@@ -5,31 +5,59 @@ from django.contrib.auth.models import (
 )
 
 
-# Create your models here .
+# Create your models here.
 
 class UserManager(BaseUserManager):
-    def create_user(self, id, email, password=None, is_active=True, is_admin=False):
+
+    # método base para la creación de los usuarios
+    def create_user(self, id, first_name, last_name, email, recovery_email, phone, password=None, is_active=True, is_admin=False, is_staff=False):
         if not email:
             raise ValueError('Es requerido ingresar el correo electrónico.')
         if not password:
             raise ValueError('Es requerido ingresar una contraseña.')
 
         user_obj = self.model(
-            id=self.normalize_username(id),
-            email=self.normalize_email(email)
+            id=str(id),
+            first_name=str(first_name),
+            last_name=str(last_name),
+            email=self.normalize_email(email),
+            recovery_email=self.normalize_email(recovery_email),
+            phone=str(phone)
         )
         user_obj.set_password(password)
-        user_obj.is_active = is_active
-        user_obj.is_admin = is_admin
+        user_obj.active = is_active
+        user_obj.admin = is_admin
+        user_obj.staff = is_staff
         user_obj.save(using=self._db)
 
         return user_obj
 
-    def create_admin(self, id, email, password=None):
+    # método para la asignación de usuarios staff
+    def create_staffuser(self, id, first_name, last_name, email, recovery_email, phone, password=None):
         user = self.create_user(
-            id=id,
-            email=email,
+            id=str(id),
+            first_name=str(first_name),
+            last_name=str(last_name),
+            email=self.normalize_email(email),
+            recovery_email=self.normalize_email(recovery_email),
+            phone=str(phone),
             password=password,
+            is_staff=True
+        )
+
+        return user
+
+    # método para la asignación de usuarios superuser
+    def create_superuser(self, id, first_name, last_name, email, recovery_email, phone, password=None):
+        user = self.create_user(
+            id=str(id),
+            first_name=str(first_name),
+            last_name=str(last_name),
+            email=self.normalize_email(email),
+            recovery_email=self.normalize_email(recovery_email),
+            phone=str(phone),
+            password=password,
+            is_staff=True,
             is_admin=True
         )
 
@@ -53,19 +81,27 @@ class FamedicUser(AbstractBaseUser):
     phone = models.CharField(max_length=10)
 
     # atributos adicionales para el usuario
-    date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
-    last_login = models.DateTimeField(verbose_name='last login', auto_now=True)
-    is_admin = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    active = models.BooleanField(default=True)
+    staff = models.BooleanField(default=True)
+    admin = models.BooleanField(default=False)
 
+    # parametros del model
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['id']
+    REQUIRED_FIELDS = ['id', 'first_name', 'last_name', 'recovery_email', 'phone']
 
     objects = UserManager()
 
+    # métodos base del model
     def __str__(self):
         return self.email
 
+    def has_perm(self, perm, obj=None):
+        return True
+
+    def has_module_perms(self, app_label):
+        return True
+
+    # métodos adicionales del model para obtención de datos del usuario
     def get_first_name(self):
         return self.first_name
 
@@ -75,18 +111,18 @@ class FamedicUser(AbstractBaseUser):
     def get_id(self):
         return self.id
 
-    @property
-    def is_admin(self):
-        return self.is_admin
+    def get_phone(self):
+        return self.phone
 
+    # propiedades del model de usuario
     @property
     def is_active(self):
-        return self.is_active
+        return self.active
 
-    @is_active.setter
-    def is_active(self, value):
-        self._is_active = value
+    @property
+    def is_admin(self):
+        return self.admin
 
-    @is_admin.setter
-    def is_admin(self, value):
-        self._is_admin = value
+    @property
+    def is_staff(self):
+        return self.staff
