@@ -21,5 +21,16 @@
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:C:\Users\RicardoQuintana\OneDrive - Tecnologias en Infraestructuras, Comunicaciones, Servicios de IT y Outsourcing TICS SAS\ARCHIVOS DE PROYECTOS\FAMEDIC\FamedicPortal\db.sqlite3</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="db [3]" uuid="19b00f66-3872-4709-ac99-f0cb6d62a90e">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\Users\RicardoQuintana\OneDrive - Tecnologias en Infraestructuras, Comunicaciones, Servicios de IT y Outsourcing TICS SAS\ARCHIVOS DE PROYECTOS\FAMEDIC\FAMEDIC_PORTAL_GIT\db.sqlite3</jdbc-url>
+      <libraries>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.31.1/sqlite-jdbc-3.31.1.jar</url>
+        </library>
+      </libraries>
+    </data-source>
   </component>
 </project>
