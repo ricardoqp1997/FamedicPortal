@@ -108,6 +108,9 @@ class FamedicUser(AbstractBaseUser):
     def get_last_name(self):
         return self.last_name
 
+    def get_full_name(self):
+        return str(self.first_name + ' ' + self.last_name)
+
     def get_id(self):
         return self.id
 
