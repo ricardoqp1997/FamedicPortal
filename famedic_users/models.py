@@ -5,7 +5,7 @@ from django.contrib.auth.models import (
 )
 
 
-# Create your models here.
+# Create your models here .
 
 class UserManager(BaseUserManager):
     def create_user(self, id, email, password=None, is_active=True, is_admin=False):
@@ -90,6 +90,3 @@ class FamedicUser(AbstractBaseUser):
     @is_admin.setter
     def is_admin(self, value):
         self._is_admin = value
-
-    class Meta:
-        db_table = 'auth_user'
