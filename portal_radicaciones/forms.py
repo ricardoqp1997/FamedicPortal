@@ -2,22 +2,25 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
+from famedic_users.models import (
+    FamedicUser,
+    UserManager
+)
 
 
 # Form de inicio de sesión para usuarios
-
 class UserLoginForm(forms.Form):
     email = forms.CharField(label='Correo electrónico')
-    id_number = forms.CharField(label='Cédula', widget=forms.NumberInput, max_length=10)
+    id = forms.CharField(label='Cédula', widget=forms.NumberInput, max_length=10)
     password = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
 
     def clean(self, *args, **kwargs):
         email = self.cleaned_data.get('email')
-        id_number = self.cleaned_data.get('id_number')
+        id = self.cleaned_data.get('id')
         password = self.cleaned_data.get('password')
 
-        if email and id_number and password:
-            user = authenticate(username=id_number, password=password, email=email)
+        if email and id and password:
+            user = authenticate(email=email, id=id, password=password)
 
             if not user:
                 raise forms.ValidationError('Por favor verifique los datos de usuario ingresados.')
@@ -29,28 +32,30 @@ class UserLoginForm(forms.Form):
 
 
 # Form de registro de usuarios (añadiendole el campo de email al form base de registro de Django)
-
 class UserRegisterForm(UserCreationForm):
 
-    username = forms.CharField(label='Cédula', widget=forms.NumberInput)
-    first_name = forms.TextInput()
-    last_name = forms.TextInput()
+    id = forms.CharField(label='Cédula/NIT', widget=forms.NumberInput, max_length=10)
+    first_name = forms.CharField(label='Nombre(s)', max_length=25)
+    last_name = forms.CharField(label='Apellido(s)', max_length=25)
+    phone = forms.CharField(label='Teléfono celular', widget=forms.NumberInput, max_length=10)
     email = forms.EmailField(label='Correo electrónico')
+    recovery_email = forms.EmailField(label='Correo electrónico de recuperación')
 
     class Meta:
-        model = User
+        model = FamedicUser
         fields = [
-            'username',
+            'id',
             'first_name',
             'last_name',
             'email',
+            'recovery_email',
+            'phone',
             'password1',
             'password2'
         ]
 
 
 # Form de ingreso del token de acceso (Solo obtención del token, la validación se hace en views.py)
-
 class TokenAccessForm(forms.Form):
 
     token = forms.CharField(
@@ -61,7 +66,6 @@ class TokenAccessForm(forms.Form):
 
 
 # Form de radicacion de facturas
-
 class RadicacionForm(forms.Form):
 
     monto_factura = forms.CharField(

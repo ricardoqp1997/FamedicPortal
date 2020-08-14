@@ -52,8 +52,8 @@ def register_famedic(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            username = form.cleaned_data.get('username')
-            messages.success(request, f'Cuenta creada: {username}')
+            id = form.cleaned_data.get('id')
+            messages.success(request, f'Cuenta creada: {id}')
             return redirect('/login/')
     else:
         form = UserRegisterForm()
