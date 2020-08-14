@@ -27,7 +27,7 @@ import secrets
 from twilio.rest import Client
 
 loged_user = False
-email_login = ""
+username_login = ""
 password_login = ""
 phone_number_login = ""
 otp = ""
@@ -72,23 +72,23 @@ def login_famedic(request):
     form = UserLoginForm(request.POST or None)
 
     global loged_user
-    global email_login
+    global username_login
     global password_login
     global phone_number_login
     global otp
 
     if form.is_valid():
-        email_login = form.cleaned_data.get('email')
+        username_login = form.cleaned_data.get('id_number')
         password_login = form.cleaned_data.get('password')
 
-        user = authenticate(username=email_login, password=password_login)
+        user = authenticate(username=username_login, password=password_login)
         phone_number_login = '+57' + user.get_username()
         print(phone_number_login)
 
         secret_otp = secrets.SystemRandom()
         otp = str(secret_otp.randrange(100000, 999999))
         print(otp)
-
+        """
         account_sid = 'AC87661e5cf909a34afc46401f943466b8'
         auth_token = '42c8e8dda0ed20b0a6cee6461e979f1e'
         client = Client(account_sid, auth_token)
@@ -101,7 +101,7 @@ def login_famedic(request):
             )
 
         print(message.sid)
-
+        """
         loged_user = True
         return redirect('/verificacion/')
 
@@ -119,7 +119,7 @@ def token_famedic(request):
     form = TokenAccessForm(request.POST or None)
 
     global loged_user
-    global email_login
+    global username_login
     global password_login
     global phone_number_login
     global otp
@@ -132,7 +132,7 @@ def token_famedic(request):
                 token_number = form.cleaned_data.get('token')
 
                 if token_number == otp:
-                    user = authenticate(username=email_login, password=password_login)
+                    user = authenticate(username=username_login, password=password_login)
                     login(request, user)
                     return redirect('/main/')
                 else:
@@ -156,7 +156,7 @@ def resend_token(request):
     new_secret_otp = secrets.SystemRandom()
     otp = str(new_secret_otp.randrange(100000, 999999))
     print(otp)
-
+    """
     account_sid = 'AC87661e5cf909a34afc46401f943466b8'
     auth_token = '42c8e8dda0ed20b0a6cee6461e979f1e'
     client = Client(account_sid, auth_token)
@@ -169,7 +169,7 @@ def resend_token(request):
         )
 
     print(message.sid)
-
+    """
     messages.success(request, f'Se envió un nuevo token para el acceso')
     return redirect('/verificacion/')
 
@@ -181,7 +181,7 @@ def hola_mundo(request):
     if request.user.is_authenticated:
         form_main = {
             'page_title': 'Pagina principal',
-            'user_name': request.user.first_name
+            'user_name': request.user.get_full_name()
         }
         return render(request, 'FamedicDesign/Main.html', form_main)
     else:
@@ -221,7 +221,7 @@ def radicacion(request):
     form = RadicacionForm(request.POST or None)
     form_rad = {
         'page_title': 'Radicación de facturas',
-        'user_name': request.user.first_name,
+        'user_name': request.user.get_full_name(),
         'form': form,
         'num_rad': num_factura
     }
@@ -233,7 +233,7 @@ def radicacion(request):
 def list_radicados(request):
     form_list_rad = {
         'page_title': 'Lista de radicados',
-        'user_name': request.user.first_name
+        'user_name': request.user.get_full_name()
     }
     return render(request, 'FamedicDesign/ListaRadicados.html', form_list_rad)
 
@@ -243,6 +243,6 @@ def list_radicados(request):
 def search_radicados(request):
     form_search_rad = {
         'page_title': 'Búsqueda de radicados',
-        'user_name': request.user.first_name
+        'user_name': request.user.get_full_name()
     }
     return render(request, 'FamedicDesign/ListaRadicados.html', form_search_rad)

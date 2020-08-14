@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.admindocs',
 
     'portal_radicaciones',
+    'famedic_users',
 
     'django_otp',
     'django_otp.plugins.otp_totp',
@@ -145,9 +146,7 @@ STATICFILES_DIRS = [
 
 
 
-AUTHENTICATION_BACKENDS = [
-    'portal_radicaciones.EmailAuth.EmailAuthBackend'
-]
+
 
 MEDIA_ROOT = os.path.join(BASE_DIR, '../media')
 MEDIA_URL = 'media/'

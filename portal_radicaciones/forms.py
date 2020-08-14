@@ -8,14 +8,16 @@ from django.contrib.auth import authenticate
 
 class UserLoginForm(forms.Form):
     email = forms.CharField(label='Correo electrónico')
+    id_number = forms.CharField(label='Cédula', widget=forms.NumberInput, max_length=10)
     password = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
 
     def clean(self, *args, **kwargs):
         email = self.cleaned_data.get('email')
+        id_number = self.cleaned_data.get('id_number')
         password = self.cleaned_data.get('password')
 
-        if email and password:
-            user = authenticate(username=email, password=password)
+        if email and id_number and password:
+            user = authenticate(username=id_number, password=password, email=email)
 
             if not user:
                 raise forms.ValidationError('Por favor verifique los datos de usuario ingresados.')
@@ -30,18 +32,21 @@ class UserLoginForm(forms.Form):
 
 class UserRegisterForm(UserCreationForm):
 
+    username = forms.CharField(label='Cédula', widget=forms.NumberInput)
     first_name = forms.TextInput()
+    last_name = forms.TextInput()
     email = forms.EmailField(label='Correo electrónico')
-    username = forms.CharField(label='Número de teléfono', widget=forms.NumberInput)
 
     class Meta:
         model = User
-        fields = ['first_name',
-                  'email',
-                  'username',
-                  'password1',
-                  'password2'
-                  ]
+        fields = [
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'password1',
+            'password2'
+        ]
 
 
 # Form de ingreso del token de acceso (Solo obtención del token, la validación se hace en views.py)
