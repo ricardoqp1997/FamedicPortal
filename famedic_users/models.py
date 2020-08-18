@@ -5,24 +5,23 @@ from django.contrib.auth.models import (
 )
 
 
-# Create your models here.
-
 class UserManager(BaseUserManager):
 
     # método base para la creación de los usuarios
-    def create_user(self, id, first_name, last_name, email, recovery_email, phone, password=None, is_active=True, is_admin=False, is_staff=False):
+    def create_user(self, id_famedic, first_name, last_name, email, recovery_email, phone, location, password=None, is_active=True, is_staff=False, is_admin=False):
         if not email:
             raise ValueError('Es requerido ingresar el correo electrónico.')
         if not password:
             raise ValueError('Es requerido ingresar una contraseña.')
 
         user_obj = self.model(
-            id=str(id),
+            id_famedic=str(id_famedic),
             first_name=str(first_name),
             last_name=str(last_name),
             email=self.normalize_email(email),
             recovery_email=self.normalize_email(recovery_email),
-            phone=str(phone)
+            phone=str(phone),
+            location=location,
         )
         user_obj.set_password(password)
         user_obj.active = is_active
@@ -33,33 +32,37 @@ class UserManager(BaseUserManager):
         return user_obj
 
     # método para la asignación de usuarios staff
-    def create_staffuser(self, id, first_name, last_name, email, recovery_email, phone, password=None):
+    def create_staffuser(self, id_famedic, first_name, last_name, email, recovery_email, phone, location, password=None):
         user = self.create_user(
-            id=str(id),
+            id_famedic=str(id_famedic),
             first_name=str(first_name),
             last_name=str(last_name),
             email=self.normalize_email(email),
             recovery_email=self.normalize_email(recovery_email),
             phone=str(phone),
+            location=location,
             password=password,
             is_staff=True
         )
+        # user.save(using=self._db)
 
         return user
 
     # método para la asignación de usuarios superuser
-    def create_superuser(self, id, first_name, last_name, email, recovery_email, phone, password=None):
+    def create_superuser(self, id_famedic, first_name, last_name, email, recovery_email, phone, location, password=None):
         user = self.create_user(
-            id=str(id),
+            id_famedic=str(id_famedic),
             first_name=str(first_name),
             last_name=str(last_name),
             email=self.normalize_email(email),
             recovery_email=self.normalize_email(recovery_email),
             phone=str(phone),
+            location=location,
             password=password,
             is_staff=True,
             is_admin=True
         )
+        # user.save(using=self._db)
 
         return user
 
@@ -67,18 +70,21 @@ class UserManager(BaseUserManager):
 class FamedicUser(AbstractBaseUser):
 
     # cédula del usuario
-    id = models.CharField(max_length=10, unique=True, primary_key=True)
+    id_famedic = models.CharField(verbose_name='id_famedic', max_length=10, unique=True)
 
     # nombre y apellidos del usuario
-    first_name = models.CharField(max_length=25)
-    last_name = models.CharField(max_length=25)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
 
     # correo electrónico de cuenta y para recuperación
-    email = models.EmailField(verbose_name='email', max_length=60, unique=True)
+    email = models.EmailField(verbose_name='email', max_length=255, unique=True)
     recovery_email = models.EmailField(verbose_name='recovery email', max_length=60)
 
     # número de teléfono del usuario
-    phone = models.CharField(max_length=10)
+    phone = models.CharField(max_length=10, unique=True)
+
+    # empresa vinculada del usuario
+    location = models.CharField(max_length=255)
 
     # atributos adicionales para el usuario
     active = models.BooleanField(default=True)
@@ -87,7 +93,14 @@ class FamedicUser(AbstractBaseUser):
 
     # parametros del model
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['id', 'first_name', 'last_name', 'recovery_email', 'phone']
+    REQUIRED_FIELDS = [
+        'id_famedic',
+        'first_name',
+        'last_name',
+        'recovery_email',
+        'phone',
+        'location'
+    ]
 
     objects = UserManager()
 
@@ -112,7 +125,7 @@ class FamedicUser(AbstractBaseUser):
         return str(self.first_name + ' ' + self.last_name)
 
     def get_id(self):
-        return self.id
+        return self.id_famedic
 
     def get_phone(self):
         return self.phone

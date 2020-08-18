@@ -25,7 +25,11 @@
     <button type="button" class="btn btn-primary btn-lg botones_panel">Radicado 2</button>
     <button type="button" class="btn btn-primary btn-lg botones_panel">Radicado 3</button>
 
-    <a class="btn btn-link boton_radicados" role="button" href="{% url 'radicados_list' %}">Ver todos los radicados</a>
+    {% if user.is_admin %}
+        <a class="btn btn-link boton_radicados" role="button" href="{% url 'radicados_list' %}">Ver todos los radicados</a>
+    {% else %}
+        <a class="btn btn-link boton_radicados" role="button" href="{% url 'radicados_list' %}">Ver mis radicados</a>
+    {% endif %}
 
 {% endblock %}
 
@@ -86,8 +90,13 @@
     <div class="contenedorbtna">
         <button class="btn btn-primary btn-lg btnini" id="btnUsuario"><img class="imgbtn" src="{% static '/resouces/usuario.png' %}" alt=""><br>PERFIL</button>
         <button class="btn btn-primary btn-lg btnini" id="btnRadicar"><img class="imgbtn" src="{% static '/resouces/documento.png' %}" alt=""><br>RADICAR</button>
-        <button class="btn btn-primary btn-lg btnini" id="btnRadicados"><img class="imgbtn" src="{% static '/resouces/documentocheck.png' %}" alt=""><br>RADICADOS</button>
-        <button class="btn btn-primary btn-lg btnini" id="btnBuscar"><img class="imgbtn" src="{% static '/resouces/buscar.png' %}" alt=""><br>BUSCAR RADICADOS</button>
+        {% if user.is_admin %}
+            <button class="btn btn-primary btn-lg btnini" id="btnRadicados"><img class="imgbtn" src="{% static '/resouces/documentocheck.png' %}" alt=""><br>RADICADOS</button>
+            <button class="btn btn-primary btn-lg btnini" id="btnBuscar"><img class="imgbtn" src="{% static '/resouces/buscar.png' %}" alt=""><br>BUSCAR RADICADOS</button>
+        {% else %}
+             <button class="btn btn-primary btn-lg btnini" id="btnRadicados"><img class="imgbtn" src="{% static '/resouces/documentocheck.png' %}" alt=""><br>MIS RADICADOS</button>
+        {% endif %}
+
     </div>
 
     <script type="text/javascript">

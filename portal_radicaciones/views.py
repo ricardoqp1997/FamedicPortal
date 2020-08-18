@@ -59,14 +59,14 @@ def register_famedic(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            id = form.cleaned_data.get('id')
+            id = form.cleaned_data.get('id_famedic')
             messages.success(request, f'Cuenta creada: {id}')
             return redirect('/login/')
     else:
         form = UserRegisterForm()
 
     form_register = {
-        'page_title': 'Inicio de sesión',
+        'page_title': 'Registro de usuarios',
         'form': form
     }
 
@@ -171,7 +171,7 @@ def resend_token(request):
     account_sid = 'AC87661e5cf909a34afc46401f943466b8'
     auth_token = '42c8e8dda0ed20b0a6cee6461e979f1e'
     client = Client(account_sid, auth_token)
-
+    
     message = client.messages \
         .create(
             body=f"Su código de acceso al portal de radicación de facturas es: {otp}.",

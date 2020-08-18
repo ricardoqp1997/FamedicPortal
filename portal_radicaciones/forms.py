@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
+from django.contrib.auth.forms import ReadOnlyPasswordHashField
+
 from famedic_users.models import (
     FamedicUser,
     UserManager
@@ -10,19 +12,21 @@ from famedic_users.models import (
 
 # Form de inicio de sesión para usuarios
 class UserLoginForm(forms.Form):
+
     email = forms.CharField(label='Correo electrónico')
-    id = forms.CharField(label='Cédula/NIT', widget=forms.NumberInput, max_length=10)
+    id_famedic = forms.CharField(label='Cédula/NIT', widget=forms.NumberInput, max_length=10)
     password = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
 
     def clean(self, *args, **kwargs):
+
         email = self.cleaned_data.get('email')
-        id = self.cleaned_data.get('id')
+        id_famedic = self.cleaned_data.get('id_famedic')
         password = self.cleaned_data.get('password')
 
-        if email and id and password:
-            user = authenticate(email=email, id=id, password=password)
+        if email and id_famedic and password:
+            user = authenticate(email=email, id_famedic=id_famedic, password=password)
 
-            if user.get_id() != id:
+            if user.get_id() != id_famedic:
                 raise forms.ValidationError('Por favor verifique los datos de usuario ingresados.')
             if not user:
                 raise forms.ValidationError('Por favor verifique los datos de usuario ingresados.')
@@ -34,27 +38,133 @@ class UserLoginForm(forms.Form):
 
 
 # Form de registro de usuarios (añadiendole el campo de email al form base de registro de Django)
-class UserRegisterForm(UserCreationForm):
+class UserRegisterForm(forms.ModelForm):
 
-    id = forms.CharField(label='Cédula/NIT', widget=forms.NumberInput, max_length=10)
+    id_famedic = forms.CharField(label='Cédula/NIT', widget=forms.NumberInput, max_length=10)
     first_name = forms.CharField(label='Nombre(s)', max_length=25)
     last_name = forms.CharField(label='Apellido(s)', max_length=25)
     phone = forms.CharField(label='Teléfono celular', widget=forms.NumberInput, max_length=10)
+    location = forms.CharField(label='Entidad a la que pertenece', max_length=50)
     email = forms.EmailField(label='Correo electrónico')
     recovery_email = forms.EmailField(label='Correo electrónico de recuperación')
 
+    password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Confirme la contraseña ingresada', widget=forms.PasswordInput)
+
     class Meta:
+
         model = FamedicUser
         fields = [
-            'id',
+            'id_famedic',
             'first_name',
             'last_name',
             'email',
             'recovery_email',
             'phone',
-            'password1',
-            'password2'
+            'location'
         ]
+
+    def clean_email(self):
+
+        email = self.cleaned_data.get('email')
+        recovery = self.cleaned_data.get('recovery_email')
+
+        qs = FamedicUser.objects.filter(email=email)
+
+        if qs.exists():
+            raise forms.ValidationError("El correo electrónico ya está registrado")
+        if email == recovery:
+            raise forms.ValidationError("Su correo de acceso y el de recuperación deben ser distintos")
+
+        return email
+
+    def clean_password2(self):
+
+        password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
+
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError('La confirmación no coincide con la contraseña ingresada')
+
+        return password2
+
+    def save(self, commit=True):
+
+        user = super(UserRegisterForm, self).save(commit=False)
+        user.set_password(self.cleaned_data['password1'])
+
+        if commit:
+            user.save()
+
+        return user
+
+
+# Form de registro de administradores
+class UserAdminCreationForm(forms.ModelForm):
+
+    id_famedic = forms.CharField(label='Cédula/NIT', widget=forms.NumberInput, max_length=10)
+    first_name = forms.CharField(label='Nombre(s)', max_length=25)
+    last_name = forms.CharField(label='Apellido(s)', max_length=25)
+    phone = forms.CharField(label='Teléfono celular', widget=forms.NumberInput, max_length=10)
+    location = forms.CharField(label='Entidad a la que pertenece', max_length=50)
+    email = forms.EmailField(label='Correo electrónico')
+    recovery_email = forms.EmailField(label='Correo electrónico de recuperación')
+
+    password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Confirme la contraseña ingresada', widget=forms.PasswordInput)
+
+    class Meta:
+
+        model = FamedicUser
+        fields = [
+            'id_famedic',
+            'first_name',
+            'last_name',
+            'email',
+            'recovery_email',
+            'phone',
+            'location'
+        ]
+
+    def clean_password2(self):
+
+        password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
+
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError('La confirmación no coincide con la contraseña ingresada')
+
+        return password2
+
+    def save(self, commit=True):
+
+        user = super(UserAdminCreationForm, self).save(commit=False)
+        user.set_password(self.cleaned_data['password1'])
+
+        if commit:
+            user.save()
+
+        return user
+
+
+# Form de cambios a administradores
+class UserAdminChangeForm(forms.ModelForm):
+
+    password = ReadOnlyPasswordHashField()
+
+    class Meta:
+
+        model = FamedicUser
+        fields = [
+            'email',
+            'password',
+            'active',
+            'admin'
+        ]
+
+    def clean_password(self):
+
+        return self.initial['password']
 
 
 # Form de ingreso del token de acceso (Solo obtención del token, la validación se hace en views.py)

@@ -93,7 +93,7 @@ WSGI_APPLICATION = 'FAMEDIC_Dev.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db_famedic.sqlite3'),
     }
 }
 
@@ -144,12 +144,7 @@ LOGIN_REDIRECT_URL = 'token_access'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
-
 ]
-
-
-
-
 
 MEDIA_ROOT = os.path.join(BASE_DIR, '../media')
 MEDIA_URL = 'media/'

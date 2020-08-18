@@ -94,18 +94,28 @@
                                 <a class="nav-link boton_radicados" href="{% url 'radicar' %}">Radicar</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link boton_radicados" href="{% url 'radicados_list' %}">Lista de radicados</a>
+                                {% if user.is_admin %}
+                                    <a class="nav-link boton_radicados" href="{% url 'radicados_list' %}">Lista de radicados</a>
+                                {% else %}
+                                    <a class="nav-link boton_radicados" href="{% url 'radicados_list' %}">Mis radicados</a>
+                                {% endif %}
                             </li>
                         </ul>
 
                         <hr class="hr_style">
 
-                        <div class="input-group input-group-lg search_bar_tarjeta">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Buscar radicados</span>
-                            </div>
+                        {% if user.is_admin %}
+                            <div class="input-group search_bar_tarjeta">
                                 <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-                        </div>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Buscar radicado</button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#">Buscar por documento</a>
+                                        <a class="dropdown-item" href="#">Buscar por NIT</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
 
                         {% block hist_radicados %}
 
