@@ -64,7 +64,7 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = []
 
 
-# Para incluir Famedic Users en el panel administrativo de Django
+# Para incluir Famedic Users y la clase UserAdmin en el panel administrativo de Django
 admin.site.register(User, UserAdmin)
 
 # Para eliminar la sección de Grupos ya que no será necesaria
