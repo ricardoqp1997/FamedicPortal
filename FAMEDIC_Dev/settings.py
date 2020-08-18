@@ -53,7 +53,6 @@ INSTALLED_APPS = [
 
 AUTH_USER_MODEL = 'famedic_users.FamedicUser'
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

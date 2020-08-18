@@ -70,26 +70,26 @@ class UserManager(BaseUserManager):
 class FamedicUser(AbstractBaseUser):
 
     # cédula del usuario
-    id_famedic = models.CharField(verbose_name='id_famedic', max_length=10, unique=True)
+    id_famedic = models.CharField(verbose_name='cédula/NIT', max_length=10, unique=True)
 
     # nombre y apellidos del usuario
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
+    first_name = models.CharField(verbose_name='nombre(s)', max_length=50)
+    last_name = models.CharField(verbose_name='apellido(s)', max_length=50)
 
     # correo electrónico de cuenta y para recuperación
-    email = models.EmailField(verbose_name='email', max_length=255, unique=True)
-    recovery_email = models.EmailField(verbose_name='recovery email', max_length=60)
+    email = models.EmailField(verbose_name='correo electrónico', max_length=255, unique=True)
+    recovery_email = models.EmailField(verbose_name='correo electrónico de recuperación', max_length=60)
 
     # número de teléfono del usuario
-    phone = models.CharField(max_length=10, unique=True)
+    phone = models.CharField(verbose_name='teléfono celular', max_length=10, unique=True)
 
     # empresa vinculada del usuario
-    location = models.CharField(max_length=255)
+    location = models.CharField(verbose_name='entidad a la que pertenece', max_length=255)
 
     # atributos adicionales para el usuario
-    active = models.BooleanField(default=True)
-    staff = models.BooleanField(default=True)
-    admin = models.BooleanField(default=False)
+    active = models.BooleanField(verbose_name='estado activo', default=True)
+    staff = models.BooleanField(verbose_name='miembro del portal', default=True)
+    admin = models.BooleanField(verbose_name='administrador del portal', default=False)
 
     # parametros del model
     USERNAME_FIELD = 'email'
@@ -109,9 +109,11 @@ class FamedicUser(AbstractBaseUser):
         return self.email
 
     def has_perm(self, perm, obj=None):
+        print(perm, obj)
         return True
 
     def has_module_perms(self, app_label):
+        print(app_label)
         return True
 
     # métodos adicionales del model para obtención de datos del usuario

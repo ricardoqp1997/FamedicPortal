@@ -8,38 +8,64 @@ from portal_radicaciones.forms import (
     UserAdminChangeForm
 )
 
+# Personalización de titulo y nombre del sitio de administración Django acorde a Famedic IPS
+admin.site.site_header = 'Panel administrativo: Famedic'
+admin.site.site_title = 'Famedic IPS'
+
 
 class UserAdmin(BaseUserAdmin):
-    # The forms to add and change user instances
+
+    # Vinculacion de los formularios personalizados de Famedic al portal admin de Django
     form = UserAdminChangeForm
     add_form = UserAdminCreationForm
 
-    # The fields to be used in displaying the User model.
-    # These override the definitions on the base UserAdmin
-    # that reference specific fields on auth.User.
-    list_display = ('email', 'admin')
-    list_filter = ('admin',)
-    fieldsets = (
-        (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ()}),
-        ('Permissions', {'fields': ('admin',)}),
-    )
-    # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
-    # overrides get_fieldsets to use this attribute when creating a user.
+    # Parametrización de los filtros de búsqueda y de visualización de contenido dentro de Famedic Users
+    list_display = ['id_famedic', 'last_name', 'first_name', 'email', 'admin']
+    list_filter = ['active', 'admin', 'id_famedic', 'email']
+
+    # Campos de información del usuario a mostrar en el panel de Famedic Users (Creación)
     add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2')}
+        (
+            'Credenciales', {
+                'classes': ['wide', ],
+                'fields': ['id_famedic', 'email', 'password1', 'password2']
+            }
+        ),
+        (
+            'Información personal del usuario', {
+                'classes': ['wide', ],
+                'fields': ['first_name', 'last_name', 'phone']
+            }
         ),
     )
-    search_fields = ('email',)
-    ordering = ('email',)
-    filter_horizontal = ()
+
+    # Campos de información del usuario a mostrar en el panel de Famedic Users (visualización, edición y eliminación)
+    fieldsets = (
+        (
+            'Credenciales', {
+                'fields': ['id_famedic', 'email', 'recovery_email', 'password']
+            }
+        ),
+        (
+            'Información personal del usuario', {
+                'fields': ['first_name', 'last_name', 'phone', 'location']
+            }
+        ),
+        (
+            'Permisos en el sitio', {
+                'fields': ['active', 'staff', 'admin']
+            }
+        )
+    )
+
+    # Parametros de filtrado y busqueda de usuarios en Famedic Users
+    search_fields = ['email', 'id_famedic']
+    ordering = ['email', 'id_famedic']
+    filter_horizontal = []
 
 
+# Para incluir Famedic Users en el panel administrativo de Django
 admin.site.register(User, UserAdmin)
 
-# Remove Group Model from admin. We're not using it.
+# Para eliminar la sección de Grupos ya que no será necesaria
 admin.site.unregister(Group)
-
-
