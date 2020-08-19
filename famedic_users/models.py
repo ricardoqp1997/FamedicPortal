@@ -5,6 +5,7 @@ from django.contrib.auth.models import (
 )
 
 
+# Clase para manipulacion, creacion, edicion de usuarios de Famedic User
 class UserManager(BaseUserManager):
 
     # método base para la creación de los usuarios
@@ -44,7 +45,6 @@ class UserManager(BaseUserManager):
             password=password,
             is_staff=True
         )
-        # user.save(using=self._db)
 
         return user
 
@@ -62,11 +62,11 @@ class UserManager(BaseUserManager):
             is_staff=True,
             is_admin=True
         )
-        # user.save(using=self._db)
 
         return user
 
 
+# Clase para estructurar el modelo de datos de los usuarios de Famedic
 class FamedicUser(AbstractBaseUser):
 
     # cédula del usuario
@@ -144,3 +144,4 @@ class FamedicUser(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.staff
+

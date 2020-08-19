@@ -100,18 +100,25 @@
                                     <a class="nav-link boton_radicados" href="{% url 'radicados_list' %}">Mis radicados</a>
                                 {% endif %}
                             </li>
+                            {% if user.is_admin %}
+                            <li class="nav-item">
+                                <a class="nav-link boton_radicados" href="{% url 'admin' %}">Administrar sitio</a>
+                            </li>
+                            {% endif %}
+
                         </ul>
 
                         <hr class="hr_style">
 
                         {% if user.is_admin %}
+
                             <div class="input-group search_bar_tarjeta">
-                                <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                                <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" id="searchbar_famedic">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Buscar radicado</button>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">Buscar por documento</a>
-                                        <a class="dropdown-item" href="#">Buscar por NIT</a>
+                                        <a class="dropdown-item" href="#" id="document_search">Buscar por documento</a>
+                                        <a class="dropdown-item" href="#" id="nit_search">Buscar por NIT</a>
                                     </div>
                                 </div>
                             </div>

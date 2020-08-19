@@ -4,6 +4,9 @@ from . import views
 
 urlpatterns = [
 
+    # Acceso al panel administrativo
+    path('admin-redirect', views.admin_redirect, name='admin'),
+
     # index de "portal_radicaciones" redireccionará a Login si no se ha iniciado sesión
     path('', views.index, name='index'),
 
@@ -22,4 +25,7 @@ urlpatterns = [
     path('main/opciones/', views.opciones, name='settings'),
     path('main/radicar/', views.radicacion, name='radicar'),
     path('main/historial/', views.list_radicados, name='radicados_list'),
+
+    # Vista al haber realizado radicación exitosa
+    path('main/done/', views.radicacion_finish, name='radicado_finished')
 ]

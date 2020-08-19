@@ -1,6 +1,6 @@
 # Librerías de Django para el manejo de las vistas, plantillas y navegación
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 
 # Librería para restricción de vistas con autenticación realizada
@@ -38,7 +38,13 @@ email_login = ""
 password_login = ""
 phone_number_login = ""
 otp = ""
-num_factura = 0
+invoice_id = 0
+invoice_finished = False
+
+
+# redireccionamiento al panel administrativo
+def admin_redirect(request):
+    return redirect('/admin/')
 
 
 # redireccionamiento desde index hasta la ventana de login
@@ -47,7 +53,6 @@ def index(request):
     if request.user.is_authenticated:
         return redirect('main/')
     else:
-
         loged_user = False
         logout(request)
         return redirect('login/')
@@ -178,7 +183,7 @@ def resend_token(request):
             from_='+12165846582',
             to=phone_number_login
         )
-
+    
     print(message.sid)
     """
     messages.success(request, f'Se envió un nuevo token para el acceso')
@@ -221,22 +226,54 @@ def opciones(request):
 @login_required(login_url='/login/')
 def radicacion(request):
 
-    global num_factura
+    global invoice_id
+    global invoice_finished
 
-    factura_repetida = False
-    num_factura = 100000
+    form = RadicacionForm(request.POST, request.FILES)
+    invoice_finished = False
 
-    if factura_repetida:
-        num_factura = num_factura + 1
+    if request.method == 'POST':
+        if form.is_valid():
 
-    form = RadicacionForm(request.POST or None)
+            invoice_finished = True
+            invoice_id = form.cleaned_data.get('id_factura')
+            form.save()
+
+            return HttpResponseRedirect('/main/done/')
+
+    else:
+        form = RadicacionForm()
+
     form_rad = {
         'page_title': 'Radicación de facturas',
         'user_name': request.user.get_full_name(),
         'form': form,
-        'num_rad': num_factura
     }
+
     return render(request, 'FamedicDesign/RadicadosSite.html', form_rad)
+
+
+# Vista de radicación realizada
+@login_required(login_url='/login/')
+def radicacion_finish(request):
+
+    global invoice_id
+    global invoice_finished
+
+    if invoice_finished:
+
+        form_finished = {
+            'page_title': 'Radicación realizada',
+            'user_name': request.user.get_full_name(),
+            'invoice_id': invoice_id
+        }
+
+        invoice_finished = False
+
+        return render(request, 'FamedicDesign/Radicado.html', form_finished)
+    else:
+
+        return redirect('/main/radicar/')
 
 
 # sección de lista de radicados

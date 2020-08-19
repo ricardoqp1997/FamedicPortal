@@ -6,7 +6,6 @@
 <!-- Bloque de contenido para la tarjeta 1 (izquierda)-->
 {% block hist_radicados %}
 
-
     <style>
 
        .botones_panel{
@@ -37,7 +36,7 @@
     <style>
 
         /* Estilos para la parte superior del formulario */
-       .rectangulo_prueba1{
+       .Radicado_main_box{
            margin: 5%;
            width: 655px;
            height: auto;
@@ -46,29 +45,30 @@
            -moz-box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
            box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
        }
-       .id_factura{
+       .id_factura_label{
            text-align: left;
            margin-top: 15px;
            margin-left: 15px;
            font-weight: bold;
        }
+
        hr.radicacion{
            border-top: 3px solid #16254C;
-           width: 200px;
+           width: 250px;
            margin-left: 15px;
        }
 
        /* Estilos para la parte de ingreso del monto de factura */
        .monto_content{
-           padding-left: 1px;
+           padding-left: 13px;
        }
        .monto_field{
-           width: 30%;
+           width: 50%;
        }
 
        /* Estilos para la el cargue de archivos */
        .file_box{
-           margin-left: 10px;
+           margin-left: 17px;
        }
        .file_input_box{
            padding-left: 20px;
@@ -109,14 +109,21 @@
     </style>
 
     <!--  -->
-    <div class="rectangulo_prueba1">
-        <form method="POST">
+    <div class="Radicado_main_box">
+        <form action="." method="POST" enctype="multipart/form-data">
             {% csrf_token %}
 
             {{ form.non_field_errors }}
 
-            <button class="btn btn-primary btn-lg boton_registrar" type="submit">Radicar</button>
-            <h5 class="id_factura">Factura No. {{ num_rad }}</h5>
+            <button class="btn btn-primary btn-lg boton_registrar" type="submit" value="submit">Radicar</button>
+
+            <div class="row id_factura_label">
+                <label for = "facturaID" class="col-sm-3 col-form-label form-control-lg">Factura No.</label>
+                <div class="col-sm-9">
+                    {{ form.id_factura }}
+                    <!--input type="text" readonly class="form-control-plaintext form-control-lg" id="facturaID" value="{{ num_rad }}"-->
+                </div>
+            </div>
             <hr class="radicacion">
             <br>
 
@@ -126,8 +133,9 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">$</span>
                 </div>
-
-                {{ form.monto_factura }}
+                <div class="monto_field">
+                    {{ form.monto_factura }}
+                </div>
 
             </div>
             <br>

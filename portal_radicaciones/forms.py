@@ -1,13 +1,16 @@
+# Librerías base para la manipulación de formularios Django
 from django import forms
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
+# Librería personalizada para el uso de los modelos propios de usuarios Famedic
 from famedic_users.models import (
     FamedicUser,
     UserManager
 )
+
+# Librería personalizada para el uso del modelo de radicación
+from .models import RadicacionModel
 
 
 # Form de inicio de sesión para usuarios
@@ -178,7 +181,29 @@ class TokenAccessForm(forms.Form):
 
 
 # Form de radicacion de facturas
-class RadicacionForm(forms.Form):
+class RadicacionForm(forms.ModelForm):
+
+    id_famedic_factura = 100001
+    existing_id = RadicacionModel.objects.last()
+
+    print(existing_id)
+
+    if id_famedic_factura == existing_id:
+        id_famedic_factura = existing_id + 1
+
+    print(id_famedic_factura)
+
+    id_factura = forms.CharField(
+        widget=forms.NumberInput(
+            attrs={
+                'type': 'text',
+                'readonly': 'readonly',
+                'class': 'form-control-plaintext form-control-lg',
+                'id': 'facturaID',
+                'value': id_famedic_factura
+            }
+        )
+    )
 
     monto_factura = forms.CharField(
         widget=forms.NumberInput(
@@ -253,3 +278,25 @@ class RadicacionForm(forms.Form):
             }
         )
     )
+
+    class Meta:
+
+        model = RadicacionModel
+        fields = [
+            'id_factura',
+            'monto_factura',
+            'file_factura',
+            'file_aportes',
+            'file_soporte',
+            'file_ribs',
+            'observaciones',
+
+        ]
+
+    def save(self, commit=True):
+        invoice = super(RadicacionForm, self).save(commit=False)
+
+        if commit:
+            invoice.save()
+
+        return invoice
