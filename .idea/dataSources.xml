@@ -20,5 +20,14 @@
         </library>
       </libraries>
     </data-source>
+    <data-source source="LOCAL" name="django_famedic_mysql" uuid="13d750d6-a9e6-414a-a085-bc29d9ccb6c7">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://127.0.0.1:3306/famedic_db</jdbc-url>
+      <driver-properties>
+        <property name="serverTimezone" value="GMT-5" />
+      </driver-properties>
+    </data-source>
   </component>
 </project>

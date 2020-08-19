@@ -1,0 +1,56 @@
+[
+{
+    "model": "famedic_users.famedicuser",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$180000$N9KSpGNITjfO$LFyB1wsMyq4sZ+QmcPUgEnpymB84PftTgcED2OIBWTU=",
+        "last_login": "2020-08-18T22:56:21.493Z",
+        "id_famedic": "1234567890",
+        "first_name": "Ricardo",
+        "last_name": "Quintana",
+        "email": "dev_famedic@famedic.com",
+        "recovery_email": "ricardoq@tics-sas.com",
+        "phone": "3214569870",
+        "location": "Famedic",
+        "active": true,
+        "staff": true,
+        "admin": true
+    }
+},
+{
+    "model": "famedic_users.famedicuser",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$180000$N9KSpGNITjfO$LFyB1wsMyq4sZ+QmcPUgEnpymB84PftTgcED2OIBWTU=",
+        "last_login": "2020-08-18T16:58:47.161Z",
+        "id_famedic": "1032488877",
+        "first_name": "Ricardo",
+        "last_name": "Quintana Paternina",
+        "email": "ricardoq@tics-sas.com",
+        "recovery_email": "dev_famedic@famedic.com",
+        "phone": "3194963217",
+        "location": "",
+        "active": true,
+        "staff": true,
+        "admin": true
+    }
+},
+{
+    "model": "famedic_users.famedicuser",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$180000$FsW4K5NK3AAT$/rPECtn9nTmjpRQ2UWHigYmYy78FyZvSlsPReLvP8mI=",
+        "last_login": "2020-08-18T18:04:22.096Z",
+        "id_famedic": "1032456789",
+        "first_name": "Ricardo de Jes\u00fas",
+        "last_name": "Paternina",
+        "email": "dev777@tics-sas.com",
+        "recovery_email": "ricardoq@tics-sas.com",
+        "phone": "3214567890",
+        "location": "Famedic IPS",
+        "active": true,
+        "staff": true,
+        "admin": true
+    }
+}
+]
