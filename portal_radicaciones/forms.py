@@ -183,26 +183,37 @@ class TokenAccessForm(forms.Form):
 # Form de radicacion de facturas
 class RadicacionForm(forms.ModelForm):
 
-    id_famedic_factura = 100001
-    existing_id = RadicacionModel.objects.last()
+    query_last_id = RadicacionModel.objects.values('id_radicado').last()
+    existing_id = int(query_last_id['id_radicado'])
 
     print(existing_id)
 
-    if id_famedic_factura == existing_id:
-        id_famedic_factura = existing_id + 1
+    id_radicado = existing_id + 1
 
-    print(id_famedic_factura)
+    print(id_radicado)
 
-    id_factura = forms.CharField(
+    id_radicado = forms.CharField(
         widget=forms.NumberInput(
             attrs={
                 'type': 'text',
                 'readonly': 'readonly',
                 'class': 'form-control-plaintext form-control-lg',
                 'id': 'facturaID',
-                'value': id_famedic_factura
+                'value': id_radicado
             }
         )
+    )
+
+    id_factura = forms.CharField(
+        widget=forms.NumberInput(
+            attrs={
+                'placeholder': 'Ingrese un número',
+                'class': 'form-control monto_field',
+                'aria-label': ''
+            }
+        ),
+        required=True,
+        max_length=25
     )
 
     monto_factura = forms.CharField(
@@ -210,10 +221,11 @@ class RadicacionForm(forms.ModelForm):
             attrs={
                 'placeholder': 'Ingrese un monto',
                 'class': 'form-control monto_field',
-                'aria-label': 'Amount (to the nearest dollar)'
+                'aria-label': ''
             }
         ),
-        required=True
+        required=True,
+        max_length=10
     )
 
     file_factura = forms.FileField(
@@ -283,6 +295,7 @@ class RadicacionForm(forms.ModelForm):
 
         model = RadicacionModel
         fields = [
+            'id_radicado',
             'id_factura',
             'monto_factura',
             'file_factura',
@@ -290,7 +303,6 @@ class RadicacionForm(forms.ModelForm):
             'file_soporte',
             'file_ribs',
             'observaciones',
-
         ]
 
     def save(self, commit=True):

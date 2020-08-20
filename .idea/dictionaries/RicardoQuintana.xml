@@ -73,6 +73,7 @@
       <w>contenido</w>
       <w>continuar</w>
       <w>contraseña</w>
+      <w>contributivo</w>
       <w>correcta</w>
       <w>correctamente</w>
       <w>correo</w>
@@ -152,6 +153,7 @@
       <w>humana</w>
       <w>icono</w>
       <w>identificador</w>
+      <w>identificadores</w>
       <w>imagenlog</w>
       <w>imgbtn</w>
       <w>incididunt</w>
@@ -211,6 +213,7 @@
       <w>nuestro</w>
       <w>nuestros</w>
       <w>número</w>
+      <w>números</w>
       <w>observaciones</w>
       <w>obtención</w>
       <w>obtendrá</w>
@@ -292,6 +295,7 @@
       <w>soporte</w>
       <w>soportes</w>
       <w>staffuser</w>
+      <w>subsidiario</w>
       <w>tarjeta</w>
       <w>tarjetas</w>
       <w>teléfono</w>
@@ -300,6 +304,7 @@
       <w>textos</w>
       <w>tiene</w>
       <w>tigvo</w>
+      <w>tipo</w>
       <w>titulo</w>
       <w>toda</w>
       <w>todas</w>
@@ -325,6 +330,7 @@
       <w>zona</w>
       <w>ética</w>
       <w>único</w>
+      <w>únicos</w>
     </words>
   </dictionary>
 </component>

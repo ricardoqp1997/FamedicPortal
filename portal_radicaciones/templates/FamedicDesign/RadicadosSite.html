@@ -54,7 +54,7 @@
 
        hr.radicacion{
            border-top: 3px solid #16254C;
-           width: 250px;
+           width: 400px;
            margin-left: 15px;
        }
 
@@ -118,13 +118,26 @@
             <button class="btn btn-primary btn-lg boton_registrar" type="submit" value="submit">Radicar</button>
 
             <div class="row id_factura_label">
-                <label for = "facturaID" class="col-sm-3 col-form-label form-control-lg">Factura No.</label>
+                <label for = "facturaID" class="col-sm-3 col-form-label form-control-lg">Radicado No.</label>
                 <div class="col-sm-9">
-                    {{ form.id_factura }}
-                    <!--input type="text" readonly class="form-control-plaintext form-control-lg" id="facturaID" value="{{ num_rad }}"-->
+                    {{ form.id_radicado }}
                 </div>
             </div>
+
             <hr class="radicacion">
+            <br>
+
+            <div class="monto_content row input-group">
+                <label for="colFormLabel" class="col-sm-3 col-form-label">Número de factura*</label>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text">#</span>
+                </div>
+                <div class="monto_field">
+                    {{ form.id_factura }}
+                </div>
+
+            </div>
             <br>
 
             <div class="monto_content row input-group">
@@ -172,7 +185,7 @@
 
                 <div class="file_input_box">
                     <img class="file_input_icon" src="{% static '/resouces/upload.svg' %}" width="50px" height="50px" alt="">
-                    <span class="file_input_label">Ribs*</span>
+                    <span class="file_input_label">Rips*</span>
                     <div class="custom-file">
                         {{ form.file_ribs }}
                         <label class="custom-file-label" for="customFileLang">Seleccionar Archivo</label>
