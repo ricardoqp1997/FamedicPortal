@@ -14,14 +14,41 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
+from django.contrib.auth import views as auth_views
+from portal_radicaciones import views as portal_views
+
 from django.conf import settings
 from django.conf.urls.static import static
 
+
 urlpatterns = [
 
+    # Acceso al panel administrativo
+    path('admin-redirect', portal_views.admin_redirect, name='admin'),
     path('admin/', admin.site.urls),
-    path('', include('portal_radicaciones.urls')),
+
+    # index de "portal_radicaciones" redireccionará a Login si no se ha iniciado sesión
+    path('', portal_views.index, name='index'),
+
+    # Vistas de registro y validación creadas en el views.py de la app "portal_radicaciones"
+    path('registro/', portal_views.register_famedic, name='register'),
+    path('verificacion/', portal_views.token_famedic, name='token_access'),
+    path('resend-token', portal_views.resend_token, name='resend'),
+
+    # Vistas de inicio de sesión cargadas directamente desde las librerías de Django
+    path('login/', portal_views.login_famedic, name='login'),
+    path('logout/', auth_views.LogoutView.as_view(template_name='FamedicDesign/LogOut.html'), name='logout'),
+
+    # Vistas del menú principal de la aplicación después de haber iniciado sesión de forma correcta
+    path('main/', portal_views.hola_mundo, name='main'),
+    path('main/perfil/', portal_views.perfil, name='profile'),
+    path('main/opciones/', portal_views.opciones, name='settings'),
+    path('main/radicar/', portal_views.radicacion, name='radicar'),
+    path('main/historial/', portal_views.list_radicados, name='radicados_list'),
+
+    # Vista al haber realizado radicación exitosa
+    path('main/done/', portal_views.radicacion_finish, name='radicado_finished')
 ]
 
 if settings.DEBUG:
