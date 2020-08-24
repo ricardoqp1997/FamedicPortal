@@ -1,6 +1,8 @@
 {% extends 'BaseMainPage/BaseMain.html' %}
 {% load static %}
 
+{% block titulo %} Lista de radicados {% endblock %}
+
 <!-- Bloque de contenido para la tarjeta 1 (izquierda)-->
 {% block hist_radicados %}
 
@@ -22,15 +24,86 @@
 {% block panel_main %}
 
     <style>
+
+        hr.lista_radicados{
+            margin-left: 5%;
+            margin-right: 5%;
+            border-top: 1px solid #16254C;
+            width: 655px;
+            text-align: center;
+       }
+
        .Radicado_main_box{
 
            margin: 5%;
            width: 655px;
-           height: 400px;
+           height: auto;
+       }
+
+       .card_rad_style{
+
+           text-align: left;
+
+           background-color: #ccd3e0;
+
+           -webkit-box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
+           -moz-box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
+           box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
+       }
+
+       .boton_detalles{
+           color: #ffffff;
            background-color: #000A26;
        }
+
     </style>
 
-    <div class="rectangulo_prueba1"></div>
+     <div class="Radicado_main_box">
+        <h4><strong>Lista de radicados</strong></h4>
+         <br>
+        <p>Puede ver el detalle de cada facturación realizada en el portal, si necesita mas detalles
+        respecto a una facturación podrá obtener mas informacion haciendo click en el botón "Mas información.</p>
+     </div>
+
+    <hr class="lista_radicados">
+
+    <div class="Radicado_main_box">
+
+        {% for radicado in object_list %}
+            <div class="card card_rad_style">
+                <div class="card-header">
+                    <i>Radicado No. {{ radicado.id }}</i>
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title"><strong>Factura número {{ radicado.id_factura }}</strong></h5>
+                    <br>
+                    <p class="card-text">Régimen de factura: {{ radicado.regimen_type}}</p>
+                    <p class="card-text">Sede correspondiente a la factura: {{ radicado.sede_select }}</p>
+                    <a href="#" class="btn btn-primary boton_detalles">Mas información</a>
+                </div>
+            </div>
+            <br>
+        {% endfor %}
+
+    </div>
+
+    <div class="pagination Radicado_main_box">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; Primera</a>
+                <a href="?page={{ page_obj.previous_page_number }}">Ant.</a>
+            {% endif %}
+
+            <span class="current">
+                Pág {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Sig.</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
 
 {% endblock %}

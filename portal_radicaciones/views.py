@@ -32,6 +32,13 @@ from django.contrib.auth import (
 import secrets
 from twilio.rest import Client
 
+# Librerías para la vista blog (lista de radicados)
+from .models import RadicacionModel
+from django.views.generic import (
+    ListView,
+    DetailView
+)
+
 loged_user = False
 id_login = ""
 email_login = ""
@@ -214,15 +221,6 @@ def perfil(request):
     return render(request, 'FamedicDesign/PerfilUsuario.html', form_profile)
 
 
-# sección de opciones de sitio
-@login_required(login_url='/login/')
-def opciones(request):
-    form_settings = {
-        'page_title': 'Opciones del sitio'
-    }
-    return render(request, 'FamedicDesign/OpcionesSitio.html', form_settings)
-
-
 # sección de radicación
 @login_required(login_url='/login/')
 def radicacion(request):
@@ -240,11 +238,6 @@ def radicacion(request):
         if form.is_valid():
 
             invoice_finished = True
-
-            """form.radicador = request.user
-            saved_form = form.save()
-            invoice_id = saved_form.pk
-            form.save()"""
 
             data_form = form.save(commit=False)
             data_form.radicador = request.user
@@ -282,31 +275,46 @@ def radicacion_finish(request):
 
     invoice_mail = 'admin1234@mail.com'
 
-    if invoice_finished:
+    if request.user.is_authenticated:
+        if invoice_finished:
 
-        form_finished = {
-            'page_title': 'Radicación realizada',
-            'user_name': request.user.get_full_name(),
-            'invoice_id': invoice_id,
-            'invoice_mail': invoice_mail
-        }
+            form_finished = {
+                'page_title': 'Radicación realizada',
+                'user_name': request.user.get_full_name(),
+                'invoice_id': invoice_id,
+                'invoice_mail': invoice_mail
+            }
 
-        invoice_finished = False
+            invoice_finished = False
 
-        return render(request, 'FamedicDesign/Radicado.html', form_finished)
+            return render(request, 'FamedicDesign/Radicado.html', form_finished)
+        else:
+
+            return redirect('/main/radicar/')
     else:
-
-        return redirect('/main/radicar/')
+        return redirect('/login/')
 
 
 # sección de lista de radicados
-@login_required(login_url='/login/')
-def list_radicados(request):
-    form_list_rad = {
-        'page_title': 'Lista de radicados',
-        'user_name': request.user.get_full_name()
-    }
-    return render(request, 'FamedicDesign/ListaRadicados.html', form_list_rad)
+class ListaRadicados(ListView):
+
+    paginate_by = 5
+    model = RadicacionModel
+    template_name = 'FamedicDesign/ListaRadicados.html'
+
+    def get_context_data(self, *args, **kwargs):
+
+        data = super(ListaRadicados, self).get_context_data(*args, **kwargs)
+        data['build_page_title'] = 'Example Page Title'
+
+        return data
+
+
+# sección de detalles de radicados
+class RadicadoDetail(DetailView):
+
+    model = RadicacionModel
+    template_name = 'FamedicDesign/ListaRadicados.html'
 
 
 # sección de lista de radicados

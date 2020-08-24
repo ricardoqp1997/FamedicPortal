@@ -294,7 +294,8 @@ class RadicacionForm(forms.ModelForm):
                 'id': 'exampleFormControlTextarea1',
                 'rows': '10'
             }
-        )
+        ),
+        required=False
     )
 
     class Meta:

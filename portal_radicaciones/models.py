@@ -6,12 +6,9 @@ from famedic_users.models import FamedicUser
 class RadicacionModel(models.Model):
 
     # Selección de régimen
-    CONTRIBUTIVO = 'CT'
-    SUBSIDIARIO = 'SB'
-
     REGIMEN_CHOICES = [
-        (CONTRIBUTIVO, 'Contributivo'),
-        (SUBSIDIARIO, 'Subsidiario'),
+        ('CT', 'Contributivo'),
+        ('SB', 'Subsidiario'),
     ]
 
     # Selección de sede
@@ -52,10 +49,10 @@ class RadicacionModel(models.Model):
     file_ribs = models.FileField(verbose_name='ribs')
 
     # Campo para asignación de tipo de regimen
-    regimen_type = models.CharField(verbose_name='regimen', max_length=2, choices=REGIMEN_CHOICES, default=CONTRIBUTIVO)
+    regimen_type = models.CharField(verbose_name='regimen', max_length=2, choices=REGIMEN_CHOICES, default=REGIMEN_CHOICES[0])
 
     # Campo para asignación de sede
-    sede_select = models.CharField(verbose_name='sede correspondiente', max_length=5, choices=SEDE_CHOICES, default=SEDE_CHOICES[5])
+    sede_select = models.CharField(verbose_name='sede correspondiente', max_length=5, choices=SEDE_CHOICES, default=SEDE_CHOICES[0])
 
     # Campo de observaciones adicionales para diligenciar
     observaciones = models.TextField(verbose_name='observaciones')
