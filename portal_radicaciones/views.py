@@ -1,6 +1,6 @@
 # Librerías de Django para el manejo de las vistas, plantillas y navegación
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.contrib import messages
 
 # Librería para restricción de vistas con autenticación realizada
@@ -40,6 +40,7 @@ phone_number_login = ""
 otp = ""
 invoice_id = 0
 invoice_finished = False
+invoice_mail = ''
 
 
 # redireccionamiento al panel administrativo
@@ -233,13 +234,16 @@ def radicacion(request):
     invoice_finished = False
 
     if request.method == 'POST':
+        print(form.is_valid())
         if form.is_valid():
 
             invoice_finished = True
-            invoice_id = form.cleaned_data.get('id_factura')
             form.save()
+            form = RadicacionForm()
 
-            return HttpResponseRedirect('/main/done/')
+            return redirect('/main/done/')
+        else:
+            messages.add_message(request, messages.ERROR, 'Error validando formulario')
 
     else:
         form = RadicacionForm()
@@ -258,14 +262,19 @@ def radicacion(request):
 def radicacion_finish(request):
 
     global invoice_id
+    global invoice_mail
     global invoice_finished
+
+    invoice_id = 123456
+    invoice_mail = 'admin1234@mail.com'
 
     if invoice_finished:
 
         form_finished = {
             'page_title': 'Radicación realizada',
             'user_name': request.user.get_full_name(),
-            'invoice_id': invoice_id
+            'invoice_id': invoice_id,
+            'invoice_mail': invoice_mail
         }
 
         invoice_finished = False

@@ -1,131 +1,166 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-	<link rel="stylesheet" href="style.css">
-	<meta charset="utf-8">
-	<title>Radicación FAMEDIC</title>
-	<style type="text/css">
-		*{
-			margin: 0px;
-			padding: 0px;
-		}
-		body{
-			color: #16254C;
-			background-color: #D9D9D9;
-		}
-		header{
-			background-color: #16254C;
-			width:100%;
-		}
-		footer{
+{% extends 'BaseMainPage/BaseMain.html' %}
+{% load static %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
 
-		}
-		input{
-			border: 1px solid #16254C;
-			width: 59%;
-			height: 30px;
-			border-radius: 3px
+<!-- Bloque de contenido para la tarjeta 1 (izquierda)-->
+{% block hist_radicados %}
 
-		}
-		button{ 
-			
-		}
-		.rad{
-			width: 90%;
-			height: 100%;
-			margin-left: 5%;
-			margin-right: 5%;
-			background-color: #fff;
-			border-radius: 3px;
-			margin-top: 5%;
-		}
-		.imagenlog{
-			width: 8.4%; 
-			justify-content: left; 
-			display: flex; margin-left: 10%; 
-			padding-top: 1%; 
-			padding-bottom: 1%;
-		}
-		.msj{
-			margin-left: 10%;
-		}
-		.contenedorrade{
-			margin-left: 3%;
-			margin-bottom: 8%;
-			justify-content: center;
-			text-align: center;
-		}
-		.contenedorrad{
-			background-color: #8E9EBF;
-			margin-left: 40%;
-			width: 55%;
-			padding-top: 0.5%;
-			padding-bottom: 0.5%;
-		}
-		.btnrad{
+    <style>
+
+       .botones_panel{
+           margin-left: 5%;
+           margin-right: 5%;
+           margin-bottom: 5%;
+           height: 60px;
+           color: #ffffff;
+           background-color: #000A26;
+       }
+       .boton_radicados{
+           color: #000A26;
+           padding-bottom: 15px;
+       }
+    </style>
+
+    <button type="button" class="btn btn-primary btn-lg botones_panel">Radicado 1</button>
+    <button type="button" class="btn btn-primary btn-lg botones_panel">Radicado 2</button>
+    <button type="button" class="btn btn-primary btn-lg botones_panel">Radicado 3</button>
+
+    <a class="btn btn-link boton_radicados" role="button" href="{% url 'radicados_list' %}">Ver todos los radicados</a>
+
+{% endblock %}
+
+<!-- Bloque de contenido para la tarjeta 2 (derecha)-->
+{% block panel_main %}
+
+    <style>
+
+        /* Estilo para la el contenido del bloque */
+       .Radicado_main_box{
+           margin: 5%;
+           width: 655px;
+           height: auto;
+           background-color: #c8ced9;
+           -webkit-box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
+           -moz-box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
+           box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
+       }
+
+        /* Estilo para lel hr personalizado */
+       hr.radicado{
+           margin-left: 5%;
+           margin-right: 5%;
+           border-top: 2px solid #16254C;
+           width: 655px;
+       }
+
+       /* Estilos para la el contenido de la tarjeta de radicado finalizado */
+        .card_rad_style{
+            background-color: #ccd3e0;
+        }
+       .text_numrad{
+           text-align: center;
+           font-weight: bold;
+           font-size: 30px;
+       }
+       .boton1_panel{
+           color: #ffffff;
+           background-color: #000A26;
+       }
+       .boton2_panel{
+           color: #000A26;
+       }
+
+       /* Estilos para los botones de navegacion */
+       .contenedorbtna{
+			justify-content:space-between;
+			margin: 2%
+       }
+       .btnini{
 			background-color: #16254C;
 			color: #fff;
 			border:3px;
 			border-radius: 3px;
       		border: none;
       		font-size: 13px;
-      		width: 10%;
-			height: 25px;
-		}
-		
-	</style>
-</head>
-<body>
-	<header>
-	<div>
-		<div >
-	  		<a  href="index.html" title="Inicio" rel="home">
-	  			<img class="imagenlog" src="resouces/Logo-Famedic1b.png" alt="Inicio">
-			</a>
-		</div>
-<!--		<div>
-			<button>Cerrar Seción</button>
-		</div>-->
-	</div>
-	</header>
-	<br>
-	<div class="msj">
-		<h1>Bienvenido Administrador</h1>
-	</div>
-	<div>
-		
-	</div>
-<div class="contenedorrad" >
-	<div class="rad">
-		<div class="contenedorrade">
-			<div>
-				<h2>Su factura fue creada con exito con el numero:</h2>
-			</div>
-			<br>
-			<div>
-				<h1>00000004</h1>
-			</div>
-			<br>
-			<div>
-				<h2>Se ha enviado al correo electrónico:</h2>
-			</div>
-			<br>
-			<div>
-				<h1>usuario123@mail.com</h1>
-			</div>
-			<br>
-			<div>
-				<button class="btnrad">Finalizar</button>
-			</div>
-			<br>
-			<div>
-				<button style="height: 50px;" class="btnrad">Realizar otro radicado</button>
-			</div>
-			<br>
-		</div>
-	</div>
-</div>
+      		width: 20%;
+			height: 140px;
+			margin: 1%;
+       }
+       .imgbtn{
+			width: 50%;
+            padding-bottom: 15px;
+			display: inline-block;
+       }
 
+    </style>
 
-</body>
-</html>
+    <!--  -->
+    <div class="Radicado_main_box">
+        <div class="card card_rad_style">
+            <div class="card-header">
+                Radicación finalizada
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Su factura ha sido creada con el número:</h5>
+                <p class="card-text text_numrad">{{ invoice_id }}</p>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Su radicación finalizó con exito y ha sido enviada al correo electronico:</h5>
+                <p class="card-text text_numrad">{{ invoice_mail }}</p>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Cualquier inconveniente o novedad contactese con el administrador.</h5>
+            </div>
+
+            <br>
+            <div class="row justify-content-center">
+
+                <div class="col-sm-4">
+                    <a href="{% url 'main' %}" class="btn btn-primary boton1_panel">Finalizar</a>
+                    <a href="{% url 'radicar' %}" class="btn btn-link boton2_panel">Realizar otro radicado</a>
+                </div>
+            </div>
+            <br>
+        </div>
+
+    </div>
+
+    <hr class="radicado">
+
+    <div class="contenedorbtna">
+        <button class="btn btn-primary btn-lg btnini" id="btnUsuario"><img class="imgbtn" src="{% static '/resouces/usuario.png' %}" alt=""><br>PERFIL</button>
+        <button class="btn btn-primary btn-lg btnini" id="btnRadicar"><img class="imgbtn" src="{% static '/resouces/documento.png' %}" alt=""><br>RADICAR</button>
+        {% if user.is_admin %}
+            <button class="btn btn-primary btn-lg btnini" id="btnRadicados"><img class="imgbtn" src="{% static '/resouces/documentocheck.png' %}" alt=""><br>RADICADOS</button>
+            <button class="btn btn-primary btn-lg btnini" id="btnBuscar"><img class="imgbtn" src="{% static '/resouces/buscar.png' %}" alt=""><br>BUSCAR RADICADOS</button>
+        {% else %}
+             <button class="btn btn-primary btn-lg btnini" id="btnRadicados"><img class="imgbtn" src="{% static '/resouces/documentocheck.png' %}" alt=""><br>MIS RADICADOS</button>
+        {% endif %}
+
+    </div>
+
+    <script type="text/javascript">
+
+        // Navegación a la ventana de usuario
+        document.getElementById("btnUsuario").onclick = function(){
+            location.href = "{% url 'profile' %}"
+        }
+
+        // Navegación a la ventana de radicación
+        document.getElementById("btnRadicar").onclick = function(){
+            location.href = "{% url 'radicar' %}"
+        }
+
+        // Navegación a la ventana de lista de radicados
+        document.getElementById("btnRadicados").onclick = function(){
+            location.href = "{% url 'radicados_list' %}"
+        }
+
+        // Navegación a la ventana de búsqueda de radicados
+        document.getElementById("btnBuscar").onclick = function(){
+            location.href = "{% url 'profile' %}"
+        }
+    </script>
+
+{% endblock %}

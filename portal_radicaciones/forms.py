@@ -183,27 +183,6 @@ class TokenAccessForm(forms.Form):
 # Form de radicacion de facturas
 class RadicacionForm(forms.ModelForm):
 
-    query_last_id = RadicacionModel.objects.values('id_radicado').last()
-    existing_id = int(query_last_id['id_radicado'])
-
-    print(existing_id)
-
-    id_radicado = existing_id + 1
-
-    print(id_radicado)
-
-    id_radicado = forms.CharField(
-        widget=forms.NumberInput(
-            attrs={
-                'type': 'text',
-                'readonly': 'readonly',
-                'class': 'form-control-plaintext form-control-lg',
-                'id': 'facturaID',
-                'value': id_radicado
-            }
-        )
-    )
-
     id_factura = forms.CharField(
         widget=forms.NumberInput(
             attrs={
@@ -281,12 +260,36 @@ class RadicacionForm(forms.ModelForm):
         required=True
     )
 
+    regimen_type = forms.ChoiceField(
+        widget=forms.Select(
+            attrs={
+                'id': 'regimen1',
+                'class': 'form-control',
+            }
+        ),
+        label='Régimen',
+        choices=RadicacionModel.REGIMEN_CHOICES,
+        required=True
+    )
+
+    sede_select = forms.ChoiceField(
+        widget=forms.Select(
+            attrs={
+                'id': 'sede1',
+                'class': 'form-control',
+            }
+        ),
+        label='Sede correspondiente',
+        choices=RadicacionModel.SEDE_CHOICES,
+        required=True
+    )
+
     observaciones = forms.CharField(
         widget=forms.Textarea(
             attrs={
                 'class': 'form-control',
                 'id': 'exampleFormControlTextarea1',
-                'rows': '8'
+                'rows': '10'
             }
         )
     )
@@ -295,17 +298,19 @@ class RadicacionForm(forms.ModelForm):
 
         model = RadicacionModel
         fields = [
-            'id_radicado',
             'id_factura',
             'monto_factura',
             'file_factura',
             'file_aportes',
             'file_soporte',
             'file_ribs',
+            'regimen_type',
+            'sede_select',
             'observaciones',
         ]
 
     def save(self, commit=True):
+
         invoice = super(RadicacionForm, self).save(commit=False)
 
         if commit:

@@ -4,6 +4,7 @@
 <html lang="es">
 
 <head>
+    <link  rel="icon"   href="{% static '/favicon_famedic.png' %}" type="image/png"/>
 	<link rel="stylesheet" href= "{% static '/style.css' %}">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" integrity="sha384-VCmXjywReHh4PwowAiWNagnWcLhlEJLA5buUprzK8rxFgeH0kww/aWY76TfkUoSX" crossorigin="anonymous">
@@ -101,7 +102,6 @@
             {% if user.is_authenticated %}
 
                 <a class="nav-link" type="button" href="{% url 'profile' %}" style="color: #FFFFFF">Perfil</a>
-                <a class="nav-link" type="button" href="{% url 'settings' %}" style="color: #FFFFFF">Opciones</a>
                 <a class="nav-link" type="button" href="{% url 'radicar' %}" style="color: #FFFFFF">Radicar</a>
 
                 {% if user.is_admin %}

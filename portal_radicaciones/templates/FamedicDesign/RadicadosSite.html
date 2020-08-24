@@ -110,7 +110,7 @@
 
     <!--  -->
     <div class="Radicado_main_box">
-        <form action="." method="POST" enctype="multipart/form-data">
+        <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
 
             {{ form.non_field_errors }}
@@ -118,10 +118,7 @@
             <button class="btn btn-primary btn-lg boton_registrar" type="submit" value="submit">Radicar</button>
 
             <div class="row id_factura_label">
-                <label for = "facturaID" class="col-sm-3 col-form-label form-control-lg">Radicado No.</label>
-                <div class="col-sm-9">
-                    {{ form.id_radicado }}
-                </div>
+                <label class="col-sm-5 col-form-label form-control-lg">Radicado de facturas</label>
             </div>
 
             <hr class="radicacion">
@@ -193,6 +190,16 @@
                 </div>
             </div>
             <br>
+
+            <div class="form-group label_textarea">
+                <label for="regimen1" class="">Régimen</label>
+                {{ form.regimen_type }}
+            </div>
+
+            <div class="form-group label_textarea">
+                <label for="sede1" class="">Sede correspondiente</label>
+                {{ form.sede_select }}
+            </div>
 
             <div class="form-group label_textarea">
                 <label for="exampleFormControlTextarea1" class="">Observaciones</label>
