@@ -230,7 +230,9 @@ def radicacion(request):
     global invoice_id
     global invoice_finished
 
-    form = RadicacionForm(request.POST or None, request.FILES)
+    pk_user = {'radicador': request.user}
+
+    form = RadicacionForm(request.POST or None, request.FILES, pk_user)
     invoice_finished = False
 
     if request.method == 'POST':
@@ -238,10 +240,17 @@ def radicacion(request):
         if form.is_valid():
 
             invoice_finished = True
-            # form.radicador = request.user.pk
-            print(request.user.pk)
+
+            """form.radicador = request.user
             saved_form = form.save()
             invoice_id = saved_form.pk
+            form.save()"""
+
+            data_form = form.save(commit=False)
+            data_form.radicador = request.user
+            data_form.save()
+
+            invoice_id = data_form.pk
 
             form = RadicacionForm()
 
@@ -256,6 +265,7 @@ def radicacion(request):
     form_rad = {
         'page_title': 'Radicación de facturas',
         'user_name': request.user.get_full_name(),
+        'id_user': request.user.pk,
         'form': form,
     }
 

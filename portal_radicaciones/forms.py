@@ -183,9 +183,9 @@ class TokenAccessForm(forms.Form):
 # Form de radicacion de facturas
 class RadicacionForm(forms.ModelForm):
 
-    radicador = forms.CharField(
-        widget=forms.NumberInput(),
-        required=None
+    radicador = forms.IntegerField(
+        widget=forms.HiddenInput(),
+        required=False
     )
 
     id_factura = forms.CharField(
@@ -301,6 +301,7 @@ class RadicacionForm(forms.ModelForm):
 
         model = RadicacionModel
         fields = [
+            'radicador',
             'id_factura',
             'monto_factura',
             'file_factura',
@@ -315,8 +316,10 @@ class RadicacionForm(forms.ModelForm):
     def save(self, commit=True):
 
         invoice = super(RadicacionForm, self).save(commit=False)
+        invoice.radicador = self.cleaned_data.get('radicador')
 
         if commit:
+
             invoice.save()
 
         return invoice
