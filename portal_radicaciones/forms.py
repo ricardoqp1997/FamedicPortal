@@ -183,6 +183,11 @@ class TokenAccessForm(forms.Form):
 # Form de radicacion de facturas
 class RadicacionForm(forms.ModelForm):
 
+    radicador = forms.CharField(
+        widget=forms.NumberInput(),
+        required=None
+    )
+
     id_factura = forms.CharField(
         widget=forms.NumberInput(
             attrs={
@@ -192,7 +197,6 @@ class RadicacionForm(forms.ModelForm):
             }
         ),
         required=True,
-        max_length=25
     )
 
     monto_factura = forms.CharField(
@@ -204,7 +208,6 @@ class RadicacionForm(forms.ModelForm):
             }
         ),
         required=True,
-        max_length=10
     )
 
     file_factura = forms.FileField(

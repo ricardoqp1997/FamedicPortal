@@ -110,6 +110,15 @@
 
     <!--  -->
     <div class="Radicado_main_box">
+
+        {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}" style="margin-top: 15px">
+                {{ message }}
+              </div>
+            {% endfor %}
+        {% endif %}
+
         <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
 
@@ -125,6 +134,7 @@
             <br>
 
             <div class="monto_content row input-group">
+                {{ form.id_factura.error_messages }}
                 <label for="colFormLabel" class="col-sm-3 col-form-label">Número de factura*</label>
 
                 <div class="input-group-prepend">
@@ -138,6 +148,7 @@
             <br>
 
             <div class="monto_content row input-group">
+                {{ form.monto_factura.error_messages }}
                 <label for="colFormLabel" class="col-sm-3 col-form-label">Monto de la factura*</label>
 
                 <div class="input-group-prepend">
@@ -152,6 +163,11 @@
             <br>
 
             <div class="file_box row">
+
+                {{ form.file_factura.error_messages }}
+                {{ form.file_aportes.error_messages }}
+                {{ form.file_soporte.error_messages }}
+                {{ form.file_ribs.error_messages }}
 
                 <div class="file_input_box">
                     <img class="file_input_icon" src="{% static '/resouces/upload.svg' %}" width="50px" height="50px" alt="">
@@ -192,16 +208,19 @@
             <br>
 
             <div class="form-group label_textarea">
+                {{ form.regimen_type.error_messages }}
                 <label for="regimen1" class="">Régimen</label>
                 {{ form.regimen_type }}
             </div>
 
             <div class="form-group label_textarea">
+                {{ form.sede_select.error_messages }}
                 <label for="sede1" class="">Sede correspondiente</label>
                 {{ form.sede_select }}
             </div>
 
             <div class="form-group label_textarea">
+                {{ form.observaciones.error_messages }}
                 <label for="exampleFormControlTextarea1" class="">Observaciones</label>
                 {{ form.observaciones }}
             </div>

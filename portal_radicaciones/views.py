@@ -230,19 +230,24 @@ def radicacion(request):
     global invoice_id
     global invoice_finished
 
-    form = RadicacionForm(request.POST, request.FILES)
+    form = RadicacionForm(request.POST or None, request.FILES)
     invoice_finished = False
 
     if request.method == 'POST':
-        print(form.is_valid())
+
         if form.is_valid():
 
             invoice_finished = True
-            form.save()
+            # form.radicador = request.user.pk
+            print(request.user.pk)
+            saved_form = form.save()
+            invoice_id = saved_form.pk
+
             form = RadicacionForm()
 
             return redirect('/main/done/')
         else:
+            form = RadicacionForm()
             messages.add_message(request, messages.ERROR, 'Error validando formulario')
 
     else:
@@ -265,7 +270,6 @@ def radicacion_finish(request):
     global invoice_mail
     global invoice_finished
 
-    invoice_id = 123456
     invoice_mail = 'admin1234@mail.com'
 
     if invoice_finished:

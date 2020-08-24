@@ -132,6 +132,9 @@ class FamedicUser(AbstractBaseUser):
     def get_phone(self):
         return self.phone
 
+    def get_mail(self):
+        return self.email
+
     # propiedades del model de usuario
     @property
     def is_active(self):
