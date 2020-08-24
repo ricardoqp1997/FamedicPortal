@@ -78,8 +78,9 @@
                 <div class="card-body">
                     <h5 class="card-title"><strong>Factura número {{ radicado.id_factura }}</strong></h5>
                     <br>
+                    <p class="card-text">Monto: $ {{ radicado.monto_factura}}</p>
                     <p class="card-text">Régimen de factura: {{ radicado.regimen_type}}</p>
-                    <p class="card-text">Sede correspondiente a la factura: {{ radicado.sede_select }}</p>
+                    <p class="card-text">Sede correspondiente a la radicación: {{ radicado.sede_select }}</p>
                     <a href="#" class="btn btn-primary boton_detalles">Mas información</a>
                 </div>
             </div>
