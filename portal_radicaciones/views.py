@@ -28,9 +28,10 @@ from django.contrib.auth import (
     logout
 )
 
-# Librerías para generar y enviar por SMS las OTP
+# Librerías para generar y enviar por SMS las OTP y correos de confirmación de formularios
 import secrets
 from twilio.rest import Client
+from django.core.mail import send_mail
 
 # Librerías para la vista blog (lista de radicados)
 from .models import RadicacionModel
@@ -273,10 +274,26 @@ def radicacion_finish(request):
     global invoice_mail
     global invoice_finished
 
-    invoice_mail = 'admin1234@mail.com'
+    invoice_mail = 'ricardoq@tics-sas.com'
+    user_mail = request.user.get_username()
 
     if request.user.is_authenticated:
         if invoice_finished:
+
+            # Correo enviado al usuario radicador
+            send_mail(
+                from_email=invoice_mail,
+                recipient_list=[user_mail],
+
+                subject='Radicación de archivos - Famedic IPS',
+                message='Sr/Sra' + request.user.get_full_name() + '.\n '
+                        
+                        '\n Se le notifica que su radicado con número ' + str(invoice_id) + ' fué realizado'
+                        'de forma exitosa en el portal de radicaciones de Famedic IPS. \n'
+                        
+                        ''
+
+            )
 
             form_finished = {
                 'page_title': 'Radicación realizada',
@@ -301,13 +318,6 @@ class ListaRadicados(ListView):
     paginate_by = 5
     model = RadicacionModel
     template_name = 'FamedicDesign/ListaRadicados.html'
-
-    def get_context_data(self, *args, **kwargs):
-
-        data = super(ListaRadicados, self).get_context_data(*args, **kwargs)
-        data['build_page_title'] = 'Example Page Title'
-
-        return data
 
 
 # sección de detalles de radicados

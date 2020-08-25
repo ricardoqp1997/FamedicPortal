@@ -34,7 +34,7 @@ class UserAdmin(BaseUserAdmin):
         (
             'Información personal del usuario', {
                 'classes': ['wide', ],
-                'fields': ['first_name', 'last_name', 'phone']
+                'fields': ['location', 'first_name', 'last_name', 'phone', 'recovery_email']
             }
         ),
     )

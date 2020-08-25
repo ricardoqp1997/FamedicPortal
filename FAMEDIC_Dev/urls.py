@@ -16,8 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
+
 from portal_radicaciones import views as portal_views
-from portal_radicaciones.views import ListaRadicados
+from portal_radicaciones.views import (
+    ListaRadicados,
+    RadicadoDetail
+)
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -27,27 +31,28 @@ from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
 
-    # Acceso al panel administrativo
-    path('admin-redirect', portal_views.admin_redirect, name='admin'),
-    path('admin/', admin.site.urls),
-
     # index de "portal_radicaciones" redireccionará a Login si no se ha iniciado sesión
     path('', portal_views.index, name='index'),
+
+    # Vistas de inicio de sesión cargadas directamente desde las librerías de Django
+    path('login/', portal_views.login_famedic, name='login'),
+    path('logout/', auth_views.LogoutView.as_view(template_name='FamedicDesign/LogOut.html'), name='logout'),
 
     # Vistas de registro y validación creadas en el views.py de la app "portal_radicaciones"
     path('registro/', portal_views.register_famedic, name='register'),
     path('verificacion/', portal_views.token_famedic, name='token_access'),
     path('resend-token', portal_views.resend_token, name='resend'),
 
-    # Vistas de inicio de sesión cargadas directamente desde las librerías de Django
-    path('login/', portal_views.login_famedic, name='login'),
-    path('logout/', auth_views.LogoutView.as_view(template_name='FamedicDesign/LogOut.html'), name='logout'),
+    # Acceso al panel administrativo
+    path('admin-redirect', portal_views.admin_redirect, name='admin'),
+    path('admin/', admin.site.urls),
 
     # Vistas del menú principal de la aplicación después de haber iniciado sesión de forma correcta
     path('main/', portal_views.hola_mundo, name='main'),
     path('main/perfil/', portal_views.perfil, name='profile'),
     path('main/radicar/', portal_views.radicacion, name='radicar'),
     path('main/historial/', login_required(ListaRadicados.as_view()), name='radicados_list'),
+    path('main/detalles/<int:pk>', login_required(RadicadoDetail.as_view()), name='radicado_detail'),
 
     # Vista al haber realizado radicación exitosa
     path('main/done/', portal_views.radicacion_finish, name='radicado_finished')

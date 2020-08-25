@@ -1,7 +1,7 @@
 {% extends 'BaseMainPage/BaseMain.html' %}
 {% load static %}
 
-{% block titulo %} Lista de radicados {% endblock %}
+{% block titulo %} {% if page_title %} {{ page_title }} {% else %} Lista de radicados {% endif %} {% endblock %}
 
 <!-- Bloque de contenido para la tarjeta 1 (izquierda)-->
 {% block hist_radicados %}
@@ -81,7 +81,7 @@
                     <p class="card-text">Monto: $ {{ radicado.monto_factura}}</p>
                     <p class="card-text">Régimen de factura: {{ radicado.regimen_type}}</p>
                     <p class="card-text">Sede correspondiente a la radicación: {{ radicado.sede_select }}</p>
-                    <a href="#" class="btn btn-primary boton_detalles">Mas información</a>
+                    <a href="{% url 'radicado_detail' radicado.pk %}" class="btn btn-primary boton_detalles">Mas información</a>
                 </div>
             </div>
             <br>

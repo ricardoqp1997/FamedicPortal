@@ -230,11 +230,12 @@ class RadicacionForm(forms.ModelForm):
                 'type': 'file',
                 'class': 'custom-file-input',
                 'id': 'customFileLang',
-                'lang': 'es'
+                'lang': 'es',
+                'multiple': True
             }
         ),
         label='Aportes',
-        required=True
+        required=False
     )
     file_soporte = forms.FileField(
         allow_empty_file=False,
@@ -247,7 +248,7 @@ class RadicacionForm(forms.ModelForm):
             }
         ),
         label='Soportes',
-        required=True
+        required=False
     )
     file_ribs = forms.FileField(
         allow_empty_file=False,
@@ -260,7 +261,7 @@ class RadicacionForm(forms.ModelForm):
             }
         ),
         label='Ribs',
-        required=True
+        required=False
     )
 
     regimen_type = forms.ChoiceField(
