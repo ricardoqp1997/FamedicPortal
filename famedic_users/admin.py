@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
+from django.contrib.sites.models import Site
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from .models import FamedicUser as User
@@ -67,5 +68,6 @@ class UserAdmin(BaseUserAdmin):
 # Para incluir Famedic Users y la clase UserAdmin en el panel administrativo de Django
 admin.site.register(User, UserAdmin)
 
-# Para eliminar la sección de Grupos ya que no será necesaria
+# Para eliminar las secciónes que no serán necesarias
 admin.site.unregister(Group)
+admin.site.unregister(Site)

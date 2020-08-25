@@ -3,23 +3,6 @@
 
 {% block titulo %} {% if page_title %} {{ page_title }} {% else %} Lista de radicados {% endif %} {% endblock %}
 
-<!-- Bloque de contenido para la tarjeta 1 (izquierda)-->
-{% block hist_radicados %}
-
-
-<style>
-       .rectangulo_prueba2{
-
-           margin: 5%;
-           width: 310px;
-           height: 300px;
-           background-color: #26000f;
-       }
-    </style>
-
-    <div class="rectangulo_prueba2"></div>
-{% endblock %}
-
 <!-- Bloque de contenido para la tarjeta 2 (derecha)-->
 {% block panel_main %}
 
@@ -59,10 +42,10 @@
     </style>
 
      <div class="Radicado_main_box">
-        <h4><strong>Lista de radicados</strong></h4>
+        <h4><strong>{% if user.is_admin %} Lista de radicados {% else %} Mis radicados {% endif %}</strong></h4>
          <br>
         <p>Puede ver el detalle de cada facturación realizada en el portal, si necesita mas detalles
-        respecto a una facturación podrá obtener mas informacion haciendo click en el botón "Mas información.</p>
+        respecto a una facturación podrá obtener mas informacion haciendo click en el botón "Mas información".</p>
      </div>
 
     <hr class="lista_radicados">
@@ -76,12 +59,12 @@
                 </div>
 
                 <div class="card-body">
-                    <h5 class="card-title"><strong>Factura número {{ radicado.id_factura }}</strong></h5>
+                    <h5 class="card-title"><strong>Número de factura: {{ radicado.id_factura }}</strong></h5>
                     <br>
-                    <p class="card-text">Monto: $ {{ radicado.monto_factura}}</p>
-                    <p class="card-text">Régimen de factura: {{ radicado.regimen_type}}</p>
-                    <p class="card-text">Sede correspondiente a la radicación: {{ radicado.sede_select }}</p>
-                    <a href="{% url 'radicado_detail' radicado.pk %}" class="btn btn-primary boton_detalles">Mas información</a>
+                    <p class="card-text"><strong>Monto designado:</strong> $ {{ radicado.monto_factura}}</p>
+                    <p class="card-text"><strong>Régimen de factura:</strong> {{ radicado.get_regimen_type_display }}</p>
+                    <p class="card-text"><strong>Sede correspondiente a la radicación:</strong> {{ radicado.get_sede_select_display }}</p>
+                    <a href="{% url 'radicado_detail' radicado.id %}" class="btn btn-primary boton_detalles">Mas información</a>
                 </div>
             </div>
             <br>

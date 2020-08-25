@@ -104,7 +104,10 @@ class FamedicUser(AbstractBaseUser):
 
     objects = UserManager()
 
-    # métodos base del model
+    # métodos base del modelo
+    class Meta:
+        verbose_name = 'Usuario'
+
     def __str__(self):
         return self.email
 

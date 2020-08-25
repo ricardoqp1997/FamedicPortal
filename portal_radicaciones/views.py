@@ -353,13 +353,20 @@ class ListaRadicados(ListView):
     paginate_by = 5
     model = RadicacionModel
     template_name = 'FamedicDesign/ListaRadicados.html'
+    queryset = RadicacionModel.objects.all()
+
+    def get_queryset(self):
+        if self.request.user.is_admin:
+            return RadicacionModel.objects.all()
+        else:
+            return RadicacionModel.objects.filter(radicador=self.request.user.pk)
 
 
 # sección de detalles de radicados
 class RadicadoDetail(DetailView):
 
     model = RadicacionModel
-    template_name = 'FamedicDesign/ListaRadicados.html'
+    template_name = 'FamedicDesign/DetalleRadicados.html'
 
 
 # sección de lista de radicados

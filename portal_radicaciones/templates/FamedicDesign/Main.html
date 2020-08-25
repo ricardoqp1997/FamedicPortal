@@ -3,38 +3,6 @@
 
 {% block titulo %} {{ page_title }} {% endblock %}
 
-<!-- Bloque de contenido para la tarjeta 1 (izquierda)-->
-{% block hist_radicados %}
-
-
-    <style>
-
-       .botones_panel{
-           margin-left: 5%;
-           margin-right: 5%;
-           margin-bottom: 5%;
-           height: 60px;
-           color: #ffffff;
-           background-color: #000A26;
-       }
-       .boton_radicados{
-           color: #000A26;
-           padding-bottom: 15px;
-       }
-    </style>
-
-    <button type="button" class="btn btn-primary btn-lg botones_panel">Radicado 1</button>
-    <button type="button" class="btn btn-primary btn-lg botones_panel">Radicado 2</button>
-    <button type="button" class="btn btn-primary btn-lg botones_panel">Radicado 3</button>
-
-    {% if user.is_admin %}
-        <a class="btn btn-link boton_radicados" role="button" href="{% url 'radicados_list' %}">Ver todos los radicados</a>
-    {% else %}
-        <a class="btn btn-link boton_radicados" role="button" href="{% url 'radicados_list' %}">Ver mis radicados</a>
-    {% endif %}
-
-{% endblock %}
-
 <!-- Bloque de contenido para la tarjeta 2 (derecha)-->
 {% block panel_main %}
 

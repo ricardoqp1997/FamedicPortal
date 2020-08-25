@@ -72,9 +72,14 @@ class RadicacionModel(models.Model):
         'sede_select'
     ]
 
+    # métodos base del modelo
+    class Meta:
+        verbose_name = 'Radicado'
+
     def __str__(self):
         return str(self.id_factura)
 
+    # propiedades del modelo
     @property
     def is_aproved(self):
         return self.aproved

@@ -51,8 +51,8 @@ urlpatterns = [
     path('main/', portal_views.hola_mundo, name='main'),
     path('main/perfil/', portal_views.perfil, name='profile'),
     path('main/radicar/', portal_views.radicacion, name='radicar'),
-    path('main/historial/', login_required(ListaRadicados.as_view()), name='radicados_list'),
-    path('main/detalles/<int:pk>', login_required(RadicadoDetail.as_view()), name='radicado_detail'),
+    path('main/historial/', login_required(ListaRadicados.as_view(), login_url='/login/'), name='radicados_list'),
+    path('main/detalles/<int:pk>', login_required(RadicadoDetail.as_view(), login_url='/login/'), name='radicado_detail'),
 
     # Vista al haber realizado radicación exitosa
     path('main/done/', portal_views.radicacion_finish, name='radicado_finished')
