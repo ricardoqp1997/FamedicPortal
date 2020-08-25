@@ -146,9 +146,10 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = '1025'
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-EMAIL_USE_TLS = False
-# EMAIL_USE_SSL = False
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'famedicips.co'
+EMAIL_PORT = '465'
+EMAIL_HOST_USER = 'notificaciones@famedicips.co'
+EMAIL_HOST_PASSWORD = 'Lucas1705'
+EMAIL_USE_SSL = True
+

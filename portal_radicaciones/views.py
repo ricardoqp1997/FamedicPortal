@@ -31,7 +31,12 @@ from django.contrib.auth import (
 # Librerías para generar y enviar por SMS las OTP y correos de confirmación de formularios
 import secrets
 from twilio.rest import Client
-from django.core.mail import send_mail
+from django.core.mail import (
+    send_mail,
+    EmailMessage,
+    EmailMultiAlternatives
+)
+from django.conf import settings
 
 # Librerías para la vista blog (lista de radicados)
 from .models import RadicacionModel
@@ -276,24 +281,54 @@ def radicacion_finish(request):
 
     invoice_mail = 'ricardoq@tics-sas.com'
     user_mail = request.user.get_username()
+    user_fullname = request.user.get_full_name()
+
+    sender_mail = settings.EMAIL_HOST_USER
 
     if request.user.is_authenticated:
         if invoice_finished:
 
             # Correo enviado al usuario radicador
-            send_mail(
-                from_email=invoice_mail,
-                recipient_list=[user_mail],
+            mail_to_user = EmailMultiAlternatives(
 
-                subject='Radicación de archivos - Famedic IPS',
-                message='Sr/Sra' + request.user.get_full_name() + '.\n '
-                        
-                        '\n Se le notifica que su radicado con número ' + str(invoice_id) + ' fué realizado'
-                        'de forma exitosa en el portal de radicaciones de Famedic IPS. \n'
-                        
-                        ''
+                from_email=sender_mail,
+                to=[user_mail],
 
+                subject='Radicación de archivos realizada - Famedic IPS',
+                body='Sr(a). ' + user_fullname + '.\n '
+                        
+                     '\nSe le notifica que su radicado con número ' + str(invoice_id) + ' fué realizado'
+                     'de forma exitosa en el portal de radicaciones de Famedic IPS. Un administrador del portal '
+                     'de radicaciones se encargará de validar el radicado realizado y darle aprobación mientras '
+                     'todo se encuentre en orden. \n'
+
+                     '\n\n Este es un mensaje automático y no es necesario responder.',
             )
+
+            # Correo enviado al usuario administrador
+            mail_to_admin = EmailMultiAlternatives(
+
+                from_email=sender_mail,
+                to=[invoice_mail],
+                bcc=[sender_mail],
+
+                subject='Radicación de archivos recibida - Famedic IPS',
+                body='Sr(a) administrador(a) del portal.\n '
+
+                     '\nSe le notifica que el usuario ' + user_fullname + ' (' + user_mail + ') '
+                     'realizó un radicado identificado con el numero ' + str(invoice_id) + ', para realizar '
+                     'el proceso de revisión y aprobación será necesario revisar el correspondiente '
+                     'en el portal de radicaciones de Famedic IPS. \n'
+                        
+                     '\nDespués de acceder y confirmar dicho proceso realizado por el usuario el radicado quedará '
+                     'aprobado en el portal. \n'
+
+
+                     '\n\n Este es un mensaje automático y no es necesario responder.'
+            )
+
+            mail_to_user.send()
+            mail_to_admin.send()
 
             form_finished = {
                 'page_title': 'Radicación realizada',
