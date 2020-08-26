@@ -1,6 +1,8 @@
 {% extends 'BaseMainPage/BaseMain.html' %}
 {% load static %}
 
+{% block titulo %} {{ page_title }} {% endblock %}
+
 <!-- Bloque de contenido para la tarjeta 2 (derecha)-->
 {% block panel_main %}
 
@@ -10,7 +12,7 @@
            margin: 5%;
            padding: 3%;
            width: 655px;
-           height: 400px;
+           height: auto;
            background-color: #c8ced9;
            border-radius: 3px;
            -webkit-box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
@@ -23,6 +25,11 @@
             border-top: 1px solid #16254C;
             width: 550px;
        }
+       .monto_content{
+           padding-left: 30px;
+           text-align: left;
+           font-size: 20px;
+       }
        .aligment_text{
            text-align: left;
        }
@@ -33,6 +40,70 @@
         <h2>{{ user.get_full_name }}</h2>
 
         <hr class="perfil">
+
+        <br>
+
+        <div class="card">
+            <div class="card-header" style="font-size: 20px">
+                Datos del Usuario
+            </div>
+            <div class="card-body">
+                <p class="card-text">A continuacion encontrara toda la informacion basica de su usuario en el
+                portal de radicacion de facturas. Si usted no es administrador sera necesario contactar con uno
+                en caso de necesitar modificar sus datos de usuario.</p>
+                <br>
+
+                <div class="monto_content row form-group">
+                    <label for="idFactura" class="col-sm-5 col-form-label"><strong>Nombre(s):</strong></label>
+                    <div class="col-sm-7">
+                        <input type="text" readonly class="form-control-plaintext" id="idFactura" value="{{ user.get_first_name }}">
+                    </div>
+                </div>
+
+                <div class="monto_content row form-group">
+                    <label for="idFactura" class="col-sm-5 col-form-label"><strong>Apellido(s):</strong></label>
+                    <div class="col-sm-7">
+                        <input type="text" readonly class="form-control-plaintext" id="idFactura" value="{{ user.get_last_name }}">
+                    </div>
+                </div>
+                <br>
+
+                <div class="monto_content row form-group">
+                    <label for="idFactura" class="col-sm-5 col-form-label"><strong>Número de teléfono:</strong></label>
+                    <div class="col-sm-7">
+                        <input type="text" readonly class="form-control-plaintext" id="idFactura" value="(+57) {{ user.get_phone }}">
+                    </div>
+                </div>
+
+                <div class="monto_content row form-group">
+                    <label for="idFactura" class="col-sm-5 col-form-label"><strong>Correo electrónico:</strong></label>
+                    <div class="col-sm-7">
+                        <input type="text" readonly class="form-control-plaintext" id="idFactura" value="{{ user.get_mail }}">
+                    </div>
+                </div>
+
+                <div class="monto_content row form-group">
+                    <label for="idFactura" class="col-sm-5 col-form-label"><strong>Entidad a la que pertenece:</strong></label>
+                    <div class="col-sm-7">
+                        <input type="text" readonly class="form-control-plaintext" id="idFactura" value="{{ user.get_location }}">
+                    </div>
+                </div>
+
+                <div class="monto_content row form-group">
+                    <label for="idFactura" class="col-sm-5 col-form-label"><strong>Tipo de usuario:</strong></label>
+                    <div class="col-sm-7">
+                        <input type="text" readonly class="form-control-plaintext" id="idFactura" value="{% if user.is_admin %} Administrador {% else %} Usuario estandar {% endif %}">
+                    </div>
+                </div>
+
+                {% if user.is_admin %}
+                    <br>
+                    <a href="{% url 'admin' %}" class="btn btn-primary">Administrar perfil</a>
+                {% endif %}
+            </div>
+
+        </div>
+
     </div>
 
 {% endblock %}
