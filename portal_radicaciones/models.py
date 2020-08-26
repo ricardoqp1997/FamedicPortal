@@ -2,6 +2,22 @@ from django.db import models
 from famedic_users.models import FamedicUser
 
 
+class Glosa(models.Model):
+
+    glosa_name = models.CharField(verbose_name='nombre de glosa', max_length=25, default='glosa')
+    glosa_status = models.BooleanField(verbose_name='estado de glosa', default=True)
+
+    REQUIRED_FIELD = [
+        'glosa_name'
+    ]
+
+    class Meta:
+        verbose_name = 'Glosa'
+
+    def __str__(self):
+        return self.id
+
+
 # Clase para el manejo de formularios de radicación
 class RadicacionModel(models.Model):
 
@@ -34,7 +50,7 @@ class RadicacionModel(models.Model):
     ]
 
     # Que usuario realizó la radicación
-    radicador = models.ForeignKey(FamedicUser, blank=True, null=True, on_delete=models.CASCADE)
+    radicador = models.ForeignKey(FamedicUser, blank=True, null=True, on_delete=models.SET_NULL)
 
     # Números identificadores únicos de la factura
     id_factura = models.IntegerField(verbose_name='número de factura')
@@ -61,7 +77,6 @@ class RadicacionModel(models.Model):
     aproved = models.BooleanField(verbose_name=' radicado aprovado', default=False)
 
     REQUIRED_FIELDS = [
-        'id_radicado',
         'id_factura',
         'monto_factura',
         'file_factura',

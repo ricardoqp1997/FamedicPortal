@@ -76,6 +76,9 @@ class FamedicUser(AbstractBaseUser):
     first_name = models.CharField(verbose_name='nombre(s)', max_length=50)
     last_name = models.CharField(verbose_name='apellido(s)', max_length=50)
 
+    # Foto de perfil del usuario
+    profile_foto = models.ImageField(verbose_name='foto de perfil', blank=True)
+
     # correo electrónico de cuenta y para recuperación
     email = models.EmailField(verbose_name='correo electrónico', max_length=255, unique=True)
     recovery_email = models.EmailField(verbose_name='correo electrónico de recuperación', max_length=60)

@@ -19,6 +19,11 @@
            -moz-box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
            box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
        }
+       .shadow_card_profile{
+           -webkit-box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
+           -moz-box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
+           box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
+       }
        hr.perfil{
             margin-left: 5%;
             margin-right: 5%;
@@ -38,19 +43,21 @@
     <div class="Radicado_main_box">
 
         <h2>{{ user.get_full_name }}</h2>
+        <img src="{% if user.profile_foto %} {{ user.profile_foto.url }} {% else %} {% static 'resouces/no_photo_famedic.svg' %} {% endif %}" width="150" height="150" alt="">
 
         <hr class="perfil">
 
         <br>
 
-        <div class="card">
+        <div class="card shadow_card_profile">
             <div class="card-header" style="font-size: 20px">
                 Datos del Usuario
             </div>
+            <img src="{% static 'resouces/cover_profile.jpeg' %}" class="card-img-top" alt="...">
             <div class="card-body">
-                <p class="card-text">A continuacion encontrara toda la informacion basica de su usuario en el
-                portal de radicacion de facturas. Si usted no es administrador sera necesario contactar con uno
-                en caso de necesitar modificar sus datos de usuario.</p>
+                <p class="card-text">A continuacón encontrará toda la información básica de su usuario en el
+                portal de radicación de facturas. Si usted no es administrador sera necesario contactar con uno
+                en caso de requerir modificar sus datos de usuario.</p>
                 <br>
 
                 <div class="monto_content row form-group">

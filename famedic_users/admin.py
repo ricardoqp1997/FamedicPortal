@@ -49,7 +49,7 @@ class UserAdmin(BaseUserAdmin):
         ),
         (
             'Información personal del usuario', {
-                'fields': ['first_name', 'last_name', 'phone', 'location']
+                'fields': ['profile_foto', 'first_name', 'last_name', 'phone', 'location']
             }
         ),
         (
