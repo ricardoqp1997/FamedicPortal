@@ -92,4 +92,32 @@ class SedesAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Sedes, SedesAdmin)
-admin.site.register(Glosa)
+
+
+class GlosaAdmin(admin.ModelAdmin):
+    # Parametrización de los filtros de búsqueda y de visualización de contenido
+    list_display = ['id', 'glosa_name', 'glosa_status']
+    list_filter = ['id', 'glosa_name', 'glosa_status']
+
+    fieldsets = (
+        (
+            'Datos básicos de la glosa', {
+                'classes': ['wide', ],
+                'fields': ['glosa_name']
+            }
+        ),
+        (
+            'Revisión de estado de la glosa', {
+                'classes': ['wide', ],
+                'fields': ['glosa_status']
+            }
+        )
+    )
+
+    # Parametros de filtrado y busqueda
+    search_fields = ['id', 'glosa_name', 'glosa_status']
+    ordering = ['id', 'glosa_name', 'glosa_status']
+    filter_horizontal = []
+
+
+admin.site.register(Glosa, GlosaAdmin)
