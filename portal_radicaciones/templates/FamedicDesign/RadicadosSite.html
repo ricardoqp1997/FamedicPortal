@@ -12,6 +12,7 @@
 
         /* Estilos para la parte superior del formulario */
        .Radicado_main_box{
+
            margin: 5%;
            width: 655px;
            height: auto;
@@ -67,6 +68,15 @@
             margin-top: 20px;
             margin-bottom: 18px;
        }
+        .file_input_input input{
+            margin-left: -5%;
+            background-color: #f1f9ff;
+            padding: 4%;
+            color: #283b72;
+            width: 110%;
+            height: auto;
+            border: 0;
+        }
 
        /* Estilos para la zona de observaciones */
        .label_textarea{
@@ -95,11 +105,10 @@
         {% endif %}
 
         <form action="" method="POST" enctype="multipart/form-data">
+
             {% csrf_token %}
 
-            {{ form.non_field_errors }}
-
-            <button class="btn btn-primary btn-lg boton_registrar" type="submit" value="submit">Radicar</button>
+             <button class="btn btn-primary btn-lg boton_registrar" type="submit" value="submit">Radicar</button>
 
             <div class="row id_factura_label">
                 <label class="col-sm-5 col-form-label form-control-lg">Radicado de facturas</label>
@@ -109,6 +118,9 @@
             </div>
 
             <hr class="radicacion">
+
+            {{ form.non_field_errors }}
+
             <br>
 
             <div class="monto_content row input-group">
@@ -150,36 +162,32 @@
                 <div class="file_input_box">
                     <img class="file_input_icon" src="{% static '/resouces/upload.svg' %}" width="50px" height="50px" alt="">
                     <span class="file_input_label">Factura*</span>
-                    <div class="custom-file">
+                    <div class="file_input_input">
                         {{ form.file_factura }}
-                        <label class="custom-file-label" for="customFileLang">Seleccionar Archivo</label>
                     </div>
                 </div>
 
                 <div class="file_input_box">
                     <img class="file_input_icon" src="{% static '/resouces/upload.svg' %}" width="50px" height="50px" alt="">
                     <span class="file_input_label">Aportes*</span>
-                    <div class="custom-file">
+                    <div class="file_input_input">
                         {{ form.file_aportes }}
-                        <label class="custom-file-label" for="customFileLang">Seleccionar Archivo</label>
                     </div>
                 </div>
 
                 <div class="file_input_box">
                     <img class="file_input_icon" src="{% static '/resouces/upload.svg' %}" width="50px" height="50px" alt="">
                     <span class="file_input_label">Soportes de factura*</span>
-                    <div class="custom-file">
+                    <div class="file_input_input">
                         {{ form.file_soporte }}
-                        <label class="custom-file-label" for="customFileLang">Seleccionar Archivo</label>
                     </div>
                 </div>
 
                 <div class="file_input_box">
                     <img class="file_input_icon" src="{% static '/resouces/upload.svg' %}" width="50px" height="50px" alt="">
                     <span class="file_input_label">Rips*</span>
-                    <div class="custom-file">
+                    <div class="file_input_input">
                         {{ form.file_ribs }}
-                        <label class="custom-file-label" for="customFileLang">Seleccionar Archivo</label>
                     </div>
                 </div>
             </div>
@@ -194,7 +202,7 @@
             <div class="form-group label_textarea">
                 {{ form.sede_select.error_messages }}
                 <label for="sede1" class="">Sede correspondiente</label>
-                {{ form.sede_select }}
+                {{ form.sede_selection }}
             </div>
 
             <div class="form-group label_textarea">

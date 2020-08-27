@@ -10,7 +10,7 @@ from famedic_users.models import (
 )
 
 # Librería personalizada para el uso del modelo de radicación
-from .models import RadicacionModel
+from .models import RadicacionModel, Sedes
 
 
 # Form de inicio de sesión para usuarios
@@ -210,60 +210,6 @@ class RadicacionForm(forms.ModelForm):
         required=True,
     )
 
-    file_factura = forms.FileField(
-        allow_empty_file=False,
-        widget=forms.FileInput(
-            attrs={
-                'type': 'file',
-                'class': 'custom-file-input',
-                'id': 'customFileLang',
-                'lang': 'es'
-            }
-        ),
-        label='Factura',
-        required=True
-    )
-    file_aportes = forms.FileField(
-        allow_empty_file=False,
-        widget=forms.FileInput(
-            attrs={
-                'type': 'file',
-                'class': 'custom-file-input',
-                'id': 'customFileLang',
-                'lang': 'es',
-                'multiple': True
-            }
-        ),
-        label='Aportes',
-        required=False
-    )
-    file_soporte = forms.FileField(
-        allow_empty_file=False,
-        widget=forms.FileInput(
-            attrs={
-                'type': 'file',
-                'class': 'custom-file-input',
-                'id': 'customFileLang',
-                'lang': 'es'
-            }
-        ),
-        label='Soportes',
-        required=False
-    )
-    file_ribs = forms.FileField(
-        allow_empty_file=False,
-        widget=forms.FileInput(
-            attrs={
-                'type': 'file',
-                'class': 'custom-file-input',
-                'id': 'customFileLang',
-                'lang': 'es'
-            }
-        ),
-        label='Ribs',
-        required=False
-    )
-
     regimen_type = forms.ChoiceField(
         widget=forms.Select(
             attrs={
@@ -276,7 +222,7 @@ class RadicacionForm(forms.ModelForm):
         required=True
     )
 
-    sede_select = forms.ChoiceField(
+    sede_selection = forms.ModelChoiceField(
         widget=forms.Select(
             attrs={
                 'id': 'sede1',
@@ -284,7 +230,7 @@ class RadicacionForm(forms.ModelForm):
             }
         ),
         label='Sede correspondiente',
-        choices=RadicacionModel.SEDE_CHOICES,
+        queryset=Sedes.objects.all(),
         required=True
     )
 
@@ -311,7 +257,7 @@ class RadicacionForm(forms.ModelForm):
             'file_soporte',
             'file_ribs',
             'regimen_type',
-            'sede_select',
+            'sede_selection',
             'observaciones',
         ]
 
@@ -319,6 +265,7 @@ class RadicacionForm(forms.ModelForm):
 
         invoice = super(RadicacionForm, self).save(commit=False)
         invoice.radicador = self.cleaned_data.get('radicador')
+        invoice.sede_select = self.cleaned_data.get('sede_select')
 
         if commit:
 

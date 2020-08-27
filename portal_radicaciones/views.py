@@ -1,5 +1,5 @@
 # Librerías de Django para el manejo de las vistas, plantillas y navegación
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib import messages
 
@@ -39,7 +39,7 @@ from django.core.mail import (
 from django.conf import settings
 
 # Librerías para la vista blog (lista de radicados)
-from .models import RadicacionModel
+from .models import RadicacionModel, Sedes
 from django.views.generic import (
     ListView,
     DetailView
@@ -244,6 +244,9 @@ def radicacion(request):
         if form.is_valid():
 
             invoice_finished = True
+
+            sede = form.cleaned_data.get('sede_selection')
+            sede_id = get_object_or_404(Sedes, sede_name=sede)
 
             data_form = form.save(commit=False)
             data_form.radicador = request.user

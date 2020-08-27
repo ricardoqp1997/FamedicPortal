@@ -1,13 +1,12 @@
 from django.contrib import admin
 from .models import RadicacionModel, Glosa, Sedes
-from .forms import RadicacionForm
 
 
 class RadicacionAdmin(admin.ModelAdmin):
 
     # Parametrización de los filtros de búsqueda y de visualización de contenido
     list_display = ['id', 'id_factura', 'radicador', 'monto_factura', 'aproved']
-    list_filter = ['aproved', 'id', 'sede_select', 'regimen_type']
+    list_filter = ['aproved', 'id', 'sede_selection', 'regimen_type']
 
     fieldsets = (
         (
@@ -25,7 +24,7 @@ class RadicacionAdmin(admin.ModelAdmin):
         (
             'Información adicional de la radicación', {
                 'classes': ['wide', ],
-                'fields': ['regimen_type', 'sede_select', 'observaciones']
+                'fields': ['regimen_type', 'sede_selection', 'observaciones']
             }
         ),
         (
@@ -40,7 +39,7 @@ class RadicacionAdmin(admin.ModelAdmin):
         'id_factura',
         'radicador',
         'monto_factura',
-        'sede_select',
+        'sede_selection',
         'regimen_type',
         'observaciones',
         'file_factura',

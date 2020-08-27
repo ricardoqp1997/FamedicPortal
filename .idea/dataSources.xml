@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="db" uuid="5cab3366-78c0-43cc-bf99-a5b0e646ba6e">
+    <data-source source="LOCAL" name="db_famedic" uuid="ced10b76-2dcb-40e2-8420-46ede85a489c">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\RicardoQuintana\OneDrive - Tecnologias en Infraestructuras, Comunicaciones, Servicios de IT y Outsourcing TICS SAS\ARCHIVOS DE PROYECTOS\FAMEDIC\FAMEDIC_PORTAL_GIT\db.sqlite3</jdbc-url>
+      <jdbc-url>jdbc:sqlite:C:\Users\RicardoQuintana\OneDrive - Tecnologias en Infraestructuras, Comunicaciones, Servicios de IT y Outsourcing TICS SAS\ARCHIVOS DE PROYECTOS\FAMEDIC\FAMEDIC_PORTAL_GIT\db_famedic.sqlite3</jdbc-url>
       <libraries>
         <library>
           <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.31.1/sqlite-jdbc-3.31.1.jar</url>
