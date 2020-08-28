@@ -41,7 +41,7 @@ class Glosa(models.Model):
     ]
 
     glosa_name = models.CharField(verbose_name='nombre de glosa', max_length=25, default='glosa')
-    glosa_status = models.BooleanField(verbose_name='estado de la glosa', choices=STATUS_CHOICES,  default=GLOSA_ACTIVA)
+    glosa_status = models.BooleanField(verbose_name='estado de la glosa', choices=STATUS_CHOICES, default=GLOSA_ACTIVA)
 
     REQUIRED_FIELD = [
         'glosa_name'
@@ -58,10 +58,12 @@ class Glosa(models.Model):
 class RadicacionModel(models.Model):
 
     # Selección de estado de radicado
-    RAD_APROVED = True
-    RAD_DISAPROVED = False
+    RAD_UNVERIFIED = 'SINAP'
+    RAD_APROVED = 'RADSI'
+    RAD_DISAPROVED = 'RADNO'
 
     STATUS_CHOICES = [
+        (RAD_UNVERIFIED, 'Sin verificar'),
         (RAD_APROVED, 'Radicado aprobado'),
         (RAD_DISAPROVED, 'Radicado no aprobado')
     ]
@@ -88,19 +90,22 @@ class RadicacionModel(models.Model):
     file_ribs = models.FileField(verbose_name='ribs')
 
     # Campo para asignación de tipo de regimen
-    regimen_type = models.CharField(verbose_name='regimen', max_length=2, choices=REGIMEN_CHOICES, default=REGIMEN_CHOICES[0])
+    regimen_type = models.CharField(verbose_name='regimen', max_length=2, choices=REGIMEN_CHOICES,
+                                    default=REGIMEN_CHOICES[0])
 
     # Campo para asignación de sede
-    sede_selection = models.ForeignKey(Sedes, blank=True, null=True, on_delete=models.SET_NULL, verbose_name='sede correspondiente')
+    sede_selection = models.ForeignKey(Sedes, blank=True, null=True, on_delete=models.SET_NULL,
+                                       verbose_name='sede correspondiente')
 
     # Campo de observaciones adicionales para diligenciar
     observaciones = models.TextField(verbose_name='observaciones')
 
     # Validación de aprobación del radicado
-    aproved = models.BooleanField(verbose_name='estado de radicado', default=RAD_DISAPROVED, choices=STATUS_CHOICES)
+    aproved = models.CharField(verbose_name='estado de radicado', max_length=5, default=RAD_UNVERIFIED,
+                               choices=STATUS_CHOICES)
 
     # Campo para asignacion de glosa
-    glosa_asign = models.ForeignKey(Glosa, blank=True, null=True, on_delete=models.SET_NULL)
+    glosa_asign = models.ForeignKey(Glosa, blank=True, null=True, on_delete=models.SET_NULL, verbose_name='glosa')
 
     REQUIRED_FIELDS = [
         'id_factura',

@@ -60,7 +60,7 @@ class UserAdmin(BaseUserAdmin):
     )
 
     # Parametros de filtrado y busqueda de usuarios en Famedic Users
-    search_fields = ['email', 'id_famedic']
+    search_fields = ['email', 'id_famedic', 'first_name', 'last_name', 'phone', 'location']
     ordering = ['email', 'id_famedic']
     filter_horizontal = []
 

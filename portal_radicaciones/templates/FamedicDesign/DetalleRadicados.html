@@ -118,7 +118,7 @@
         <button class="btn btn-primary btn-lg boton_registrar" id="back-to-radicadolist">Atrás</button>
 
         <div class="row id_factura_label">
-                <label class="col-sm-5 col-form-label form-control-lg">Radicado No. {{ radicacionmodel.pk }}</label>
+                <label class="col-sm-7 col-form-label form-control-lg">Radicado No. {{ radicacionmodel.pk }} ({{ radicacionmodel.get_aproved_display }})</label>
         </div>
 
         <hr class="radicacion">
@@ -150,7 +150,7 @@
         <div class="monto_content row form-group">
                 <label for="idFactura" class="col-sm-4 col-form-label"><strong>Sede correspondiente a la radicación:</strong></label>
                 <div class="col-sm-8">
-                    <input type="text" readonly class="form-control-plaintext" id="idFactura" value="{{ radicacionmodel.get_sede_select_display }}">
+                    <input type="text" readonly class="form-control-plaintext" id="idFactura" value="{{ radicacionmodel.sede_selection }}">
                 </div>
         </div>
 

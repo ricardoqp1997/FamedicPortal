@@ -230,7 +230,7 @@ class RadicacionForm(forms.ModelForm):
             }
         ),
         label='Sede correspondiente',
-        queryset=Sedes.objects.all(),
+        queryset=Sedes.objects.filter(sede_status=True),
         required=True
     )
 
