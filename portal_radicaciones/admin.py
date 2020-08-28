@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.conf import settings
+from django.contrib import messages
 
 from .models import RadicacionModel, Glosa, Sedes
 from famedic_users.models import FamedicUser
@@ -95,8 +96,10 @@ class RadicacionAdmin(admin.ModelAdmin):
         if '_aprove-radicado' in request.POST:
 
             if obj.aproved != 'SINAP':
+
                 self.message_user(request, "El radicado ya ha sido revisado, "
-                                           "no es posible cambiar su estado.")
+                                           "no es posible cambiar su estado.", messages.ERROR)
+
                 return HttpResponseRedirect(".")
 
             obj.aproved = 'RADSI'
@@ -132,7 +135,7 @@ class RadicacionAdmin(admin.ModelAdmin):
                     to=[user.email, test_mail],
 
                     subject='Notificación de radicación aprobada - Famedic IPS',
-                    body='Sr(a). ' + user.get_full_name() + '.\n '
+                    body='Sr(a). ' + user.get_full_name() + '.\n\n'
 
                          '\nSe le notifica que el radicado con número ' + str(obj.id) + ' que usted realizó '
                          'fué revisado y aprovado por los administradores del portal de radicaciones de Famedic IPS. '
@@ -151,7 +154,8 @@ class RadicacionAdmin(admin.ModelAdmin):
 
             if obj.aproved != 'SINAP':
                 self.message_user(request, "El radicado ya ha sido revisado, "
-                                           "no es posible cambiar su estado.")
+                                           "no es posible cambiar su estado.", messages.ERROR)
+
                 return HttpResponseRedirect(".")
 
             obj.aproved = 'RADNO'
@@ -190,7 +194,7 @@ class RadicacionAdmin(admin.ModelAdmin):
                     subject='Notificación de radicación rechazada - Famedic IPS',
                     body='Sr(a). ' + user.get_full_name() + '.\n '
 
-                                                            '\nSe le notifica que el radicado con número ' + str(
+                         '\nSe le notifica que el radicado con número ' + str(
                         obj.id) + ' que usted realizó '
                                   'fué revisado y no fue aprobado por no cumplir con todos los requisitos.'
 
@@ -203,6 +207,35 @@ class RadicacionAdmin(admin.ModelAdmin):
             mail_to_user.send()
 
             self.message_user(request, "Se ha cambiado el estado del radicado a: No aprobado")
+            return HttpResponseRedirect(".")
+
+        if '_revert-radicado' in request.POST:
+
+            if obj.aproved == 'SINAP':
+                self.message_user(request, "No es posible revertir cambios, "
+                                           "el radicado está sin revisar.", messages.ERROR)
+                return HttpResponseRedirect(".")
+
+            obj.aproved = 'SINAP'
+            obj.save()
+
+            mail_to_user = EmailMultiAlternatives(
+
+                from_email=sender_mail,
+                to=[user.email, test_mail],
+
+                subject='Estado de revisión de radicado restaurado - Famedic IPS',
+                body='Sr(a). Moderador(a).\n '
+
+                     'Se le indica que el administrador ' + request.user.get_mail() + ' realizó'
+                     ' reversión de cambios en el estado del radicado ' + str(obj.id) + '.' 
+                     
+                     '\n\n Este es un mensaje automático y no es necesario responder.',
+            )
+
+            mail_to_user.send()
+
+            self.message_user(request, "Se ha restablecido la revision del radicado", messages.WARNING)
             return HttpResponseRedirect(".")
 
         return super().response_change(request, obj)
