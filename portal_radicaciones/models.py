@@ -103,6 +103,7 @@ class RadicacionModel(models.Model):
     # Validación de aprobación del radicado
     aproved = models.CharField(verbose_name='estado de radicado', max_length=5, default=RAD_UNVERIFIED,
                                choices=STATUS_CHOICES)
+    obs_admin = models.TextField(verbose_name='observaciones durante revisión', blank=True, null=True)
 
     # Campo para asignacion de glosa
     glosa_asign = models.ForeignKey(Glosa, blank=True, null=True, on_delete=models.SET_NULL, verbose_name='glosa')

@@ -111,8 +111,9 @@ def login_famedic(request):
         password_login = form.cleaned_data.get('password')
 
         user = authenticate(email=email_login, id=id_login, password=password_login)
-        phone_number_login = '+57' + user.get_phone()
-        print(phone_number_login)
+
+        phone_number = '+57' + user.get_phone()
+        print(phone_number)
 
         secret_otp = secrets.SystemRandom()
         otp = str(secret_otp.randrange(100000, 999999))
@@ -209,6 +210,10 @@ def resend_token(request):
 def hola_mundo(request):
 
     if request.user.is_authenticated:
+
+        phone_number = '+57' + request.user.get_phone()
+        print(phone_number)
+
         form_main = {
             'page_title': 'Pagina principal',
             'user_name': request.user.get_full_name()

@@ -25,7 +25,7 @@ class RadicacionAdmin(admin.ModelAdmin):
         (
             'Revisión de la factura', {
                 'classes': ['wide', 'extrapretty'],
-                'fields': ['glosa_asign', 'aproved', ]
+                'fields': ['glosa_asign', 'aproved', 'obs_admin']
             }
         ),
         (
@@ -93,25 +93,54 @@ class RadicacionAdmin(admin.ModelAdmin):
         test_mail = 'ricardoq@tics-sas.com'
 
         if '_aprove-radicado' in request.POST:
+
+            if obj.aproved != 'SINAP':
+                self.message_user(request, "El radicado ya ha sido revisado, "
+                                           "no es posible cambiar su estado.")
+                return HttpResponseRedirect(".")
+
             obj.aproved = 'RADSI'
             obj.save()
 
             # Correo enviado al usuario radicador
-            mail_to_user = EmailMultiAlternatives(
+            if obj.obs_admin:
 
-                from_email=sender_mail,
-                to=[user.email, test_mail],
+                mail_to_user = EmailMultiAlternatives(
 
-                subject='Notificación de radicación aprobada - Famedic IPS',
-                body='Sr(a). ' + user.get_full_name() + '.\n '
+                    from_email=sender_mail,
+                    to=[user.email, test_mail],
 
-                     '\nSe le notifica que el radicado con número ' + str(obj.id) + ' que usted realizó '
-                     'fué revisado y aprovado por los administradores del portal de radicaciones de Famedic IPS. '
-                                                                                    
-                     'Con dicha validación el proceso de radicación ha finalizado correctamente. \n'
+                    subject='Notificación de radicación aprobada - Famedic IPS',
+                    body='Sr(a). ' + user.get_full_name() + '.\n '
+        
+                         '\nSe le notifica que el radicado con número ' + str(obj.id) + ' que usted realizó '
+                         'fué revisado y aprovado por los administradores del portal de radicaciones de Famedic IPS. '
+                         
+                         ' Durante la revisión se indicaron los siguientes comentarios: \n\n'
 
-                     '\n\n Este es un mensaje automático y no es necesario responder.',
-            )
+                         + obj.obs_admin + '\n\n'                                                              
+                         
+                         'Con dicha validación el proceso de radicación ha finalizado correctamente. \n'
+        
+                         '\n\n Este es un mensaje automático y no es necesario responder.',
+                )
+
+            else:
+                mail_to_user = EmailMultiAlternatives(
+
+                    from_email=sender_mail,
+                    to=[user.email, test_mail],
+
+                    subject='Notificación de radicación aprobada - Famedic IPS',
+                    body='Sr(a). ' + user.get_full_name() + '.\n '
+
+                         '\nSe le notifica que el radicado con número ' + str(obj.id) + ' que usted realizó '
+                         'fué revisado y aprovado por los administradores del portal de radicaciones de Famedic IPS. '
+
+                         'Con dicha validación el proceso de radicación ha finalizado correctamente. \n'
+
+                         '\n\n Este es un mensaje automático y no es necesario responder.',
+                )
 
             mail_to_user.send()
 
@@ -119,26 +148,57 @@ class RadicacionAdmin(admin.ModelAdmin):
             return HttpResponseRedirect(".")
 
         if '_reject-radicado' in request.POST:
+
+            if obj.aproved != 'SINAP':
+                self.message_user(request, "El radicado ya ha sido revisado, "
+                                           "no es posible cambiar su estado.")
+                return HttpResponseRedirect(".")
+
             obj.aproved = 'RADNO'
             obj.save()
 
             # Correo enviado al usuario radicador
-            mail_to_user = EmailMultiAlternatives(
+            if obj.obs_admin:
 
-                from_email=sender_mail,
-                to=[user.email, test_mail],
+                mail_to_user = EmailMultiAlternatives(
 
-                subject='Notificación de radicación rechazada - Famedic IPS',
-                body='Sr(a). ' + user.get_full_name() + '.\n '
+                    from_email=sender_mail,
+                    to=[user.email, test_mail],
 
-                     '\nSe le notifica que el radicado con número ' + str(obj.id) + ' que usted realizó '
-                     'fué revisado y no fue aprobada por no cumplir con todos los requisitos.'
-                                                                                    
-                     'El administrador del portal de radicaciónes rechazó su radicado y será necesario'
-                     'que realice el proceso nuevamente. \n'
+                    subject='Notificación de radicación rechazada - Famedic IPS',
+                    body='Sr(a). ' + user.get_full_name() + '.\n '
+    
+                         '\nSe le notifica que el radicado con número ' + str(obj.id) + ' que usted realizó '
+                         'fué revisado y no fue aprobado por no cumplir con todos los requisitos.'
+                                                                                        
+                         ' Durante la revisión se indicaron los siguientes comentarios: \n\n'
 
-                     '\n\n Este es un mensaje automático y no es necesario responder.',
-            )
+                         + obj.obs_admin + '\n\n'
+                                                                                        
+                         'Debido a l resultado negativo en la revisión de su radicado será necesario'
+                         'que realice el proceso nuevamente. \n'
+    
+                         '\n\n Este es un mensaje automático y no es necesario responder.',
+                )
+
+            else:
+                mail_to_user = EmailMultiAlternatives(
+
+                    from_email=sender_mail,
+                    to=[user.email, test_mail],
+
+                    subject='Notificación de radicación rechazada - Famedic IPS',
+                    body='Sr(a). ' + user.get_full_name() + '.\n '
+
+                                                            '\nSe le notifica que el radicado con número ' + str(
+                        obj.id) + ' que usted realizó '
+                                  'fué revisado y no fue aprobado por no cumplir con todos los requisitos.'
+
+                                  'El administrador del portal de radicaciónes rechazó su radicado y será necesario'
+                                  'que realice el proceso nuevamente. \n'
+
+                                  '\n\n Este es un mensaje automático y no es necesario responder.',
+                )
 
             mail_to_user.send()
 
