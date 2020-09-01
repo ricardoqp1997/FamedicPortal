@@ -118,7 +118,7 @@ def login_famedic(request):
         secret_otp = secrets.SystemRandom()
         otp = str(secret_otp.randrange(100000, 999999))
         print(otp)
-        """
+
         account_sid = 'AC87661e5cf909a34afc46401f943466b8'
         auth_token = '42c8e8dda0ed20b0a6cee6461e979f1e'
         client = Client(account_sid, auth_token)
@@ -127,11 +127,11 @@ def login_famedic(request):
             .create(
                 body=f"Su código de acceso al portal de radicación de facturas es: {otp}.",
                 from_='+12165846582',
-                to=phone_number_login
+                to=phone_number
             )
 
         print(message.sid)
-        """
+
         loged_user = True
         return redirect('/verificacion/')
 
