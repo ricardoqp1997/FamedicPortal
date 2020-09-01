@@ -196,7 +196,7 @@ def resend_token(request):
         .create(
             body=f"Su código de acceso al portal de radicación de facturas es: {otp}.",
             from_='+12165846582',
-            to=phone_number_login
+            to=phone_number
         )
     
     print(message.sid)
