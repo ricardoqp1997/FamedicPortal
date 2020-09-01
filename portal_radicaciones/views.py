@@ -187,7 +187,7 @@ def resend_token(request):
     new_secret_otp = secrets.SystemRandom()
     otp = str(new_secret_otp.randrange(100000, 999999))
     print(otp)
-    """
+
     account_sid = 'AC87661e5cf909a34afc46401f943466b8'
     auth_token = '42c8e8dda0ed20b0a6cee6461e979f1e'
     client = Client(account_sid, auth_token)
@@ -200,7 +200,7 @@ def resend_token(request):
         )
     
     print(message.sid)
-    """
+
     messages.success(request, f'Se envió un nuevo token para el acceso')
     return redirect('/verificacion/')
 
