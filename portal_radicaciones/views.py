@@ -45,12 +45,18 @@ from django.views.generic import (
     DetailView
 )
 
+
+# variables globales para el paso de información entre vistas
 loged_user = False
+
 id_login = ""
 email_login = ""
 password_login = ""
 phone_number_login = ""
+location_login = ""
+
 otp = ""
+
 invoice_id = 0
 invoice_finished = False
 invoice_mail = ''
@@ -74,19 +80,27 @@ def index(request):
 
 # registro de usuario
 def register_famedic(request):
+
+    global id_login
+    global email_login
+    global location_login
+
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             form.save()
             id = form.cleaned_data.get('id_famedic')
-            messages.success(request, f'Cuenta creada: {id}')
+            messages.success(request, f'Cuenta actualizada correctamente: {id}')
             return redirect('/login/')
     else:
         form = UserRegisterForm()
 
     form_register = {
         'page_title': 'Registro de usuarios',
-        'form': form
+        'form': form,
+        'id_usr': id_login,
+        'mail_usr': email_login,
+        'loc_usr': location_login
     }
 
     return render(request, 'FamedicDesign/Registro.html', form_register)
@@ -103,37 +117,57 @@ def login_famedic(request):
     global password_login
     global phone_number_login
     global otp
+    global location_login
 
     if form.is_valid():
 
-        id_login = form.cleaned_data.get('id')
+        id_login = form.cleaned_data.get('id_famedic')
         email_login = form.cleaned_data.get('email')
         password_login = form.cleaned_data.get('password')
 
         user = authenticate(email=email_login, id=id_login, password=password_login)
 
-        phone_number = '+57' + user.get_phone()
-        print(phone_number)
+        location_login = user.get_location()
+        phone_number_login = '+57' + user.get_phone()
 
-        secret_otp = secrets.SystemRandom()
-        otp = str(secret_otp.randrange(100000, 999999))
-        print(otp)
+        try:
+            if user.is_updated:
 
-        account_sid = 'AC87661e5cf909a34afc46401f943466b8'
-        auth_token = '42c8e8dda0ed20b0a6cee6461e979f1e'
-        client = Client(account_sid, auth_token)
+                print(email_login)
 
-        message = client.messages \
-            .create(
-                body=f"Su código de acceso al portal de radicación de facturas es: {otp}.",
-                from_='+12165846582',
-                to=phone_number
-            )
+                secret_otp = secrets.SystemRandom()
+                otp = str(secret_otp.randrange(100000, 999999))
+                print(otp)
 
-        print(message.sid)
+                sender_mail = settings.EMAIL_HOST_USER
 
-        loged_user = True
-        return redirect('/verificacion/')
+                token_mail = EmailMultiAlternatives(
+
+                    from_email=sender_mail,
+                    to=[email_login],
+
+                    subject='Token de acceso al portal de facturas - Famedic IPS',
+                    body='Sr(a). ' + user.get_full_name() + '.\n '
+
+                         '\nSe ha detectado un intento de acceso al portal de radicación de facturas.'
+                         ' Su token de acceso para esta sesión es ' + str(otp) + '. Si usted no trató de'
+                         ' ingresar recientemente por favor contactese con un administrador del portal'
+                         ' para revisar y garantizar la seguridad de su cuenta.'
+
+                         '\n\n Este es un mensaje automático y no es necesario responder.',
+                )
+
+                token_mail.send()
+
+                loged_user = True
+                return redirect('/verificacion/')
+            else:
+                messages.warning(request, 'Para comenzar a usar el portal es requerido que actualice sus datos '
+                                          'de su cuenta.')
+                return redirect('/registro/')
+        except:
+            messages.error(request, f'Error validando el usuario, intentelo de nuevo.')
+            return redirect('')
 
     login_form = {
         'page_title': 'Inicio de sesión',
@@ -187,19 +221,6 @@ def resend_token(request):
     new_secret_otp = secrets.SystemRandom()
     otp = str(new_secret_otp.randrange(100000, 999999))
     print(otp)
-
-    account_sid = 'AC87661e5cf909a34afc46401f943466b8'
-    auth_token = '42c8e8dda0ed20b0a6cee6461e979f1e'
-    client = Client(account_sid, auth_token)
-    
-    message = client.messages \
-        .create(
-            body=f"Su código de acceso al portal de radicación de facturas es: {otp}.",
-            from_='+12165846582',
-            to=phone_number
-        )
-    
-    print(message.sid)
 
     messages.success(request, f'Se envió un nuevo token para el acceso')
     return redirect('/verificacion/')

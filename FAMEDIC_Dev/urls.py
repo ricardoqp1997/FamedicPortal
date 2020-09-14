@@ -13,22 +13,85 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+
+# librerías estandar para el manejo de accesos, URLs y panel administrativo
 from django.contrib import admin
 from django.urls import path
-from django.contrib.auth import views as auth_views
 
+# class views para manejo de inicio y cierre de sesión (se usa solo para cierre)
+from django.contrib.auth import views as auth_views
+from django.contrib.auth.decorators import login_required
+
+# class views para manejo de listado y detalle de radicados
 from portal_radicaciones import views as portal_views
 from portal_radicaciones.views import (
     ListaRadicados,
     RadicadoDetail
 )
 
+# librerías de django para configuración de alojamiento de archivos estaticos cargados en la radicación
 from django.conf import settings
 from django.conf.urls.static import static
 
-from django.contrib.auth.decorators import login_required
+# librerías de django y django OTP para la configuración de OTP en el portal administrativo
+import django_otp.admin
+from django.db import models
+from django_otp.models import Device, ThrottlingMixin
+from django.contrib.admin.sites import AdminSite
+from django_otp.plugins.otp_totp.models import TOTPDevice
+from django_otp.plugins.otp_totp.admin import TOTPDeviceAdmin
+
+# modelo y clase (admin class) de usuarios famedic para el portal administrativo con OTP
+from famedic_users.models import FamedicUser as User
+from famedic_users.admin import UserAdmin
+
+# modelos y clases (admin class) de radicaciones famedic para el portal administrativo con OTP
+from portal_radicaciones.models import (
+    Sedes,
+    Glosa,
+    RadicacionModel
+)
+from portal_radicaciones.admin import (
+    RadicacionAdmin,
+    SedesAdmin,
+    GlosaAdmin
+)
 
 
+# Nuevo sitio con OTP para acceso
+class OTPAdminSite(AdminSite):
+
+    login_form = django_otp.admin.OTPAdminAuthenticationForm
+    login_template = django_otp.admin._admin_template_for_django_version()
+
+    def has_permission(self, request):
+        return super().has_permission(request) and request.user.is_authenticated
+
+
+# Llamado de la clase (class admin) para el manejo del portal admin cin OTP
+class OTPAdmin(OTPAdminSite):
+    pass
+
+
+# adición de contenido de modelos y clases de DISPOSITIVOS OTP al nuevo panel administrativio
+admin_site = OTPAdmin(name='OTPAdmin')
+admin_site.register(TOTPDevice, TOTPDeviceAdmin)
+
+# adición de contenido de modelos y clases de USUARIOS FAMEDIC al nuevo panel administrativio
+admin_site.register(User, UserAdmin)
+
+# adición de contenido de modelos y clases de RADICACION FAMEDIC al nuevo panel administrativio
+admin_site.register(RadicacionModel, RadicacionAdmin)
+admin_site.register(Sedes, SedesAdmin)
+admin_site.register(Glosa, GlosaAdmin)
+
+# Personalización de titulo y nombre del sitio de administración Django acorde a Famedic IPS
+admin_site.site_header = 'Panel administrativo: Famedic'
+admin_site.site_title = 'Famedic IPS'
+
+
+# URLs del portal de radicación de facturas famedic
 urlpatterns = [
 
     # index de "portal_radicaciones" redireccionará a Login si no se ha iniciado sesión
@@ -45,7 +108,7 @@ urlpatterns = [
 
     # Acceso al panel administrativo
     path('admin-redirect', portal_views.admin_redirect, name='admin'),
-    path('admin/', admin.site.urls),
+    path('admin/', admin_site.urls),
 
     # Vistas del menú principal de la aplicación después de haber iniciado sesión de forma correcta
     path('main/', portal_views.hola_mundo, name='main'),
@@ -58,6 +121,7 @@ urlpatterns = [
     path('main/done/', portal_views.radicacion_finish, name='radicado_finished')
 ]
 
+# Configuración del flujo de archivos multimedia cargados en cada formulario de radicación
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

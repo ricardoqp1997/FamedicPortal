@@ -9,10 +9,6 @@ from portal_radicaciones.forms import (
     UserAdminChangeForm
 )
 
-# Personalización de titulo y nombre del sitio de administración Django acorde a Famedic IPS
-admin.site.site_header = 'Panel administrativo: Famedic'
-admin.site.site_title = 'Famedic IPS'
-
 
 class UserAdmin(BaseUserAdmin):
 
@@ -21,7 +17,7 @@ class UserAdmin(BaseUserAdmin):
     add_form = UserAdminCreationForm
 
     # Parametrización de los filtros de búsqueda y de visualización de contenido dentro de Famedic Users
-    list_display = ['id_famedic', 'last_name', 'first_name', 'email', 'admin']
+    list_display = ['id_famedic', 'last_name', 'first_name', 'email', 'admin', 'updated']
     list_filter = ['active', 'admin', 'id_famedic', 'email']
 
     # Campos de información del usuario a mostrar en el panel de Famedic Users (Creación)
@@ -35,7 +31,7 @@ class UserAdmin(BaseUserAdmin):
         (
             'Información personal del usuario', {
                 'classes': ['wide', ],
-                'fields': ['location', 'first_name', 'last_name', 'phone', 'recovery_email']
+                'fields': ['location',]
             }
         ),
     )
@@ -54,7 +50,7 @@ class UserAdmin(BaseUserAdmin):
         ),
         (
             'Permisos en el sitio', {
-                'fields': ['active', 'staff', 'admin']
+                'fields': ['updated', 'active', 'staff', 'admin']
             }
         )
     )

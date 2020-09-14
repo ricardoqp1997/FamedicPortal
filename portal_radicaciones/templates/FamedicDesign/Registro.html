@@ -12,7 +12,7 @@
             padding-top: 10px;
             padding-bottom: 25px;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 22px;
         }
         .boton_register{
             margin-bottom: 15px;
@@ -23,6 +23,14 @@
 
         {% csrf_token %}
         <p class="titulo_register">REGISTRO DE USUARIOS EN EL PORTAL RADICACIÓN DE FACTURAS</p>
+        <hr>
+
+
+        <h5 class="card-title"><strong>Identificación: {{ id_usr }}</strong></h5>
+        <br>
+        <p class="card-text"><strong>Correo electrónico:</strong> {{ mail_usr }}</p>
+        <p class="card-text"><strong>Entidad:</strong> {{ loc_usr }}</p>
+        <hr>
 
         {{ form | crispy }}
 

@@ -94,6 +94,9 @@ class FamedicUser(AbstractBaseUser):
     staff = models.BooleanField(verbose_name='miembro del portal', default=True)
     admin = models.BooleanField(verbose_name='administrador del portal', default=False)
 
+    # revisión de estado de cuenta (actualizada o no)
+    updated = models.BooleanField(verbose_name='datos actualizados', default=False)
+
     # parametros del model
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [
@@ -156,4 +159,8 @@ class FamedicUser(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.staff
+
+    @property
+    def is_updated(self):
+        return self.updated
 

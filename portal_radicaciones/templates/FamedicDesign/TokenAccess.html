@@ -45,4 +45,22 @@
         </div>
     </form>
 
+    <script type="text/javascript">
+        window.onload = function() {
+
+            const myInput = document.getElementById('bloquear');
+
+            myInput.onpaste = function(e) {
+                e.preventDefault();
+                alert("esta acción está prohibida");
+            }
+
+            myInput.oncopy = function(e) {
+                e.preventDefault();
+                alert("esta acción está prohibida");
+            }
+
+        }
+    </script>
+
 {% endblock %}

@@ -29,42 +29,49 @@ class UserLoginForm(forms.Form):
         if email and id_famedic and password:
             user = authenticate(email=email, id_famedic=id_famedic, password=password)
 
-            if user.get_id() != id_famedic:
-                raise forms.ValidationError('Por favor verifique los datos de usuario ingresados.')
-            if not user:
-                raise forms.ValidationError('Por favor verifique los datos de usuario ingresados.')
-            if not user.check_password(password):
-                raise forms.ValidationError('Por favor verifique la contraseña ingresada.')
-            if not user.is_active:
-                raise forms.ValidationError('El usuario ingresado no está activo.')
+            try:
+                if user.get_id() != id_famedic:
+                    raise forms.ValidationError('Por favor verifique el número de identificación ingresado.')
+                if not user:
+                    raise forms.ValidationError('Por favor verifique los datos de usuario ingresados.')
+                if not user.check_password(password):
+                    raise forms.ValidationError('Por favor verifique la contraseña ingresada.')
+                if not user.is_active:
+                    raise forms.ValidationError('El usuario ingresado no está activo.')
+            except:
+                raise forms.ValidationError('Error validando sus datos, rectifiquelos e ingreselos de nuevo.')
+
         return super(UserLoginForm, self).clean()
 
 
 # Form de registro de usuarios (añadiendole el campo de email al form base de registro de Django)
 class UserRegisterForm(forms.ModelForm):
 
-    id_famedic = forms.CharField(label='Cédula/NIT', widget=forms.NumberInput, max_length=10)
     first_name = forms.CharField(label='Nombre(s)', max_length=25)
     last_name = forms.CharField(label='Apellido(s)', max_length=25)
     phone = forms.CharField(label='Teléfono celular', widget=forms.NumberInput, max_length=10)
-    location = forms.CharField(label='Entidad a la que pertenece', max_length=50)
-    email = forms.EmailField(label='Correo electrónico')
     recovery_email = forms.EmailField(label='Correo electrónico de recuperación')
 
-    password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Confirme la contraseña ingresada', widget=forms.PasswordInput)
+    password1 = forms.CharField(label='Nueva contraseña', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Confirme su nueva contraseña', widget=forms.PasswordInput)
+
+    updated = forms.BooleanField(
+        widget=forms.HiddenInput(
+            attrs={
+                'value': True
+            }
+        )
+    )
 
     class Meta:
 
         model = FamedicUser
         fields = [
-            'id_famedic',
             'first_name',
             'last_name',
-            'email',
             'recovery_email',
             'phone',
-            'location'
+            'updated'
         ]
 
     def clean_email(self):
@@ -174,7 +181,11 @@ class UserAdminChangeForm(forms.ModelForm):
 class TokenAccessForm(forms.Form):
 
     token = forms.CharField(
-        widget=forms.PasswordInput,
+        widget=forms.PasswordInput(
+            attrs={
+                'id': 'bloquear'
+            }
+        ),
         label='Token de autenticación',
         required=True
     )
