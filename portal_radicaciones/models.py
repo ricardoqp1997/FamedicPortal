@@ -2,6 +2,30 @@ from django.db import models
 from famedic_users.models import FamedicUser
 
 
+class Locaciones(models.Model):
+
+    LOCACION_ACTIVA = True
+    LOCACION_INACTIVA = True
+
+    STATUS_CHOICES = [
+        (LOCACION_ACTIVA, 'Locación activa'),
+        (LOCACION_INACTIVA, 'Locación inactiva')
+    ]
+
+    locacion_name = models.CharField(verbose_name='nombre de la locación', max_length=50, default='TAME')
+    locacion_status = models.BooleanField(verbose_name='estado de la sede', choices=STATUS_CHOICES, default=LOCACION_ACTIVA)
+
+    REQUIRED_FIELD = [
+        'locacion_name'
+    ]
+
+    class Meta:
+        verbose_name = 'Locacion'
+
+    def __str__(self):
+        return self.locacion_name
+
+
 class Sedes(models.Model):
 
     # Selección de estado activo de la sede
