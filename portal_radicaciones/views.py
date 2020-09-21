@@ -84,13 +84,23 @@ def register_famedic(request):
     global id_login
     global email_login
     global location_login
+    global password_login
 
     if request.method == 'POST':
-        form = UserRegisterForm(request.POST)
+
+        user = authenticate(email=email_login, id=id_login, password=password_login)
+        form = UserRegisterForm(data=request.POST, instance=user)
+
         if form.is_valid():
+
+            data_form = form.save(commit=False)
+            data_form.updated = True
+            data_form.save()
             form.save()
-            id = form.cleaned_data.get('id_famedic')
+
+            id = user.get_id()
             messages.success(request, f'Cuenta actualizada correctamente: {id}')
+
             return redirect('/login/')
     else:
         form = UserRegisterForm()
@@ -128,7 +138,7 @@ def login_famedic(request):
         user = authenticate(email=email_login, id=id_login, password=password_login)
 
         location_login = user.get_location()
-        phone_number_login = '+57' + user.get_phone()
+        # phone_number_login = '+57' + user.get_phone()
 
         try:
             if user.is_updated:

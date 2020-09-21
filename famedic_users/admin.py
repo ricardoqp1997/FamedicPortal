@@ -31,7 +31,7 @@ class UserAdmin(BaseUserAdmin):
         (
             'Información personal del usuario', {
                 'classes': ['wide', ],
-                'fields': ['location',]
+                'fields': ['location', ]
             }
         ),
     )

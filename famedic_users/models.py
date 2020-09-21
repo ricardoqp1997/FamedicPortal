@@ -9,7 +9,7 @@ from django.contrib.auth.models import (
 class UserManager(BaseUserManager):
 
     # método base para la creación de los usuarios
-    def create_user(self, id_famedic, first_name, last_name, email, recovery_email, phone, location, password=None, is_active=True, is_staff=False, is_admin=False):
+    def create_user(self, id_famedic, email, location, password=None, is_active=True, is_staff=False, is_admin=False):
         if not email:
             raise ValueError('Es requerido ingresar el correo electrónico.')
         if not password:
@@ -17,11 +17,7 @@ class UserManager(BaseUserManager):
 
         user_obj = self.model(
             id_famedic=str(id_famedic),
-            first_name=str(first_name),
-            last_name=str(last_name),
             email=self.normalize_email(email),
-            recovery_email=self.normalize_email(recovery_email),
-            phone=str(phone),
             location=location,
         )
         user_obj.set_password(password)
@@ -36,11 +32,7 @@ class UserManager(BaseUserManager):
     def create_staffuser(self, id_famedic, first_name, last_name, email, recovery_email, phone, location, password=None):
         user = self.create_user(
             id_famedic=str(id_famedic),
-            first_name=str(first_name),
-            last_name=str(last_name),
             email=self.normalize_email(email),
-            recovery_email=self.normalize_email(recovery_email),
-            phone=str(phone),
             location=location,
             password=password,
             is_staff=True
@@ -52,11 +44,7 @@ class UserManager(BaseUserManager):
     def create_superuser(self, id_famedic, first_name, last_name, email, recovery_email, phone, location, password=None):
         user = self.create_user(
             id_famedic=str(id_famedic),
-            first_name=str(first_name),
-            last_name=str(last_name),
             email=self.normalize_email(email),
-            recovery_email=self.normalize_email(recovery_email),
-            phone=str(phone),
             location=location,
             password=password,
             is_staff=True,
@@ -73,18 +61,18 @@ class FamedicUser(AbstractBaseUser):
     id_famedic = models.CharField(verbose_name='cédula/NIT', max_length=10, unique=True)
 
     # nombre y apellidos del usuario
-    first_name = models.CharField(verbose_name='nombre(s)', max_length=50)
-    last_name = models.CharField(verbose_name='apellido(s)', max_length=50)
+    first_name = models.CharField(verbose_name='nombre(s)', max_length=50, null=True)
+    last_name = models.CharField(verbose_name='apellido(s)', max_length=50, null=True)
 
     # Foto de perfil del usuario
-    profile_foto = models.ImageField(verbose_name='foto de perfil', blank=True)
+    profile_foto = models.ImageField(verbose_name='foto de perfil', blank=True, null=True)
 
     # correo electrónico de cuenta y para recuperación
     email = models.EmailField(verbose_name='correo electrónico', max_length=255, unique=True)
-    recovery_email = models.EmailField(verbose_name='correo electrónico de recuperación', max_length=60)
+    recovery_email = models.EmailField(verbose_name='correo electrónico de recuperación', max_length=60, null=True)
 
     # número de teléfono del usuario
-    phone = models.CharField(verbose_name='teléfono celular', max_length=10, unique=True)
+    phone = models.CharField(verbose_name='teléfono celular', max_length=10, unique=True, null=True)
 
     # empresa vinculada del usuario
     location = models.CharField(verbose_name='entidad a la que pertenece', max_length=255)
@@ -101,10 +89,6 @@ class FamedicUser(AbstractBaseUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [
         'id_famedic',
-        'first_name',
-        'last_name',
-        'recovery_email',
-        'phone',
         'location'
     ]
 

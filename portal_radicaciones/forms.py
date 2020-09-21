@@ -60,7 +60,8 @@ class UserRegisterForm(forms.ModelForm):
             attrs={
                 'value': True
             }
-        )
+        ),
+        required=False
     )
 
     class Meta:
@@ -113,12 +114,8 @@ class UserRegisterForm(forms.ModelForm):
 class UserAdminCreationForm(forms.ModelForm):
 
     id_famedic = forms.CharField(label='Cédula/NIT', widget=forms.NumberInput, max_length=10)
-    first_name = forms.CharField(label='Nombre(s)', max_length=25)
-    last_name = forms.CharField(label='Apellido(s)', max_length=25)
-    phone = forms.CharField(label='Teléfono celular', widget=forms.NumberInput, max_length=10)
     location = forms.CharField(label='Entidad a la que pertenece', max_length=50)
     email = forms.EmailField(label='Correo electrónico')
-    recovery_email = forms.EmailField(label='Correo electrónico de recuperación')
 
     password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Confirme la contraseña ingresada', widget=forms.PasswordInput)
@@ -128,11 +125,7 @@ class UserAdminCreationForm(forms.ModelForm):
         model = FamedicUser
         fields = [
             'id_famedic',
-            'first_name',
-            'last_name',
             'email',
-            'recovery_email',
-            'phone',
             'location'
         ]
 
