@@ -1,9 +1,6 @@
 from django.db import models
 from famedic_users.models import FamedicUser
 from datetime import datetime
-import pytz
-
-
 
 
 class Locacion(models.Model):
