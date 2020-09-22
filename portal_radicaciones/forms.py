@@ -249,17 +249,29 @@ class RadicacionForm(forms.ModelForm):
         required=False
     )
 
+    datetime_radicado = forms.DateTimeField(
+        widget=forms.HiddenInput(),
+        required=False
+    )
+
     class Meta:
 
         model = RadicacionModel
         fields = [
             'radicador',
+
             'id_factura',
             'monto_factura',
+
             'file_factura',
             'file_aportes',
             'file_soporte',
-            'file_ribs',
+
+            'file_ribs1',
+            'file_ribs2',
+            'file_ribs3',
+            'file_ribs4',
+
             'regimen_type',
             'sede_selection',
             'observaciones',

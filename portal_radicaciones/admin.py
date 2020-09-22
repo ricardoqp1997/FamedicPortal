@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.contrib import messages
 
-from .models import RadicacionModel, Glosa, Sedes
+from .models import *
 from famedic_users.models import FamedicUser
 
 from django.http import HttpResponseRedirect
@@ -32,7 +32,7 @@ class RadicacionAdmin(admin.ModelAdmin):
         (
             'Datos de la factura', {
                 'classes': ['wide', 'extrapretty'],
-                'fields': ['id_factura', 'radicador', 'monto_factura']
+                'fields': ['datetime_radicado', 'id_factura', 'radicador', 'monto_factura']
             }
         ),
         (
@@ -42,9 +42,15 @@ class RadicacionAdmin(admin.ModelAdmin):
             }
         ),
         (
-            'Documentos adjuntos', {
+            'Documentos adjuntos del radicado', {
                 'classes': ['wide', 'extrapretty'],
-                'fields': ['file_factura', 'file_aportes', 'file_soporte', 'file_ribs']
+                'fields': ['file_factura', 'file_aportes', 'file_soporte']
+            }
+        ),
+        (
+            'Rips adjuntos del radicado', {
+                'classes': ['wide', 'extrapretty'],
+                'fields': ['file_ribs1', 'file_ribs2', 'file_ribs3', 'file_ribs4']
             }
         )
     )
@@ -60,7 +66,11 @@ class RadicacionAdmin(admin.ModelAdmin):
         'file_factura',
         'file_aportes',
         'file_soporte',
-        'file_ribs'
+        'file_ribs1',
+        'file_ribs2',
+        'file_ribs3',
+        'file_ribs4',
+        'datetime_radicado',
     ]
 
     # Parametros de filtrado y busqueda
@@ -241,7 +251,31 @@ class RadicacionAdmin(admin.ModelAdmin):
         return super().response_change(request, obj)
 
 
-admin.site.register(RadicacionModel, RadicacionAdmin)
+class LocacionAdmin(admin.ModelAdmin):
+
+    # Parametrización de los filtros de búsqueda y de visualización de contenido
+    list_display = ['id', 'locacion_name', 'locacion_status']
+    list_filter = ['id', 'locacion_name', 'locacion_status']
+
+    fieldsets = (
+        (
+            'Datos básicos de la locación', {
+                'classes': ['wide', ],
+                'fields': ['locacion_name']
+            }
+        ),
+        (
+            'Revisión de estado de la locación', {
+                'classes': ['wide', ],
+                'fields': ['locacion_status']
+            }
+        )
+    )
+
+    # Parametros de filtrado y busqueda
+    search_fields = ['id', 'locacion_name', 'locacion_status']
+    ordering = ['id', 'locacion_name', 'locacion_status']
+    filter_horizontal = []
 
 
 class SedesAdmin(admin.ModelAdmin):
@@ -271,9 +305,6 @@ class SedesAdmin(admin.ModelAdmin):
     filter_horizontal = []
 
 
-admin.site.register(Sedes, SedesAdmin)
-
-
 class GlosaAdmin(admin.ModelAdmin):
     # Parametrización de los filtros de búsqueda y de visualización de contenido
     list_display = ['id', 'glosa_name', 'glosa_status']
@@ -298,6 +329,3 @@ class GlosaAdmin(admin.ModelAdmin):
     search_fields = ['id', 'glosa_name', 'glosa_status']
     ordering = ['id', 'glosa_name', 'glosa_status']
     filter_horizontal = []
-
-
-admin.site.register(Glosa, GlosaAdmin)

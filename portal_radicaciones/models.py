@@ -1,33 +1,37 @@
 from django.db import models
 from famedic_users.models import FamedicUser
+from datetime import datetime
+import pytz
 
 
-class Locaciones(models.Model):
+
+
+class Locacion(models.Model):
 
     LOCACION_ACTIVA = True
-    LOCACION_INACTIVA = True
+    LOCACION_INACTIVA = False
 
     STATUS_CHOICES = [
         (LOCACION_ACTIVA, 'Locación activa'),
         (LOCACION_INACTIVA, 'Locación inactiva')
     ]
 
-    locacion_name = models.CharField(verbose_name='nombre de la locación', max_length=50, default='TAME')
-    locacion_status = models.BooleanField(verbose_name='estado de la sede', choices=STATUS_CHOICES, default=LOCACION_ACTIVA)
+    locacion_name = models.CharField(verbose_name='nombre de la locación', max_length=50, default='Arauca')
+    locacion_status = models.BooleanField(verbose_name='estado activo de la locación', choices=STATUS_CHOICES,
+                                          default=LOCACION_ACTIVA)
 
     REQUIRED_FIELD = [
         'locacion_name'
     ]
 
     class Meta:
-        verbose_name = 'Locacion'
+        verbose_name = 'Sitio'
 
     def __str__(self):
         return self.locacion_name
 
 
 class Sedes(models.Model):
-
     # Selección de estado activo de la sede
     SEDE_ACTIVA = True
     SEDE_INACTIVA = False
@@ -38,9 +42,11 @@ class Sedes(models.Model):
     ]
 
     sede_name = models.CharField(verbose_name='nombre de la sede', max_length=50, default='FAMEDIC - IPS')
-    locacion_sede = models.CharField(verbose_name='ubicación', max_length=50, blank=True)
+    locacion_sede = models.ForeignKey(Locacion, blank=True, null=True, on_delete=models.SET_NULL,
+                                      verbose_name='locación de la sede')
     address_sede = models.CharField(verbose_name='dirección', max_length=50, blank=True)
-    sede_status = models.BooleanField(verbose_name='estado de la sede', choices=STATUS_CHOICES, default=SEDE_ACTIVA)
+    sede_status = models.BooleanField(verbose_name='estado activo de la sede',
+                                      choices=STATUS_CHOICES, default=SEDE_ACTIVA)
 
     REQUIRED_FIELD = [
         'sede_name'
@@ -54,7 +60,6 @@ class Sedes(models.Model):
 
 
 class Glosa(models.Model):
-
     # Selección de estado activo de la glosa
     GLOSA_ACTIVA = True
     GLOSA_INACTIVA = False
@@ -65,7 +70,8 @@ class Glosa(models.Model):
     ]
 
     glosa_name = models.CharField(verbose_name='nombre de glosa', max_length=25, default='glosa')
-    glosa_status = models.BooleanField(verbose_name='estado de la glosa', choices=STATUS_CHOICES, default=GLOSA_ACTIVA)
+    glosa_status = models.BooleanField(verbose_name='estado de la glosa',
+                                       choices=STATUS_CHOICES, default=GLOSA_ACTIVA)
 
     REQUIRED_FIELD = [
         'glosa_name'
@@ -107,11 +113,16 @@ class RadicacionModel(models.Model):
     # Monto de factura a radicar
     monto_factura = models.IntegerField(verbose_name='monto de la factura')
 
-    # Archivos requeridos para la tramitación
+    # Documentos requeridos para el radicado
     file_factura = models.FileField(verbose_name='factura')
     file_aportes = models.FileField(verbose_name='aportes')
     file_soporte = models.FileField(verbose_name='soportes de factura')
-    file_ribs = models.FileField(verbose_name='ribs')
+
+    # Rips adjuntos al radicado
+    file_ribs1 = models.FileField(verbose_name='rip 1', blank=True)
+    file_ribs2 = models.FileField(verbose_name='rip 2', blank=True)
+    file_ribs3 = models.FileField(verbose_name='rip 3', blank=True)
+    file_ribs4 = models.FileField(verbose_name='rip 4', blank=True)
 
     # Campo para asignación de tipo de regimen
     regimen_type = models.CharField(verbose_name='regimen', max_length=2, choices=REGIMEN_CHOICES,
@@ -132,13 +143,22 @@ class RadicacionModel(models.Model):
     # Campo para asignacion de glosa
     glosa_asign = models.ForeignKey(Glosa, blank=True, null=True, on_delete=models.SET_NULL, verbose_name='glosa')
 
+    # Fecha de registro del radicado
+    datetime_radicado = models.DateTimeField(auto_now_add=True, blank=True, verbose_name='fecha de radicación')
+
     REQUIRED_FIELDS = [
         'id_factura',
         'monto_factura',
+
         'file_factura',
         'file_aportes',
         'file_soporte',
-        'file_ribs',
+
+        'file_ribs1',
+        'file_ribs2',
+        'file_ribs3',
+        'file_ribs4',
+
         'regimen_type',
         'sede_selection'
     ]

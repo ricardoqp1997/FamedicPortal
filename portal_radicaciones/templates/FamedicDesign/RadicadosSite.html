@@ -152,6 +152,11 @@
             <br>
             <br>
 
+            <!-- Documentos requeridos para el radicado -->
+            <div class="monto_content row input-group">
+                <label for="colFormLabel" class="col-sm-3 col-form-label">Documentos*</label>
+            </div>
+
             <div class="file_box row">
 
                 {{ form.file_factura.error_messages }}
@@ -183,11 +188,50 @@
                     </div>
                 </div>
 
+            </div>
+            <br>
+
+            <!-- Rips adjuntos al radicado -->
+            <div class="monto_content row input-group">
+                <label for="colFormLabel" class="col-sm-4 col-form-label">Rips adjuntos al radicado*</label>
+            </div>
+
+            <div class="file_box row">
+
+                {{ form.file_factura.error_messages }}
+                {{ form.file_aportes.error_messages }}
+                {{ form.file_soporte.error_messages }}
+                {{ form.file_ribs.error_messages }}
+
                 <div class="file_input_box">
                     <img class="file_input_icon" src="{% static '/resouces/upload.svg' %}" width="50px" height="50px" alt="">
-                    <span class="file_input_label">Rips*</span>
+                    <span class="file_input_label">Rip 1*</span>
                     <div class="file_input_input">
-                        {{ form.file_ribs }}
+                        {{ form.file_ribs1 }}
+                    </div>
+                </div>
+
+                <div class="file_input_box">
+                    <img class="file_input_icon" src="{% static '/resouces/upload.svg' %}" width="50px" height="50px" alt="">
+                    <span class="file_input_label">Rip 2*</span>
+                    <div class="file_input_input">
+                        {{ form.file_ribs2 }}
+                    </div>
+                </div>
+
+                <div class="file_input_box">
+                    <img class="file_input_icon" src="{% static '/resouces/upload.svg' %}" width="50px" height="50px" alt="">
+                    <span class="file_input_label">Rip 3*</span>
+                    <div class="file_input_input">
+                        {{ form.file_ribs3 }}
+                    </div>
+                </div>
+
+                <div class="file_input_box">
+                    <img class="file_input_icon" src="{% static '/resouces/upload.svg' %}" width="50px" height="50px" alt="">
+                    <span class="file_input_label">Rip 4*</span>
+                    <div class="file_input_input">
+                        {{ form.file_ribs4 }}
                     </div>
                 </div>
             </div>
@@ -211,6 +255,7 @@
                 {{ form.observaciones }}
             </div>
 
+            {{ form.datetime_radicado }}
         </form>
     </div>
 

@@ -47,16 +47,8 @@ from famedic_users.models import FamedicUser as User
 from famedic_users.admin import UserAdmin
 
 # modelos y clases (admin class) de radicaciones famedic para el portal administrativo con OTP
-from portal_radicaciones.models import (
-    Sedes,
-    Glosa,
-    RadicacionModel
-)
-from portal_radicaciones.admin import (
-    RadicacionAdmin,
-    SedesAdmin,
-    GlosaAdmin
-)
+from portal_radicaciones.models import *
+from portal_radicaciones.admin import *
 
 
 # Nuevo sitio con OTP para acceso
@@ -82,9 +74,11 @@ admin_site.register(TOTPDevice, TOTPDeviceAdmin)
 admin_site.register(User, UserAdmin)
 
 # adición de contenido de modelos y clases de RADICACION FAMEDIC al nuevo panel administrativio
+admin_site.register(Locacion, LocacionAdmin)
 admin_site.register(RadicacionModel, RadicacionAdmin)
 admin_site.register(Sedes, SedesAdmin)
 admin_site.register(Glosa, GlosaAdmin)
+
 
 # Personalización de titulo y nombre del sitio de administración Django acorde a Famedic IPS
 admin_site.site_header = 'Panel administrativo: Famedic'
