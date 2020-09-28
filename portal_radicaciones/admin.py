@@ -32,7 +32,8 @@ class RadicacionAdmin(admin.ModelAdmin):
         (
             'Datos de la factura', {
                 'classes': ['wide', 'extrapretty'],
-                'fields': ['datetime_radicado', 'id_factura', 'radicador', 'monto_factura']
+                'fields': ['datetime_radicado', 'id_factura', 'radicador',
+                           'monto_factura', 'datetime_factura1', 'datetime_factura2', ]
             }
         ),
         (
@@ -71,6 +72,8 @@ class RadicacionAdmin(admin.ModelAdmin):
         'file_ribs3',
         'file_ribs4',
         'datetime_radicado',
+        'datetime_factura1',
+        'datetime_factura2',
     ]
 
     # Parametros de filtrado y busqueda

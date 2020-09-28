@@ -1,5 +1,7 @@
 # Librerías base para la manipulación de formularios Django
+from django.conf import settings
 from django import forms
+from django.utils import timezone
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
@@ -192,6 +194,30 @@ class RadicacionForm(forms.ModelForm):
         required=False
     )
 
+    datetime_factura1 = forms.DateField(
+        widget=forms.SelectDateWidget(
+            years=range(timezone.now().year - 3, timezone.now().year + 1),
+            attrs={
+                'placeholder': 'MM/DD/AAAA',
+                'class': 'form-control monto_field',
+                'aria-label': ''
+            }
+        ),
+        required=True,
+    )
+
+    datetime_factura2 = forms.DateField(
+        widget=forms.SelectDateWidget(
+            years=range(timezone.now().year - 3, timezone.now().year + 1),
+            attrs={
+                'placeholder': 'MM/DD/AAAA',
+                'class': 'form-control monto_field',
+                'aria-label': ''
+            }
+        ),
+        required=True,
+    )
+
     id_factura = forms.CharField(
         widget=forms.NumberInput(
             attrs={
@@ -260,6 +286,8 @@ class RadicacionForm(forms.ModelForm):
         fields = [
             'radicador',
 
+            'datetime_factura1',
+            'datetime_factura2',
             'id_factura',
             'monto_factura',
 

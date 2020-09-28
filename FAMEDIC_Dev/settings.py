@@ -151,3 +151,5 @@ EMAIL_HOST_USER = 'notificaciones@famedicips.co'
 EMAIL_HOST_PASSWORD = 'Lucas1705'
 EMAIL_USE_SSL = True
 
+DATE_INPUT_FORMATS = ['%d-%m-%Y']
+

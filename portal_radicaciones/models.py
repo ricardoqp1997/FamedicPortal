@@ -4,7 +4,6 @@ from datetime import datetime
 
 
 class Locacion(models.Model):
-
     LOCACION_ACTIVA = True
     LOCACION_INACTIVA = False
 
@@ -83,7 +82,6 @@ class Glosa(models.Model):
 
 # Clase para el manejo de formularios de radicación
 class RadicacionModel(models.Model):
-
     # Selección de estado de radicado
     RAD_UNVERIFIED = 'SINAP'
     RAD_APROVED = 'RADSI'
@@ -143,6 +141,14 @@ class RadicacionModel(models.Model):
     # Fecha de registro del radicado
     datetime_radicado = models.DateTimeField(auto_now_add=True, blank=True, verbose_name='fecha de radicación')
 
+    # Fecha inicial del periodo de la factura a radicar
+    datetime_factura1 = models.DateField(auto_now_add=False, auto_now=False,
+                                         blank=True, null=True, verbose_name='fecha inicial de la factura')
+
+    # Fecha final del periodo de la factura a radicar
+    datetime_factura2 = models.DateField(auto_now_add=False, auto_now=False,
+                                         blank=True, null=True, verbose_name='fecha final de la factura')
+
     REQUIRED_FIELDS = [
         'id_factura',
         'monto_factura',
@@ -157,7 +163,9 @@ class RadicacionModel(models.Model):
         'file_ribs4',
 
         'regimen_type',
-        'sede_selection'
+        'sede_selection',
+        'datetime_factura1',
+        'datetime_factura2',
     ]
 
     # métodos base del modelo

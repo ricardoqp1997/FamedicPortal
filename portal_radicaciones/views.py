@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib import messages
+from django.utils import timezone
 
 # Librería para restricción de vistas con autenticación realizada
 from django.contrib.auth.decorators import login_required
@@ -240,6 +241,9 @@ def resend_token(request):
 @login_required(login_url='/login/')
 def hola_mundo(request):
 
+    tz = timezone.localdate()
+    print(tz)
+
     if request.user.is_authenticated:
 
         phone_number = '+57' + request.user.get_phone()
@@ -247,8 +251,9 @@ def hola_mundo(request):
 
         form_main = {
             'page_title': 'Pagina principal',
-            'user_name': request.user.get_full_name()
+            'user_name': request.user.get_full_name(),
         }
+
         return render(request, 'FamedicDesign/Main.html', form_main)
     else:
         return redirect('/login/')
@@ -267,6 +272,8 @@ def perfil(request):
 @login_required(login_url='/login/')
 def radicacion(request):
 
+    tz = timezone.now().date()
+
     global invoice_id
     global invoice_finished
 
@@ -281,18 +288,29 @@ def radicacion(request):
 
             invoice_finished = True
 
-            sede = form.cleaned_data.get('sede_selection')
-            sede_id = get_object_or_404(Sedes, sede_name=sede)
+            fecha1 = form.cleaned_data.get('datetime_factura1')
+            fecha2 = form.cleaned_data.get('datetime_factura2')
+            print(fecha1)
+            print(fecha2)
 
-            data_form = form.save(commit=False)
-            data_form.radicador = request.user
-            data_form.save()
+            if fecha1 < fecha2:
 
-            invoice_id = data_form.pk
+                sede = form.cleaned_data.get('sede_selection')
+                sede_id = get_object_or_404(Sedes, sede_name=sede)
 
-            form = RadicacionForm()
+                data_form = form.save(commit=False)
+                data_form.radicador = request.user
+                data_form.save()
 
-            return redirect('/main/done/')
+                invoice_id = data_form.pk
+
+                form = RadicacionForm()
+
+                return redirect('/main/done/')
+            else:
+                form = RadicacionForm()
+                messages.add_message(request, messages.ERROR, 'Fechas ingresadas incorrectamente')
+
         else:
             form = RadicacionForm()
             messages.add_message(request, messages.ERROR, 'Error validando formulario')
@@ -305,6 +323,7 @@ def radicacion(request):
         'user_name': request.user.get_full_name(),
         'id_user': request.user.pk,
         'form': form,
+        'timezone_rad': tz
     }
 
     return render(request, 'FamedicDesign/RadicadosSite.html', form_rad)
