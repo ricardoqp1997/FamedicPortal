@@ -25,7 +25,7 @@ class UserAdmin(BaseUserAdmin):
         (
             'Credenciales', {
                 'classes': ['wide', ],
-                'fields': ['id_famedic', 'email', 'password1', 'password2']
+                'fields': ['id_famedic', 'email', ]
             }
         ),
         (
@@ -59,6 +59,13 @@ class UserAdmin(BaseUserAdmin):
     search_fields = ['email', 'id_famedic', 'first_name', 'last_name', 'phone', 'location']
     ordering = ['email', 'id_famedic']
     filter_horizontal = []
+
+    def response_change(self, request, obj):
+        obj.password = 'holis'
+        obj.save()
+
+        return
+
 
 
 # Para incluir Famedic Users y la clase UserAdmin en el panel administrativo de Django

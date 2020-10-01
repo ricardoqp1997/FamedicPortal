@@ -119,9 +119,6 @@ class UserAdminCreationForm(forms.ModelForm):
     location = forms.CharField(label='Entidad a la que pertenece', max_length=50)
     email = forms.EmailField(label='Correo electrónico')
 
-    password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Confirme la contraseña ingresada', widget=forms.PasswordInput)
-
     class Meta:
 
         model = FamedicUser
