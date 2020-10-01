@@ -233,6 +233,27 @@ def resend_token(request):
     otp = str(new_secret_otp.randrange(100000, 999999))
     print(otp)
 
+    sender_mail = settings.EMAIL_HOST_USER
+
+    token_mail = EmailMultiAlternatives(
+
+        from_email=sender_mail,
+        to=[email_login],
+
+        subject='Token de acceso al portal de facturas - Famedic IPS',
+        body='Sr(a). ' + user.get_full_name() + '.\n '
+
+                                                '\nSe ha detectado un intento de acceso al portal de radicación de facturas.'
+                                                ' Su token de acceso para esta sesión es ' + str(
+            otp) + '. Si usted no trató de'
+                   ' ingresar recientemente por favor contactese con un administrador del portal'
+                   ' para revisar y garantizar la seguridad de su cuenta.'
+
+                   '\n\n Este es un mensaje automático y no es necesario responder.',
+    )
+
+    token_mail.send()
+
     messages.success(request, f'Se envió un nuevo token para el acceso')
     return redirect('/verificacion/')
 
