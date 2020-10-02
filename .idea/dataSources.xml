@@ -12,5 +12,11 @@
         </library>
       </libraries>
     </data-source>
+    <data-source source="LOCAL" name="db_famedic@107.180.109.32" uuid="e28274db-a17a-44bc-8960-5459368702f1">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://107.180.109.32:3306/db_famedic</jdbc-url>
+    </data-source>
   </component>
 </project>

@@ -46,7 +46,6 @@ from django.views.generic import (
     DetailView
 )
 
-
 # variables globales para el paso de información entre vistas
 loged_user = False
 
@@ -81,7 +80,6 @@ def index(request):
 
 # registro de usuario
 def register_famedic(request):
-
     global id_login
     global email_login
     global location_login
@@ -93,14 +91,13 @@ def register_famedic(request):
         form = UserRegisterForm(data=request.POST, instance=user)
 
         if form.is_valid():
-
             data_form = form.save(commit=False)
             data_form.updated = True
             data_form.save()
             form.save()
 
-            id = user.get_id()
-            messages.success(request, f'Cuenta actualizada correctamente: {id}')
+            # id = user.get_id()
+            messages.success(request, f'Cuenta actualizada correctamente.')
 
             return redirect('/login/')
     else:
@@ -119,7 +116,6 @@ def register_famedic(request):
 
 # ventana de inicio de sesion
 def login_famedic(request):
-
     form = UserLoginForm(request.POST or None)
 
     global loged_user
@@ -158,14 +154,14 @@ def login_famedic(request):
                     to=[email_login],
 
                     subject='Token de acceso al portal de facturas - Famedic IPS',
-                    body='Sr(a). ' + user.get_full_name() + '.\n '
+                    body='Sr(a). Usuario(a) del portal de proveedores.\n'
 
                          '\nSe ha detectado un intento de acceso al portal de radicación de facturas.'
                          ' Su token de acceso para esta sesión es ' + str(otp) + '. Si usted no trató de'
-                         ' ingresar recientemente por favor contactese con un administrador del portal'
-                         ' para revisar y garantizar la seguridad de su cuenta.'
+                                                                                 ' ingresar recientemente por favor contactese con un administrador del portal'
+                                                                                 ' para revisar y garantizar la seguridad de su cuenta.'
 
-                         '\n\n Este es un mensaje automático y no es necesario responder.',
+                                                                                 '\n\n Este es un mensaje automático y no es necesario responder.',
                 )
 
                 token_mail.send()
@@ -190,7 +186,6 @@ def login_famedic(request):
 
 # ingreso de token para acceso
 def token_famedic(request):
-
     form = TokenAccessForm(request.POST or None)
 
     global loged_user
@@ -241,10 +236,10 @@ def resend_token(request):
         to=[email_login],
 
         subject='Token de acceso al portal de facturas - Famedic IPS',
-        body='Sr(a). ' + user.get_full_name() + '.\n '
+        body='Sr(a). Usuario(a) del portal de proveedores.\n'
 
-                                                '\nSe ha detectado un intento de acceso al portal de radicación de facturas.'
-                                                ' Su token de acceso para esta sesión es ' + str(
+             '\nSe ha detectado un intento de acceso al portal de radicación de facturas.'
+             ' Su token de acceso para esta sesión es ' + str(
             otp) + '. Si usted no trató de'
                    ' ingresar recientemente por favor contactese con un administrador del portal'
                    ' para revisar y garantizar la seguridad de su cuenta.'
@@ -261,14 +256,13 @@ def resend_token(request):
 # ingreso al  portal principal
 @login_required(login_url='/login/')
 def hola_mundo(request):
-
     tz = timezone.localdate()
     print(tz)
 
     if request.user.is_authenticated:
 
-        phone_number = '+57' + request.user.get_phone()
-        print(phone_number)
+        # phone_number = '+57' + request.user.get_phone()
+        # print(phone_number)
 
         form_main = {
             'page_title': 'Pagina principal',
@@ -292,7 +286,6 @@ def perfil(request):
 # sección de radicación
 @login_required(login_url='/login/')
 def radicacion(request):
-
     tz = timezone.now().date()
 
     global invoice_id
@@ -353,7 +346,6 @@ def radicacion(request):
 # Vista de radicación realizada
 @login_required(login_url='/login/')
 def radicacion_finish(request):
-
     global invoice_id
     global invoice_mail
     global invoice_finished
@@ -374,14 +366,14 @@ def radicacion_finish(request):
                 to=[user_mail],
 
                 subject='Radicación de archivos realizada - Famedic IPS',
-                body='Sr(a). ' + user_fullname + '.\n '
-                        
-                     '\nSe le notifica que su radicado con número ' + str(invoice_id) + ' fué realizado'
-                     'de forma exitosa en el portal de radicaciones de Famedic IPS. Un administrador del portal '
-                     'de radicaciones se encargará de validar el radicado realizado y darle aprobación mientras '
-                     'todo se encuentre en orden. \n'
+                body='Sr(a). Usuario(a) del portal de proveedores.\n'
 
-                     '\n\n Este es un mensaje automático y no es necesario responder.',
+                     '\nSe le notifica que su radicado con número ' + str(invoice_id) + ' fué realizado'
+                                                                                        'de forma exitosa en el portal de radicaciones de Famedic IPS. Un administrador del portal '
+                                                                                        'de radicaciones se encargará de validar el radicado realizado y darle aprobación mientras '
+                                                                                        'todo se encuentre en orden. \n'
+
+                                                                                        '\n\n Este es un mensaje automático y no es necesario responder.',
             )
 
             # Correo enviado al usuario administrador
@@ -395,15 +387,16 @@ def radicacion_finish(request):
                 body='Sr(a) administrador(a) del portal.\n '
 
                      '\nSe le notifica que el usuario ' + user_fullname + ' (' + user_mail + ') '
-                     'realizó un radicado identificado con el numero ' + str(invoice_id) + ', para realizar '
-                     'el proceso de revisión y aprobación será necesario revisar el correspondiente '
-                     'en el portal de radicaciones de Famedic IPS. \n'
-                        
-                     '\nDespués de acceder y confirmar dicho proceso realizado por el usuario el radicado quedará '
-                     'aprobado en el portal. \n'
+                                                                                             'realizó un radicado identificado con el numero ' + str(
+                    invoice_id) + ', para realizar '
+                                  'el proceso de revisión y aprobación será necesario revisar el correspondiente '
+                                  'en el portal de radicaciones de Famedic IPS. \n'
+
+                                  '\nDespués de acceder y confirmar dicho proceso realizado por el usuario el radicado quedará '
+                                  'aprobado en el portal. \n'
 
 
-                     '\n\n Este es un mensaje automático y no es necesario responder.'
+                                  '\n\n Este es un mensaje automático y no es necesario responder.'
             )
 
             mail_to_user.send()
@@ -428,7 +421,6 @@ def radicacion_finish(request):
 
 # sección de lista de radicados
 class ListaRadicados(ListView):
-
     paginate_by = 5
     model = RadicacionModel
     template_name = 'FamedicDesign/ListaRadicados.html'
@@ -443,7 +435,6 @@ class ListaRadicados(ListView):
 
 # sección de detalles de radicados
 class RadicadoDetail(DetailView):
-
     model = RadicacionModel
     template_name = 'FamedicDesign/DetalleRadicados.html'
 

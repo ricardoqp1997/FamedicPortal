@@ -40,10 +40,9 @@ INSTALLED_APPS = [
 
     'portal_radicaciones',
     'famedic_users',
-
+    'bootstrap_admin',
     'django_otp',
     'django_otp.plugins.otp_totp',
-
     'crispy_forms',
 ]
 
@@ -152,4 +151,3 @@ EMAIL_HOST_PASSWORD = 'Lucas1705'
 EMAIL_USE_SSL = True
 
 DATE_INPUT_FORMATS = ['%d-%m-%Y']
-

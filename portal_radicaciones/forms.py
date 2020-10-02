@@ -11,6 +11,13 @@ from famedic_users.models import (
     UserManager
 )
 
+import secrets
+
+from django.conf import  settings
+from django.core.mail import (
+    EmailMultiAlternatives
+)
+
 # Librería personalizada para el uso del modelo de radicación
 from .models import RadicacionModel, Sedes
 
@@ -54,8 +61,19 @@ class UserRegisterForm(forms.ModelForm):
     phone = forms.CharField(label='Teléfono celular', widget=forms.NumberInput, max_length=10)
     recovery_email = forms.EmailField(label='Correo electrónico de recuperación')
 
-    password1 = forms.CharField(label='Nueva contraseña', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Confirme su nueva contraseña', widget=forms.PasswordInput)
+    password1 = forms.CharField(
+        label='Nueva contraseña',
+        widget=forms.PasswordInput(
+
+        )
+    )
+
+    password2 = forms.CharField(
+        label='Confirme su nueva contraseña',
+        widget=forms.PasswordInput(
+
+        )
+    )
 
     updated = forms.BooleanField(
         widget=forms.HiddenInput(
@@ -128,7 +146,7 @@ class UserAdminCreationForm(forms.ModelForm):
             'location'
         ]
 
-    def clean_password2(self):
+    """def clean_password2(self):
 
         password1 = self.cleaned_data.get('password1')
         password2 = self.cleaned_data.get('password2')
@@ -136,12 +154,40 @@ class UserAdminCreationForm(forms.ModelForm):
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError('La confirmación no coincide con la contraseña ingresada')
 
-        return password2
+        return password2"""
+
 
     def save(self, commit=True):
+        random = secrets.SystemRandom()
+        random_password = str(random.randrange(10000000, 99999999))
+        print(random_password)
+
+        receptor = self.cleaned_data.get('email')
+        print(receptor)
+
+        sender_mail = settings.EMAIL_HOST_USER
+
+        access_mail = EmailMultiAlternatives(
+
+            from_email=sender_mail,
+            to=[receptor],
+
+            subject='Creación de credenciales de acceso - Famedic IPS',
+            body='Sr(a). Usuario(a) del portal de proveedores.\n '
+
+                 '\nSe han creado sus nuevas credenciales para el ingreso al portal de radicación.\n'
+                 'Sus credenciales de acceso serán: ' + receptor + ' con la contraseña: ' + str(random_password) + '.\n'
+                 '\nPara ingresar será requerido inicialmente que actualice los datos de su cuenta desde el portal '
+                 'proveedores.famedicips.co, luego de dicha actualización podrá acceder y usar el portal de '
+                 'proveedores de Famedic IPS.'
+
+                 '\n\n Este es un mensaje automático y no es necesario responder.',
+        )
+
+        access_mail.send()
 
         user = super(UserAdminCreationForm, self).save(commit=False)
-        user.set_password(self.cleaned_data['password1'])
+        user.set_password(str(random_password))
 
         if commit:
             user.save()
@@ -277,6 +323,7 @@ class RadicacionForm(forms.ModelForm):
         required=False
     )
 
+
     class Meta:
 
         model = RadicacionModel
@@ -292,10 +339,7 @@ class RadicacionForm(forms.ModelForm):
             'file_aportes',
             'file_soporte',
 
-            'file_ribs1',
-            'file_ribs2',
-            'file_ribs3',
-            'file_ribs4',
+            'file_ribs',
 
             'regimen_type',
             'sede_selection',

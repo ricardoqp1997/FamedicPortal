@@ -60,11 +60,6 @@ class UserAdmin(BaseUserAdmin):
     ordering = ['email', 'id_famedic']
     filter_horizontal = []
 
-    def response_change(self, request, obj):
-        obj.password = 'holis'
-        obj.save()
-
-        return
 
 
 

@@ -125,14 +125,14 @@
 
 
             <div class="monto_content row input-group">
-                <p class="col-sm-6 col-form-label"><strong>Fecha de radicación: </strong>{{ timezone_rad }}</p>
+                <p class="col-sm-6 col-form-label"><strong>Fecha de radicado: </strong>{{ timezone_rad }}</p>
             </div>
             <br>
             <br>
 
             <div class="monto_content row input-group">
                 {{ form.id_factura.error_messages }}
-                <label for="colFormLabel" class="col-sm-3 col-form-label">Número de factura*</label>
+                <label for="colFormLabel" class="col-sm-3 col-form-label">Número consecutivo</label>
 
                 <div class="input-group-prepend">
                     <span class="input-group-text">#</span>
@@ -146,7 +146,7 @@
 
             <div class="monto_content row input-group">
                 {{ form.monto_factura.error_messages }}
-                <label for="colFormLabel" class="col-sm-3 col-form-label">Monto de la factura*</label>
+                <label for="colFormLabel" class="col-sm-3 col-form-label">Valor de la factura</label>
 
                 <div class="input-group-prepend">
                     <span class="input-group-text">$</span>
@@ -234,40 +234,11 @@
 
             <div class="file_box row">
 
-                {{ form.file_factura.error_messages }}
-                {{ form.file_aportes.error_messages }}
-                {{ form.file_soporte.error_messages }}
-                {{ form.file_ribs.error_messages }}
-
                 <div class="file_input_box">
                     <img class="file_input_icon" src="{% static '/resouces/upload.svg' %}" width="50px" height="50px" alt="">
-                    <span class="file_input_label">Rips #1*</span>
+                    <span class="file_input_label">Rips</span>
                     <div class="file_input_input">
-                        {{ form.file_ribs1 }}
-                    </div>
-                </div>
-
-                <div class="file_input_box">
-                    <img class="file_input_icon" src="{% static '/resouces/upload.svg' %}" width="50px" height="50px" alt="">
-                    <span class="file_input_label">Rips #2*</span>
-                    <div class="file_input_input">
-                        {{ form.file_ribs2 }}
-                    </div>
-                </div>
-
-                <div class="file_input_box">
-                    <img class="file_input_icon" src="{% static '/resouces/upload.svg' %}" width="50px" height="50px" alt="">
-                    <span class="file_input_label">Rips #3*</span>
-                    <div class="file_input_input">
-                        {{ form.file_ribs3 }}
-                    </div>
-                </div>
-
-                <div class="file_input_box">
-                    <img class="file_input_icon" src="{% static '/resouces/upload.svg' %}" width="50px" height="50px" alt="">
-                    <span class="file_input_label">Rips #4*</span>
-                    <div class="file_input_input">
-                        {{ form.file_ribs4 }}
+                        {{ form.file_ribs }}
                     </div>
                 </div>
             </div>

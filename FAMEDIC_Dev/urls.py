@@ -18,6 +18,7 @@ Including another URLconf
 # librerías estandar para el manejo de accesos, URLs y panel administrativo
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls.static import static
 
 # class views para manejo de inicio y cierre de sesión (se usa solo para cierre)
 from django.contrib.auth import views as auth_views
@@ -103,6 +104,7 @@ urlpatterns = [
     # Acceso al panel administrativo
     path('admin-redirect', portal_views.admin_redirect, name='admin'),
     path('admin/', admin_site.urls),
+    path('adminl/', admin.site.urls),
 
     # Vistas del menú principal de la aplicación después de haber iniciado sesión de forma correcta
     path('main/', portal_views.hola_mundo, name='main'),

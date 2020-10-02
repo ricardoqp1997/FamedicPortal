@@ -1,6 +1,9 @@
 from django.db import models
 from famedic_users.models import FamedicUser
 from datetime import datetime
+from django import forms
+
+import os
 
 
 class Locacion(models.Model):
@@ -82,6 +85,27 @@ class Glosa(models.Model):
 
 # Clase para el manejo de formularios de radicación
 class RadicacionModel(models.Model):
+
+    def validate_file_extension(value):
+
+        ext = os.path.splitext(value.name)[1]
+        valid_extensions = [
+            '.zip',
+            '.zipx',
+            '.tar',
+            '.tar.gz',
+            '.7z',
+            '.rar',
+            '.ace',
+            '.gzip',
+            '.bzip',
+            '.bzip2'
+        ]
+
+        if not ext in valid_extensions:
+            raise forms.ValidationError(u'Error de formato de archivo, preferiblemente suba un comprimido .zip')
+
+
     # Selección de estado de radicado
     RAD_UNVERIFIED = 'SINAP'
     RAD_APROVED = 'RADSI'
@@ -114,10 +138,7 @@ class RadicacionModel(models.Model):
     file_soporte = models.FileField(verbose_name='soportes de factura')
 
     # Rips adjuntos al radicado
-    file_ribs1 = models.FileField(verbose_name='rip 1', blank=True)
-    file_ribs2 = models.FileField(verbose_name='rip 2', blank=True)
-    file_ribs3 = models.FileField(verbose_name='rip 3', blank=True)
-    file_ribs4 = models.FileField(verbose_name='rip 4', blank=True)
+    file_ribs = models.FileField(verbose_name='rip 1', blank=True, validators=[validate_file_extension])
 
     # Campo para asignación de tipo de regimen
     regimen_type = models.CharField(verbose_name='regimen', max_length=2, choices=REGIMEN_CHOICES,
