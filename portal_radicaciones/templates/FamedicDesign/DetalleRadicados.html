@@ -124,8 +124,21 @@
         <hr class="radicacion">
         <br>
 
+         <div class="monto_content row input-group">
+                <label for="colFormLabel" class="col-sm-5 col-form-label"><i>Información principal</i></label>
+        </div>
+        <br>
+
         <div class="monto_content row form-group">
-                <label for="idFactura" class="col-sm-4 col-form-label"><strong>Número de factura:</strong></label>
+                <label for="idFactura" class="col-sm-4 col-form-label"><strong>Fecha de radicado</strong></label>
+                <div class="col-sm-8">
+                    <input type="text" readonly class="form-control-plaintext" id="idFactura" value="{{ radicacionmodel.datetime_radicado }}">
+                </div>
+
+        </div>
+
+        <div class="monto_content row form-group">
+                <label for="idFactura" class="col-sm-4 col-form-label"><strong>Número consecutivo</strong></label>
                 <div class="col-sm-8">
                     <input type="text" readonly class="form-control-plaintext" id="idFactura" value="{{ radicacionmodel.id_factura }}">
                 </div>
@@ -133,9 +146,25 @@
         </div>
 
         <div class="monto_content row form-group">
-                <label for="idFactura" class="col-sm-4 col-form-label"><strong>Monto designado:</strong></label>
+                <label for="idFactura" class="col-sm-4 col-form-label"><strong>Valor de la factura</strong></label>
                 <div class="col-sm-8">
                     <input type="text" readonly class="form-control-plaintext" id="idFactura" value="$ {{ radicacionmodel.monto_factura }}">
+                </div>
+
+        </div>
+
+        <div class="monto_content row form-group">
+                <label for="idFactura" class="col-sm-4 col-form-label"><strong>Fecha inicial de factura</strong></label>
+                <div class="col-sm-8">
+                    <input type="text" readonly class="form-control-plaintext" id="idFactura" value="{{ radicacionmodel.datetime_factura1 }}">
+                </div>
+
+        </div>
+
+        <div class="monto_content row form-group">
+                <label for="idFactura" class="col-sm-4 col-form-label"><strong>Fecha final de factura</strong></label>
+                <div class="col-sm-8">
+                    <input type="text" readonly class="form-control-plaintext" id="idFactura" value="{{ radicacionmodel.datetime_factura2 }}">
                 </div>
 
         </div>
@@ -159,6 +188,10 @@
                 <div class="col-sm-8">
                     <input type="text" readonly class="form-control-plaintext" id="idFactura" value="{% if radicacionmodel.observaciones %} {{ radicacionmodel.observaciones }} {% else %} Ninguna {% endif %}">
                 </div>
+        </div>
+
+        <div class="monto_content row input-group">
+                <label for="colFormLabel" class="col-sm-5 col-form-label"><i>Documentos adjuntos</i></label>
         </div>
 
         <div class="row justify-content-sm-start contenedorbtna2">

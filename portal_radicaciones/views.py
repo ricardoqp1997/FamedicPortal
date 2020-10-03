@@ -368,12 +368,12 @@ def radicacion_finish(request):
                 subject='Radicación de archivos realizada - Famedic IPS',
                 body='Sr(a). Usuario(a) del portal de proveedores.\n'
 
-                     '\nSe le notifica que su radicado con número ' + str(invoice_id) + ' fué realizado'
-                                                                                        'de forma exitosa en el portal de radicaciones de Famedic IPS. Un administrador del portal '
-                                                                                        'de radicaciones se encargará de validar el radicado realizado y darle aprobación mientras '
-                                                                                        'todo se encuentre en orden. \n'
+                     '\nSe le notifica que su radicado con número ' + str(invoice_id) + ' fué realizado '
+                     'de forma exitosa en el portal de radicaciones de Famedic IPS. Un administrador del portal '
+                     'de radicaciones se encargará de validar el radicado realizado y darle aprobación mientras '
+                     'todo se encuentre en orden. \n'
 
-                                                                                        '\n\n Este es un mensaje automático y no es necesario responder.',
+                     '\n\n Este es un mensaje automático y no es necesario responder.',
             )
 
             # Correo enviado al usuario administrador

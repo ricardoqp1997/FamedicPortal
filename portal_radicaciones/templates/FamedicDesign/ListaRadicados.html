@@ -55,15 +55,16 @@
         {% for radicado in object_list %}
             <div class="card card_rad_style">
                 <div class="card-header">
-                    <i>Radicado No. {{ radicado.id }}</i>
+                    <i>Radicado Número {{ radicado.id }}</i>
                 </div>
 
                 <div class="card-body">
-                    <h5 class="card-title"><strong>Número de factura: {{ radicado.id_factura }}</strong></h5>
+                    <h5 class="card-title"><strong>Número consecutivo: {{ radicado.id_factura }}</strong></h5>
                     <br>
-                    <p class="card-text"><strong>Monto designado:</strong> $ {{ radicado.monto_factura}}</p>
+                    <p class="card-text"><strong>Fecha de radicado:</strong> {{ radicado.datetime_radicado }}</p>
+                    <p class="card-text"><strong>Valor de la factura:</strong> $ {{ radicado.monto_factura}}</p>
                     <p class="card-text"><strong>Régimen de factura:</strong> {{ radicado.get_regimen_type_display }}</p>
-                    <p class="card-text"><strong>Sede correspondiente a la radicación:</strong> {{ radicado.get_sede_select_display }}</p>
+                    <p class="card-text"><strong>Observaciónes:</strong> {% if radicado.observaciones %} {{ radicado.observaciones }} {% else %} Ninguna {% endif %}</p>
                     <a href="{% url 'radicado_detail' radicado.id %}" class="btn btn-primary boton_detalles">Mas información</a>
                 </div>
             </div>

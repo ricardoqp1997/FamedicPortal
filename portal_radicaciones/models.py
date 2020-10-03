@@ -10,12 +10,22 @@ class Locacion(models.Model):
     LOCACION_ACTIVA = True
     LOCACION_INACTIVA = False
 
+    DEPARTAMENTOS_CHOICES = [
+        ('ARAU', 'Arauca'),
+        ('BOYC', 'Boyacá'),
+        ('CASN', 'Casanare'),
+        ('CUND', 'Cundinamarca'),
+        ('META', 'Meta')
+    ]
+
     STATUS_CHOICES = [
         (LOCACION_ACTIVA, 'Locación activa'),
         (LOCACION_INACTIVA, 'Locación inactiva')
     ]
 
-    locacion_name = models.CharField(verbose_name='nombre de la locación', max_length=50, default='Arauca')
+    municipio = models.CharField(verbose_name='departamento', max_length=5,
+                                 choices=DEPARTAMENTOS_CHOICES, default='META')
+    locacion_name = models.CharField(verbose_name='municipio', max_length=50, default='VILLAVICENCIO')
     locacion_status = models.BooleanField(verbose_name='estado activo de la locación', choices=STATUS_CHOICES,
                                           default=LOCACION_ACTIVA)
 
@@ -87,7 +97,6 @@ class Glosa(models.Model):
 class RadicacionModel(models.Model):
 
     def validate_file_extension(value):
-
         ext = os.path.splitext(value.name)[1]
         valid_extensions = [
             '.zip',
@@ -104,7 +113,6 @@ class RadicacionModel(models.Model):
 
         if not ext in valid_extensions:
             raise forms.ValidationError(u'Error de formato de archivo, preferiblemente suba un comprimido .zip')
-
 
     # Selección de estado de radicado
     RAD_UNVERIFIED = 'SINAP'

@@ -104,7 +104,6 @@ urlpatterns = [
     # Acceso al panel administrativo
     path('admin-redirect', portal_views.admin_redirect, name='admin'),
     path('admin/', admin_site.urls),
-    path('adminl/', admin.site.urls),
 
     # Vistas del menú principal de la aplicación después de haber iniciado sesión de forma correcta
     path('main/', portal_views.hola_mundo, name='main'),

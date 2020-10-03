@@ -51,7 +51,7 @@ class RadicacionAdmin(admin.ModelAdmin):
         (
             'Rips adjuntos del radicado', {
                 'classes': ['wide', 'extrapretty'],
-                'fields': ['file_ribs1', 'file_ribs2', 'file_ribs3', 'file_ribs4']
+                'fields': ['file_ribs']
             }
         )
     )
@@ -254,14 +254,14 @@ class RadicacionAdmin(admin.ModelAdmin):
 class LocacionAdmin(admin.ModelAdmin):
 
     # Parametrización de los filtros de búsqueda y de visualización de contenido
-    list_display = ['id', 'locacion_name', 'locacion_status']
-    list_filter = ['id', 'locacion_name', 'locacion_status']
+    list_display = ['id', 'municipio',  'locacion_name', 'locacion_status']
+    list_filter = ['id', 'municipio',  'locacion_name', 'locacion_status']
 
     fieldsets = (
         (
             'Datos básicos de la locación', {
                 'classes': ['wide', ],
-                'fields': ['locacion_name']
+                'fields': ['locacion_name', 'municipio']
             }
         ),
         (
