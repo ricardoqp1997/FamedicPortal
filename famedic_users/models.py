@@ -28,7 +28,6 @@ class UserManager(BaseUserManager):
         user_obj.save(using=self._db)
         return user_obj
 
-
     # método para la asignación de usuarios staff
     def create_staffuser(self, id_famedic, email, location, password=None):
         user = self.create_user(
@@ -39,7 +38,6 @@ class UserManager(BaseUserManager):
             is_staff=True
         )
         return user
-
 
     # método para la asignación de usuarios superuser
     def create_superuser(self, id_famedic, email, location, password=None):

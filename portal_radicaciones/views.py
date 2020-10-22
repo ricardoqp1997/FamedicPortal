@@ -229,7 +229,7 @@ def resend_token(request):
     print(otp)
 
     sender_mail = settings.EMAIL_HOST_USER
-
+    print(email_login)
     token_mail = EmailMultiAlternatives(
 
         from_email=sender_mail,
@@ -286,8 +286,8 @@ def perfil(request):
 # sección de radicación
 @login_required(login_url='/login/')
 def radicacion(request):
-    tz = timezone.now().date()
-
+    tz = timezone.localdate()
+    print(tz)
     global invoice_id
     global invoice_finished
 

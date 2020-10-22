@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_otp',
     'django_otp.plugins.otp_totp',
     'crispy_forms',
+
 ]
 
 AUTH_USER_MODEL = 'famedic_users.FamedicUser'
@@ -58,7 +59,17 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'django_otp.middleware.OTPMiddleware',
+
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
 ]
+
+SESSION_EXPIRE_SECONDS = 120  # 10 minutos
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD = 2  # tiempo de espera despues de ultima actividad
+SESSION_TIMEOUT_REDIRECT = '/login/'
+
+
 
 ROOT_URLCONF = 'FAMEDIC_Dev.urls'
 

@@ -128,7 +128,7 @@ class RadicacionModel(models.Model):
     # Selección de régimen
     REGIMEN_CHOICES = [
         ('CT', 'Contributivo'),
-        ('SB', 'Subsidiario'),
+        ('SB', 'Subsidiado'),
     ]
 
     # Que usuario realizó la radicación

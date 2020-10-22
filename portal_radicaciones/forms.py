@@ -156,7 +156,6 @@ class UserAdminCreationForm(forms.ModelForm):
 
         return password2"""
 
-
     def save(self, commit=True):
         random = secrets.SystemRandom()
         random_password = str(random.randrange(10000000, 99999999))
@@ -322,7 +321,6 @@ class RadicacionForm(forms.ModelForm):
         widget=forms.HiddenInput(),
         required=False
     )
-
 
     class Meta:
 
