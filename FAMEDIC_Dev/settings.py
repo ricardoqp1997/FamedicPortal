@@ -64,12 +64,10 @@ MIDDLEWARE = [
     'django_session_timeout.middleware.SessionTimeoutMiddleware',
 ]
 
-SESSION_EXPIRE_SECONDS = 120  # 10 minutos
+SESSION_EXPIRE_SECONDS = 600  # 10 minutos
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
-SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD = 2  # tiempo de espera despues de ultima actividad
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD = 10  # tiempo de espera despues de ultima actividad
 SESSION_TIMEOUT_REDIRECT = '/login/'
-
-
 
 ROOT_URLCONF = 'FAMEDIC_Dev.urls'
 
@@ -102,7 +100,7 @@ DATABASES = {
         NAME='db_famedic',
         USER='awx4g5ommavf',
         PASSWORD='O>0H3r|-',
-        HOST='107.180.109.32',
+        HOST='a2plcpnl0835.prod.iad2.secureserver.net',
         PORT='3306'
     )
 }
