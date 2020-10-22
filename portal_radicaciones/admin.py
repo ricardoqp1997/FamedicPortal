@@ -94,6 +94,9 @@ class RadicacionAdmin(admin.ModelAdmin):
     def active(self, obj):
         return obj.aproved == 1
 
+    def has_delete_permission(self, request, obj=None):
+        return False
+
     def has_add_permission(self, request, obj=None):
         return False
 
