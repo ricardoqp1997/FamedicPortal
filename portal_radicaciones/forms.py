@@ -237,24 +237,26 @@ class RadicacionForm(forms.ModelForm):
     )
 
     datetime_factura1 = forms.DateField(
-        widget=forms.SelectDateWidget(
-            years=range(timezone.now().year - 3, timezone.now().year + 1),
+        input_formats=['%m/%d/%Y'],
+        widget=forms.DateInput(
             attrs={
                 'placeholder': 'MM/DD/AAAA',
-                'class': 'form-control monto_field',
-                'aria-label': ''
+                'class': 'form-control datetimepicker-input',
+                'data-target': '#datetimepicker1',
+                'height': '40px'
             }
         ),
         required=True,
     )
 
     datetime_factura2 = forms.DateField(
-        widget=forms.SelectDateWidget(
-            years=range(timezone.now().year - 3, timezone.now().year + 1),
+        input_formats=['%m/%d/%Y'],
+        widget=forms.DateInput(
             attrs={
                 'placeholder': 'MM/DD/AAAA',
-                'class': 'form-control monto_field',
-                'aria-label': ''
+                'class': 'form-control datetimepicker-input',
+                'data-target': '#datetimepicker2',
+                'height': '40px'
             }
         ),
         required=True,

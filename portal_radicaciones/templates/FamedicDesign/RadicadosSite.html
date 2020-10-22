@@ -93,6 +93,15 @@
            margin-right: 15px;
        }
 
+       .fa {
+          display: inline-block;
+          font: normal normal normal 10px/1 FontAwesome;
+          font-size: inherit;
+          text-rendering: auto;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
     </style>
 
     <!--  -->
@@ -162,11 +171,11 @@
                 {{ form.id_factura.error_messages }}
                 <label for="colFormLabel" class="col-sm-3 col-form-label">Fecha inicial de factura*</label>
 
-                <div class="input-group-prepend">
-                    <span class="input-group-text">Fecha</span>
-                </div>
-                <div class="monto_field">
+                <div class="input-group date monto_field" id="datetimepicker1" data-target-input="nearest">
                     {{ form.datetime_factura1 }}
+                    <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                        <div class="input-group-text"  style="height: 38px"><i class="fa fa-calendar"></i></div>
+                    </div>
                 </div>
             </div>
             <br>
@@ -175,11 +184,11 @@
                 {{ form.id_factura.error_messages }}
                 <label for="colFormLabel" class="col-sm-3 col-form-label">Fecha final de factura*</label>
 
-                <div class="input-group-prepend">
-                    <span class="input-group-text">Fecha</span>
-                </div>
-                <div class="monto_field">
+                <div class="input-group date monto_field" id="datetimepicker2" data-target-input="nearest">
                     {{ form.datetime_factura2 }}
+                    <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker">
+                        <div class="input-group-text"  style="height: 38px"><i class="fa fa-calendar"></i></div>
+                    </div>
                 </div>
             </div>
             <br>
@@ -263,7 +272,19 @@
         </form>
     </div>
 
+    <script>
+      $(function () {
+        $("#datetimepicker1").datetimepicker({
+          format: 'MM/DD/YYYY',
+        });
+      });
 
+      $(function () {
+        $("#datetimepicker2").datetimepicker({
+          format: 'MM/DD/YYYY',
+        });
+      });
+    </script>
 
 
 {% endblock %}
