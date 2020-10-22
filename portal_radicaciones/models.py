@@ -1,6 +1,6 @@
 from django.db import models
 from famedic_users.models import FamedicUser
-from datetime import datetime
+from datetime import date, time, datetime, timedelta
 from django import forms
 
 import os
@@ -96,6 +96,19 @@ class Glosa(models.Model):
 # Clase para el manejo de formularios de radicación
 class RadicacionModel(models.Model):
 
+    def valiador_dias_habiles():
+
+        semana = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
+        hoy = date.today()
+        dia = hoy.weekday()
+
+        if semana[dia] == 'sabado':
+            return hoy + timedelta(2)
+        elif semana[dia] == 'domingo':
+            return hoy + timedelta(1)
+        else:
+            return hoy
+
     def validate_file_extension(value):
         ext = os.path.splitext(value.name)[1]
         valid_extensions = [
@@ -168,7 +181,7 @@ class RadicacionModel(models.Model):
     glosa_asign = models.ForeignKey(Glosa, blank=True, null=True, on_delete=models.SET_NULL, verbose_name='glosa')
 
     # Fecha de registro del radicado
-    datetime_radicado = models.DateTimeField(auto_now_add=True, blank=True, verbose_name='fecha de radicación')
+    datetime_radicado = models.DateField(default=valiador_dias_habiles(), blank=True, verbose_name='fecha de radicación')
 
     # Fecha inicial del periodo de la factura a radicar
     datetime_factura1 = models.DateField(auto_now_add=False, auto_now=False,
