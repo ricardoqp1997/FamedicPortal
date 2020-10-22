@@ -77,6 +77,13 @@
                 Radicación finalizada
             </div>
             <div class="card-body">
+                {% if messages %}
+                    {% for message in messages %}
+                      <div class="alert alert-{{ message.tags }}" style="margin-top: 10px">
+                        {{ message }}
+                      </div>
+                    {% endfor %}
+                {% endif %}
                 <h5 class="card-title">Su factura ha sido creada con el número:</h5>
                 <p class="card-text text_numrad">{{ invoice_id }}</p>
             </div>

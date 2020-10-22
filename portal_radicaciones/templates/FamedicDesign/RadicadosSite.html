@@ -78,6 +78,7 @@
             width: 110%;
             height: auto;
             border: 0;
+            font-size: small;
         }
 
        /* Estilos para la zona de observaciones */
@@ -275,13 +276,15 @@
     <script>
       $(function () {
         $("#datetimepicker1").datetimepicker({
-          format: 'MM/DD/YYYY',
+            format: 'DD-MM-YYYY',
+            startDate: '-3y'
         });
       });
 
       $(function () {
         $("#datetimepicker2").datetimepicker({
-          format: 'MM/DD/YYYY',
+            format: 'DD-MM-YYYY',
+            startDate: '-3y'
         });
       });
     </script>

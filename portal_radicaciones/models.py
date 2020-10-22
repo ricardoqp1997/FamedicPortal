@@ -98,9 +98,18 @@ class RadicacionModel(models.Model):
 
     def valiador_dias_habiles():
 
-        semana = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
         hoy = date.today()
         dia = hoy.weekday()
+
+        semana = [
+            'lunes',
+            'martes',
+            'miercoles',
+            'jueves',
+            'viernes',
+            'sabado',
+            'domingo'
+        ]
 
         if semana[dia] == 'sabado':
             return hoy + timedelta(2)
@@ -110,6 +119,7 @@ class RadicacionModel(models.Model):
             return hoy
 
     def validate_file_extension(value):
+
         ext = os.path.splitext(value.name)[1]
         valid_extensions = [
             '.zip',

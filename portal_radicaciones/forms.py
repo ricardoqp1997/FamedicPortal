@@ -237,10 +237,10 @@ class RadicacionForm(forms.ModelForm):
     )
 
     datetime_factura1 = forms.DateField(
-        input_formats=['%m/%d/%Y'],
+        input_formats=settings.DATE_INPUT_FORMATS,
         widget=forms.DateInput(
             attrs={
-                'placeholder': 'MM/DD/AAAA',
+                'placeholder': 'DD-MM-YYYY',
                 'class': 'form-control datetimepicker-input',
                 'data-target': '#datetimepicker1',
                 'height': '40px'
@@ -250,10 +250,10 @@ class RadicacionForm(forms.ModelForm):
     )
 
     datetime_factura2 = forms.DateField(
-        input_formats=['%m/%d/%Y'],
+        input_formats=settings.DATE_INPUT_FORMATS,
         widget=forms.DateInput(
             attrs={
-                'placeholder': 'MM/DD/AAAA',
+                'placeholder': 'DD-MM-YYYY',
                 'class': 'form-control datetimepicker-input',
                 'data-target': '#datetimepicker2',
                 'height': '40px'

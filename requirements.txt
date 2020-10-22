@@ -6,3 +6,4 @@ django-otp==0.9.3
 django-crispy-forms==1.9.2
 twilio==6.44.2
 bootstrap-admin==0.4.4
+django-session-timeout==0.1.0

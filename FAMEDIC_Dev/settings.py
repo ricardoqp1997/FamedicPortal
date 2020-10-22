@@ -23,6 +23,7 @@ SECRET_KEY = '7_m6!*0(%8059)tigvo%cxcy4jhyz8by%__&l^8$0z_+67^0!m'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -64,6 +65,7 @@ MIDDLEWARE = [
     'django_session_timeout.middleware.SessionTimeoutMiddleware',
 ]
 
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_EXPIRE_SECONDS = 600  # 10 minutos
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD = 10  # tiempo de espera despues de ultima actividad
@@ -156,6 +158,23 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+"""
+STATIC_URL = '/static/'
+STATIC_ROOT = 'proveedores.famedicips.co/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'token_access'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+"""
+
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'famedicips.co'
 EMAIL_PORT = '465'
@@ -164,3 +183,5 @@ EMAIL_HOST_PASSWORD = 'Lucas1705'
 EMAIL_USE_SSL = True
 
 DATE_INPUT_FORMATS = ['%d-%m-%Y']
+
+SILENCED_SYSTEM_CHECKS = ["fields.W161"]

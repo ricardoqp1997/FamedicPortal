@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib import messages
 from django.utils import timezone
+from datetime import date, time, datetime, timedelta
 
 # Librería para restricción de vistas con autenticación realizada
 from django.contrib.auth.decorators import login_required
@@ -140,7 +141,7 @@ def login_famedic(request):
         try:
             if user.is_updated:
 
-                print(email_login)
+                # print(email_login)
 
                 secret_otp = secrets.SystemRandom()
                 otp = str(secret_otp.randrange(100000, 999999))
@@ -158,10 +159,10 @@ def login_famedic(request):
 
                          '\nSe ha detectado un intento de acceso al portal de radicación de facturas.'
                          ' Su token de acceso para esta sesión es ' + str(otp) + '. Si usted no trató de'
-                                                                                 ' ingresar recientemente por favor contactese con un administrador del portal'
-                                                                                 ' para revisar y garantizar la seguridad de su cuenta.'
+                         ' ingresar recientemente por favor contactese con un administrador del portal'
+                         ' para revisar y garantizar la seguridad de su cuenta.'
 
-                                                                                 '\n\n Este es un mensaje automático y no es necesario responder.',
+                         '\n\n Este es un mensaje automático y no es necesario responder.',
                 )
 
                 token_mail.send()
@@ -229,7 +230,7 @@ def resend_token(request):
     print(otp)
 
     sender_mail = settings.EMAIL_HOST_USER
-    print(email_login)
+    # print(email_login)
     token_mail = EmailMultiAlternatives(
 
         from_email=sender_mail,
@@ -237,14 +238,14 @@ def resend_token(request):
 
         subject='Token de acceso al portal de facturas - Famedic IPS',
         body='Sr(a). Usuario(a) del portal de proveedores.\n'
-
+            
              '\nSe ha detectado un intento de acceso al portal de radicación de facturas.'
-             ' Su token de acceso para esta sesión es ' + str(
-            otp) + '. Si usted no trató de'
-                   ' ingresar recientemente por favor contactese con un administrador del portal'
-                   ' para revisar y garantizar la seguridad de su cuenta.'
+             ' Su token de acceso para esta sesión es ' + str(otp) +
+             '. Si usted no trató de'
+             ' ingresar recientemente por favor contactese con un administrador del portal'
+             ' para revisar y garantizar la seguridad de su cuenta.'
 
-                   '\n\n Este es un mensaje automático y no es necesario responder.',
+             '\n\n Este es un mensaje automático y no es necesario responder.',
     )
 
     token_mail.send()
@@ -257,7 +258,7 @@ def resend_token(request):
 @login_required(login_url='/login/')
 def hola_mundo(request):
     tz = timezone.localdate()
-    print(tz)
+    # print(tz)
 
     if request.user.is_authenticated:
 
@@ -287,7 +288,9 @@ def perfil(request):
 @login_required(login_url='/login/')
 def radicacion(request):
     tz = timezone.localdate()
-    print(tz)
+    # print(tz)
+    # print(tz.day)
+    # print(type(tz.day))
     global invoice_id
     global invoice_finished
 
@@ -304,8 +307,8 @@ def radicacion(request):
 
             fecha1 = form.cleaned_data.get('datetime_factura1')
             fecha2 = form.cleaned_data.get('datetime_factura2')
-            print(str(fecha1) + ' - ini')
-            print(str(fecha2) + ' - fin')
+            # print(str(fecha1) + ' - ini')
+            # print(str(fecha2) + ' - fin')
 
             if fecha1 < fecha2:
 
@@ -321,13 +324,14 @@ def radicacion(request):
                 form = RadicacionForm()
 
                 return redirect('/main/done/')
+
             else:
                 form = RadicacionForm()
-                messages.add_message(request, messages.ERROR, 'Fechas ingresadas incorrectamente')
+                messages.warning(request, 'Fechas ingresadas incorrectamente')
 
         else:
             form = RadicacionForm()
-            messages.add_message(request, messages.ERROR, 'Error validando formulario')
+            messages.warning(request, 'Error validando formulario')
 
     else:
         form = RadicacionForm()
@@ -350,7 +354,10 @@ def radicacion_finish(request):
     global invoice_mail
     global invoice_finished
 
+    tz = timezone.localdate()
+
     invoice_mail = 'ricardoq@tics-sas.com'
+    # invoice_mail = 'direccioninformatica@famedicips.com'
     user_mail = request.user.get_username()
     user_fullname = request.user.get_full_name()
 
@@ -411,7 +418,18 @@ def radicacion_finish(request):
 
             invoice_finished = False
 
-            return render(request, 'FamedicDesign/Radicado.html', form_finished)
+            if tz.day > 20:
+                # print('fecha mayor')
+                messages.warning(request, 'Recuerde que todo registro después del dia 20'
+                                          ' del mes vigente quedará pendiente para el '
+                                          'siguiente. \n'
+                                          'Tendrá que esperar a que inicie el proximo'
+                                          'mes para que su radicado sea estudiado.')
+                return render(request, 'FamedicDesign/Radicado.html', form_finished)
+
+            else:
+                return render(request, 'FamedicDesign/Radicado.html', form_finished)
+
         else:
 
             return redirect('/main/radicar/')

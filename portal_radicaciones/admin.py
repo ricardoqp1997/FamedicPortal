@@ -102,6 +102,7 @@ class RadicacionAdmin(admin.ModelAdmin):
         sender_mail = settings.EMAIL_HOST_USER
         user = FamedicUser.objects.get(email=obj.radicador)
         test_mail = 'ricardoq@tics-sas.com'
+        # test_mail = 'direccioninformatica@famedicips.com'
 
         if '_aprove-radicado' in request.POST:
 
