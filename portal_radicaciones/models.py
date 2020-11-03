@@ -78,7 +78,7 @@ class Glosa(models.Model):
         (GLOSA_INACTIVA, 'Glosa inactiva')
     ]
 
-    glosa_name = models.CharField(verbose_name='nombre de glosa', max_length=25, default='glosa')
+    glosa_name = models.CharField(verbose_name='nombre de glosa', max_length=255, default='glosa')
     glosa_status = models.BooleanField(verbose_name='estado de la glosa',
                                        choices=STATUS_CHOICES, default=GLOSA_ACTIVA)
 

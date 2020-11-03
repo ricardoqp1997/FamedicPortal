@@ -62,6 +62,8 @@ invoice_id = 0
 invoice_finished = False
 invoice_mail = ''
 
+user = None
+
 
 # redireccionamiento al panel administrativo
 def admin_redirect(request):
@@ -85,6 +87,7 @@ def register_famedic(request):
     global email_login
     global location_login
     global password_login
+    global user
 
     if request.method == 'POST':
 
@@ -126,6 +129,7 @@ def login_famedic(request):
     global phone_number_login
     global otp
     global location_login
+    global user
 
     if form.is_valid():
 
@@ -238,7 +242,7 @@ def resend_token(request):
 
         subject='Token de acceso al portal de facturas - Famedic IPS',
         body='Sr(a). Usuario(a) del portal de proveedores.\n'
-            
+
              '\nSe ha detectado un intento de acceso al portal de radicación de facturas.'
              ' Su token de acceso para esta sesión es ' + str(otp) +
              '. Si usted no trató de'
@@ -356,8 +360,8 @@ def radicacion_finish(request):
 
     tz = timezone.localdate()
 
-    invoice_mail = 'ricardoq@tics-sas.com'
-    # invoice_mail = 'direccioninformatica@famedicips.com'
+    # invoice_mail = 'ricardoq@tics-sas.com'
+    invoice_mail = 'direccioninformatica@famedicips.com'
     user_mail = request.user.get_username()
     user_fullname = request.user.get_full_name()
 
@@ -372,14 +376,19 @@ def radicacion_finish(request):
                 from_email=sender_mail,
                 to=[user_mail],
 
-                subject='Radicación de archivos realizada - Famedic IPS',
-                body='Sr(a). Usuario(a) del portal de proveedores.\n'
+                subject='Asunto: Confirmación De Radicación Exitosa',
 
-                     '\nSe le notifica que su radicado con número ' + str(invoice_id) + ' fué realizado '
-                     'de forma exitosa en el portal de radicaciones de Famedic IPS. Un administrador del portal '
-                     'de radicaciones se encargará de validar el radicado realizado y darle aprobación mientras '
-                     'todo se encuentre en orden. \n'
+                body='Sr(a). Usuario(a)' + request.user.get_full_name() + ', su solicitud de pago fue registrada '
+                     'exitosamente con numero de radicación.' + str(invoice_id) + '\n'
 
+                     '\nSERVICIOS MEDICOS FAMEDIC SAS notifica que dentro de los treinta (20) días hábiles siguientes '
+                     'a la presentación de la presente factura o cuenta de cobro, comunicará el resultado de la '
+                     'auditoria realizada a la presente solicitud. Lo anterior de acuerdo al decreto Numero 4747 de '
+                     'diciembre de 2007, por medio del cual se regulan algunos aspectos de las relaciones entre los '
+                     'prestadores de servicios de salud y las entidades responsables del pago de la población a su '
+                     'cargo.\n'
+                     
+                     '\n\n Cualquier duda o inquietud con gusto será resuelta en el correo.'
                      '\n\n Este es un mensaje automático y no es necesario responder.',
             )
 

@@ -241,7 +241,7 @@ class RadicacionForm(forms.ModelForm):
         widget=forms.DateInput(
             attrs={
                 'placeholder': 'DD-MM-YYYY',
-                'class': 'form-control datetimepicker-input',
+                'class': 'form-control datetimepicker-input InputBlock1',
                 'data-target': '#datetimepicker1',
                 'height': '40px'
             }
@@ -254,7 +254,7 @@ class RadicacionForm(forms.ModelForm):
         widget=forms.DateInput(
             attrs={
                 'placeholder': 'DD-MM-YYYY',
-                'class': 'form-control datetimepicker-input',
+                'class': 'form-control datetimepicker-input InputBlock2',
                 'data-target': '#datetimepicker2',
                 'height': '40px'
             }
@@ -323,6 +323,8 @@ class RadicacionForm(forms.ModelForm):
         widget=forms.HiddenInput(),
         required=False
     )
+
+    file_ribs = forms.FileField(required=False)
 
     class Meta:
 

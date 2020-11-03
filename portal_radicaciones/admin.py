@@ -5,7 +5,13 @@ from django.contrib import messages
 from .models import *
 from famedic_users.models import FamedicUser
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
+from django.conf.urls import url, include
+from django.urls import path
+
+from import_export.admin import ImportExportModelAdmin
+from import_export.widgets import ForeignKeyWidget
+from import_export import resources, fields
 
 from django.core.mail import (
     send_mail,
@@ -13,13 +19,40 @@ from django.core.mail import (
     EmailMultiAlternatives
 )
 
+import xlsxwriter
 
-class RadicacionAdmin(admin.ModelAdmin):
+
+class ForeignRadicado(resources.ModelResource):
+    radicador = fields.Field(
+        column_name='radicador',
+        attribute='radicador',
+        widget=ForeignKeyWidget(FamedicUser, 'email')
+    )
+
+    sede_selection = fields.Field(
+        column_name='sede_selection',
+        attribute='sede_selection',
+        widget=ForeignKeyWidget(Sedes, 'sede_name')
+    )
+
+    glosa_asign = fields.Field(
+        column_name='glosa_asign',
+        attribute='glosa_asign',
+        widget=ForeignKeyWidget(Sedes, 'glosa_name')
+    )
+
+    class Meta:
+        model = RadicacionModel
+
+
+class RadicacionAdmin(ImportExportModelAdmin):
+
+    resource_class = ForeignRadicado
 
     change_form_template = 'AdminExtends/RadicadoApproval.html'
 
     # Parametrización de los filtros de búsqueda y de visualización de contenido
-    list_display = ['id', 'id_factura', 'radicador', 'monto_factura', 'sede_selection', 'aproved']
+    list_display = ['id', 'id_factura', 'datetime_radicado', 'radicador', 'monto_factura', 'sede_selection', 'aproved']
     list_filter = ['aproved', 'id', 'sede_selection', 'regimen_type']
 
     fieldsets = (
@@ -91,6 +124,8 @@ class RadicacionAdmin(admin.ModelAdmin):
     ordering = ['id', 'id_factura', 'radicador']
     filter_horizontal = []
 
+    # save_on_top = True
+
     def active(self, obj):
         return obj.aproved == 1
 
@@ -127,17 +162,14 @@ class RadicacionAdmin(admin.ModelAdmin):
                     from_email=sender_mail,
                     to=[user.email, test_mail],
 
-                    subject='Notificación de radicación aprobada - Famedic IPS',
-                    body='Sr(a). ' + user.get_full_name() + '.\n '
-        
-                         '\nSe le notifica que el radicado con número ' + str(obj.id) + ' que usted realizó '
-                         'fué revisado y aprovado por los administradores del portal de radicaciones de Famedic IPS. '
+                    subject='Proceso Exitoso de Auditoria',
+                    body='Sr(a). Usuario(a)  ' + user.get_full_name() + ', el proceso de auditoria a su solicitud de '
+                         'pago con numero de radicación bajo el consecutivo ' + str(obj.id) + ', culminó exitosamente '
+                         'sin diferencia contractual alguna, razón por la cual continua con el proceso para pago.'
                          
-                         ' Durante la revisión se indicaron los siguientes comentarios: \n\n'
+                         '\n\nDurante la revisión se indicaron los siguientes comentarios: \n\n'
 
                          + obj.obs_admin + '\n\n'                                                              
-                         
-                         'Con dicha validación el proceso de radicación ha finalizado correctamente. \n'
         
                          '\n\n Este es un mensaje automático y no es necesario responder.',
                 )
@@ -148,13 +180,10 @@ class RadicacionAdmin(admin.ModelAdmin):
                     from_email=sender_mail,
                     to=[user.email, test_mail],
 
-                    subject='Notificación de radicación aprobada - Famedic IPS',
-                    body='Sr(a). ' + user.get_full_name() + '.\n\n'
-
-                         '\nSe le notifica que el radicado con número ' + str(obj.id) + ' que usted realizó '
-                         'fué revisado y aprovado por los administradores del portal de radicaciones de Famedic IPS. '
-
-                         'Con dicha validación el proceso de radicación ha finalizado correctamente. \n'
+                    subject='Proceso Exitoso de Auditoria',
+                    body='Sr(a). Usuario(a)  ' + user.get_full_name() + ', el proceso de auditoria a su solicitud de '
+                         'pago con numero de radicación bajo el consecutivo ' + str(obj.id) + ', culminó exitosamente '
+                         'sin diferencia contractual alguna, razón por la cual continua con el proceso para pago.'
 
                          '\n\n Este es un mensaje automático y no es necesario responder.',
                 )
@@ -183,19 +212,21 @@ class RadicacionAdmin(admin.ModelAdmin):
                     from_email=sender_mail,
                     to=[user.email, test_mail],
 
-                    subject='Notificación de radicación rechazada - Famedic IPS',
-                    body='Sr(a). ' + user.get_full_name() + '.\n '
-    
-                         '\nSe le notifica que el radicado con número ' + str(obj.id) + ' que usted realizó '
-                         'fué revisado y no fue aprobado por no cumplir con todos los requisitos.'
+                    subject='Proceso Devolución solicitud bajo radicado Nro ' + str(obj.id) + '.',
+
+                    body='Sr(a). Usuario(a) ' + user.get_full_name() + ', su solicitud de pago con numero de radicación '
+                         'bajo el consecutivo “ ” no cumple con los  requisitos mínimos para realizar un proceso de '
+                         'auditoria y pago, razón por la cual se realiza la devolución total para que sean subsanadas '
+                         'las causales que se relacionan a continuación y se vuelva a radicar nuevamente.\n\n'
                                                                                         
                          ' Durante la revisión se indicaron los siguientes comentarios: \n\n'
 
                          + obj.obs_admin + '\n\n'
-                                                                                        
-                         'Debido a l resultado negativo en la revisión de su radicado será necesario'
-                         'que realice el proceso nuevamente. \n'
     
+                         '\n\n Lo anterior de acuerdo con el decreto Numero 4747 de diciembre de 2007, por medio del '
+                         'cual se regulan algunos aspectos de las relaciones entre los prestadores de servicios de '
+                         'salud y las entidades responsables del pago de la población a su cargo.'
+                                           
                          '\n\n Este es un mensaje automático y no es necesario responder.',
                 )
 
@@ -205,17 +236,18 @@ class RadicacionAdmin(admin.ModelAdmin):
                     from_email=sender_mail,
                     to=[user.email, test_mail],
 
-                    subject='Notificación de radicación rechazada - Famedic IPS',
-                    body='Sr(a). ' + user.get_full_name() + '.\n '
+                    subject='Proceso Devolución solicitud bajo radicado Nro ' + str(obj.id) + '.',
 
-                         '\nSe le notifica que el radicado con número ' + str(
-                        obj.id) + ' que usted realizó '
-                                  'fué revisado y no fue aprobado por no cumplir con todos los requisitos.'
+                    body='Sr(a). Usuario(a) ' + user.get_full_name() + ', su solicitud de pago con numero de radicación '
+                         'bajo el consecutivo “ ” no cumple con los  requisitos mínimos para realizar un proceso de '
+                         'auditoria y pago, razón por la cual se realiza la devolución total para que sean subsanadas '
+                         'las causales que se relacionan a continuación y se vuelva a radicar nuevamente.'
+                                                                       
+                         '\n\n Lo anterior de acuerdo con el decreto Numero 4747 de diciembre de 2007, por medio del '
+                         'cual se regulan algunos aspectos de las relaciones entre los prestadores de servicios de '
+                         'salud y las entidades responsables del pago de la población a su cargo.'
 
-                                  'El administrador del portal de radicaciónes rechazó su radicado y será necesario'
-                                  'que realice el proceso nuevamente. \n'
-
-                                  '\n\n Este es un mensaje automático y no es necesario responder.',
+                         '\n\n Este es un mensaje automático y no es necesario responder.',
                 )
 
             mail_to_user.send()
@@ -253,6 +285,20 @@ class RadicacionAdmin(admin.ModelAdmin):
             return HttpResponseRedirect(".")
 
         return super().response_change(request, obj)
+
+    # -----------------------------------------------------------------------------------------------------------------
+
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path('immortal/', self.set_immortal, name='admin_test'),
+        ]
+        return my_urls + urls
+
+    def set_immortal(self, request):
+
+        self.message_user(request, "Informe de radicaciones exportado")
+        return HttpResponseRedirect("../")
 
 
 class LocacionAdmin(admin.ModelAdmin):

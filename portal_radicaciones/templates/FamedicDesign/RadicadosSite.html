@@ -142,7 +142,7 @@
 
             <div class="monto_content row input-group">
                 {{ form.id_factura.error_messages }}
-                <label for="colFormLabel" class="col-sm-3 col-form-label">Número consecutivo</label>
+                <label for="colFormLabel" class="col-sm-4 col-form-label">Factura/cuenta de cobro</label>
 
                 <div class="input-group-prepend">
                     <span class="input-group-text">#</span>
@@ -287,7 +287,15 @@
             startDate: '-3y'
         });
       });
-    </script>
+        $("#ViewActivitydiv1").on("keydown keypress keyup click contextmenu", false);
+        $("#ViewActivitydiv2").on("keydown keypress keyup click contextmenu", false);
 
+        $(".InputBlock1").keydown(function(event) {
+            return false;
+        });
+        $(".InputBlock2").keydown(function(event) {
+            return false;
+        });
+    </script>
 
 {% endblock %}

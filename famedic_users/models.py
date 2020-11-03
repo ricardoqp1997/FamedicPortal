@@ -56,7 +56,15 @@ class UserManager(BaseUserManager):
 # Clase para estructurar el modelo de datos de los usuarios de Famedic
 class FamedicUser(AbstractBaseUser):
 
-# cédula del usuario
+    DOCUMENT_TYPE_CHOICES = [
+        ('NIT', 'Número NIT con indicativo al final'),
+        ('CC', 'Cédula de ciudadanía'),
+        ('CE', 'Cédula de extranjería'),
+        ('PP', 'Pasaporte')
+    ]
+    # tipo de documento del usuario
+    id_type = models.CharField(verbose_name='tipo de documento', max_length=3, choices=DOCUMENT_TYPE_CHOICES, default='CC')
+    # documento del usuario
     id_famedic = models.CharField(verbose_name='cédula/NIT', max_length=10, unique=True)
     # nombre y apellidos del usuario
     first_name = models.CharField(verbose_name='nombre(s)', max_length=50, null=True)
@@ -84,25 +92,20 @@ class FamedicUser(AbstractBaseUser):
     ]
     objects = UserManager()
 
-
     # métodos base del modelo
     class Meta:
         verbose_name = 'Usuario'
 
-
     def __str__(self):
         return self.email
-
 
     def has_perm(self, perm, obj=None):
         print(perm, obj)
         return True
 
-
     def has_module_perms(self, app_label):
         print(app_label)
         return True
-
 
     # métodos adicionales del model para obtención de datos del usuario
     def get_first_name(self):
@@ -111,13 +114,11 @@ class FamedicUser(AbstractBaseUser):
         except:
             return 'N/A'
 
-
     def get_last_name(self):
         try:
             return self.last_name
         except:
             return 'N/A'
-
 
     def get_full_name(self):
         try:
@@ -125,10 +126,8 @@ class FamedicUser(AbstractBaseUser):
         except:
             return 'N/A'
 
-
     def get_id(self):
         return self.id_famedic
-
 
     def get_phone(self):
         try:
@@ -136,30 +135,24 @@ class FamedicUser(AbstractBaseUser):
         except:
             return 'N/A'
 
-
     def get_mail(self):
         return self.email
 
-
     def get_location(self):
         return self.location
-
 
     # propiedades del model de usuario
     @property
     def is_active(self):
         return self.active
 
-
     @property
     def is_admin(self):
         return self.admin
 
-
     @property
     def is_staff(self):
         return self.staff
-
 
     @property
     def is_updated(self):
