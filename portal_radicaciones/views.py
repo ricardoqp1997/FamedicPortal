@@ -199,6 +199,7 @@ def token_famedic(request):
     global password_login
     global phone_number_login
     global otp
+    global user
 
     if request.user.is_authenticated:
         return redirect('/main/')

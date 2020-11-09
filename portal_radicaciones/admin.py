@@ -46,7 +46,6 @@ class ForeignRadicado(resources.ModelResource):
 
 
 class RadicacionAdmin(ImportExportModelAdmin):
-
     resource_class = ForeignRadicado
 
     change_form_template = 'AdminExtends/RadicadoApproval.html'
@@ -139,13 +138,12 @@ class RadicacionAdmin(ImportExportModelAdmin):
 
         sender_mail = settings.EMAIL_HOST_USER
         user = FamedicUser.objects.get(email=obj.radicador)
-        test_mail = 'ricardoq@tics-sas.com'
-        # test_mail = 'direccioninformatica@famedicips.com'
+        # test_mail = 'ricardoq@tics-sas.com'
+        test_mail = 'direccioninformatica@famedicips.com'
 
         if '_aprove-radicado' in request.POST:
 
             if obj.aproved != 'SINAP':
-
                 self.message_user(request, "El radicado ya ha sido revisado, "
                                            "no es posible cambiar su estado.", messages.ERROR)
 
@@ -155,7 +153,7 @@ class RadicacionAdmin(ImportExportModelAdmin):
             obj.save()
 
             # Correo enviado al usuario radicador
-            if obj.obs_admin:
+            if obj.glosa_asign:  # != 0 - sin glosa
 
                 mail_to_user = EmailMultiAlternatives(
 
@@ -163,30 +161,32 @@ class RadicacionAdmin(ImportExportModelAdmin):
                     to=[user.email, test_mail],
 
                     subject='Proceso Exitoso de Auditoria',
-                    body='Sr(a). Usuario(a)  ' + user.get_full_name() + ', el proceso de auditoria a su solicitud de '
-                         'pago con numero de radicación bajo el consecutivo ' + str(obj.id) + ', culminó exitosamente '
-                         'sin diferencia contractual alguna, razón por la cual continua con el proceso para pago.'
-                         
-                         '\n\nDurante la revisión se indicaron los siguientes comentarios: \n\n'
 
-                         + obj.obs_admin + '\n\n'                                                              
-        
-                         '\n\n Este es un mensaje automático y no es necesario responder.',
+                    body='Sr(a). Usuario(a)  ' + user.get_full_name() + ', el proceso de auditoria a su solicitud de '
+                                                                        'pago con numero de radicación bajo el consecutivo ' + str(
+                        obj.id) + ', culminó exitosamente '
+                                  'con las siguientes observaciones:'
+
+                                  '\n\n' + obj.obs_admin + '\n\n'
+
+                                                           '\n\nDe no haberse generado diferencia contractual alguna descrita en observaciones, su '
+                                                           'solicitud continua con el proceso para pago.\n\n'
+
+                                                           '\n\nDe haberse generado glosa descrita en observaciones SERVICIOS MEDICOS FAMEDIC SAS se '
+                                                           'permite notificar que la presente glosa que se relaciona a continuación, debe ser subsanada '
+                                                           'dentro de los quince (15) días hábiles siguientes a su recepción, o se dará como aceptada. '
+                                                           'De acuerdo al decreto Numero 4747 de diciembre de 2007, por medio del cual se regulan '
+                                                           'algunos aspectos de las relaciones entre los prestadores de servicios de salud y las '
+                                                           'entidades responsables del pago de la población a su cargo. \n\n'
+
+                                                           '\n\n Este es un mensaje automático y no es necesario responder.',
                 )
 
-            else:
-                mail_to_user = EmailMultiAlternatives(
+            else:  # == 0 - sin glosa
 
-                    from_email=sender_mail,
-                    to=[user.email, test_mail],
-
-                    subject='Proceso Exitoso de Auditoria',
-                    body='Sr(a). Usuario(a)  ' + user.get_full_name() + ', el proceso de auditoria a su solicitud de '
-                         'pago con numero de radicación bajo el consecutivo ' + str(obj.id) + ', culminó exitosamente '
-                         'sin diferencia contractual alguna, razón por la cual continua con el proceso para pago.'
-
-                         '\n\n Este es un mensaje automático y no es necesario responder.',
-                )
+                self.message_user(request,
+                                  "Es necesario seleccionar un elemento de la lista glosa si va a realizar la aprobación del radicado. Para aprobar sin glosa, seleccione el elemento: 0-Aprobada Sin Glosa")
+                return HttpResponseRedirect(".")
 
             mail_to_user.send()
 
@@ -215,19 +215,19 @@ class RadicacionAdmin(ImportExportModelAdmin):
                     subject='Proceso Devolución solicitud bajo radicado Nro ' + str(obj.id) + '.',
 
                     body='Sr(a). Usuario(a) ' + user.get_full_name() + ', su solicitud de pago con numero de radicación '
-                         'bajo el consecutivo “ ” no cumple con los  requisitos mínimos para realizar un proceso de '
-                         'auditoria y pago, razón por la cual se realiza la devolución total para que sean subsanadas '
-                         'las causales que se relacionan a continuación y se vuelva a radicar nuevamente.\n\n'
-                                                                                        
-                         ' Durante la revisión se indicaron los siguientes comentarios: \n\n'
+                                                                       'bajo el consecutivo “ ” no cumple con los  requisitos mínimos para realizar un proceso de '
+                                                                       'auditoria y pago, razón por la cual se realiza la devolución total para que sean subsanadas '
+                                                                       'las causales que se relacionan a continuación y se vuelva a radicar nuevamente.\n\n'
+
+                                                                       ' Durante la revisión se indicaron los siguientes comentarios: \n\n'
 
                          + obj.obs_admin + '\n\n'
-    
-                         '\n\n Lo anterior de acuerdo con el decreto Numero 4747 de diciembre de 2007, por medio del '
-                         'cual se regulan algunos aspectos de las relaciones entre los prestadores de servicios de '
-                         'salud y las entidades responsables del pago de la población a su cargo.'
-                                           
-                         '\n\n Este es un mensaje automático y no es necesario responder.',
+
+                                           '\n\n Lo anterior de acuerdo con el decreto Numero 4747 de diciembre de 2007, por medio del '
+                                           'cual se regulan algunos aspectos de las relaciones entre los prestadores de servicios de '
+                                           'salud y las entidades responsables del pago de la población a su cargo.'
+
+                                           '\n\n Este es un mensaje automático y no es necesario responder.',
                 )
 
             else:
@@ -239,15 +239,15 @@ class RadicacionAdmin(ImportExportModelAdmin):
                     subject='Proceso Devolución solicitud bajo radicado Nro ' + str(obj.id) + '.',
 
                     body='Sr(a). Usuario(a) ' + user.get_full_name() + ', su solicitud de pago con numero de radicación '
-                         'bajo el consecutivo “ ” no cumple con los  requisitos mínimos para realizar un proceso de '
-                         'auditoria y pago, razón por la cual se realiza la devolución total para que sean subsanadas '
-                         'las causales que se relacionan a continuación y se vuelva a radicar nuevamente.'
-                                                                       
-                         '\n\n Lo anterior de acuerdo con el decreto Numero 4747 de diciembre de 2007, por medio del '
-                         'cual se regulan algunos aspectos de las relaciones entre los prestadores de servicios de '
-                         'salud y las entidades responsables del pago de la población a su cargo.'
+                                                                       'bajo el consecutivo “ ” no cumple con los  requisitos mínimos para realizar un proceso de '
+                                                                       'auditoria y pago, razón por la cual se realiza la devolución total para que sean subsanadas '
+                                                                       'las causales que se relacionan a continuación y se vuelva a radicar nuevamente.'
 
-                         '\n\n Este es un mensaje automático y no es necesario responder.',
+                                                                       '\n\n Lo anterior de acuerdo con el decreto Numero 4747 de diciembre de 2007, por medio del '
+                                                                       'cual se regulan algunos aspectos de las relaciones entre los prestadores de servicios de '
+                                                                       'salud y las entidades responsables del pago de la población a su cargo.'
+
+                                                                       '\n\n Este es un mensaje automático y no es necesario responder.',
                 )
 
             mail_to_user.send()
@@ -274,9 +274,10 @@ class RadicacionAdmin(ImportExportModelAdmin):
                 body='Sr(a). Moderador(a).\n '
 
                      'Se le indica que el administrador ' + request.user.get_mail() + ' realizó'
-                     ' reversión de cambios en el estado del radicado ' + str(obj.id) + '.' 
-                     
-                     '\n\n Este es un mensaje automático y no es necesario responder.',
+                                                                                      ' reversión de cambios en el estado del radicado ' + str(
+                    obj.id) + '.'
+
+                              '\n\n Este es un mensaje automático y no es necesario responder.',
             )
 
             mail_to_user.send()
@@ -302,10 +303,9 @@ class RadicacionAdmin(ImportExportModelAdmin):
 
 
 class LocacionAdmin(admin.ModelAdmin):
-
     # Parametrización de los filtros de búsqueda y de visualización de contenido
-    list_display = ['id', 'municipio',  'locacion_name', 'locacion_status']
-    list_filter = ['id', 'municipio',  'locacion_name', 'locacion_status']
+    list_display = ['id', 'municipio', 'locacion_name', 'locacion_status']
+    list_filter = ['id', 'municipio', 'locacion_name', 'locacion_status']
 
     fieldsets = (
         (
@@ -329,7 +329,6 @@ class LocacionAdmin(admin.ModelAdmin):
 
 
 class SedesAdmin(admin.ModelAdmin):
-
     # Parametrización de los filtros de búsqueda y de visualización de contenido
     list_display = ['id', 'sede_name', 'locacion_sede', 'address_sede', 'sede_status']
     list_filter = ['id', 'sede_name', 'sede_status']
