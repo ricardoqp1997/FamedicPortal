@@ -84,6 +84,10 @@ class FamedicUser(AbstractBaseUser):
     admin = models.BooleanField(verbose_name='administrador del portal', default=False)
     # revisión de estado de cuenta (actualizada o no)
     updated = models.BooleanField(verbose_name='datos actualizados', default=False)
+
+    token = models.CharField(null=True, max_length=6)
+    authenticated = models.BooleanField(default=False)
+
     # parametros del model
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [
@@ -157,3 +161,17 @@ class FamedicUser(AbstractBaseUser):
     @property
     def is_updated(self):
         return self.updated
+
+    @property
+    def is_validated(self):
+        return self.authenticated
+
+
+class TokenAccess(models.Model):
+
+    user = models.ForeignKey(FamedicUser, on_delete=models.SET_NULL, null=True)
+    token = models.CharField(default='0', max_length=6)
+    datetime_loken = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Token'

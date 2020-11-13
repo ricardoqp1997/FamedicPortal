@@ -230,7 +230,6 @@
                         {{ form.file_soporte }}
                     </div>
                 </div>
-
             </div>
             <br>
 
@@ -273,24 +272,28 @@
         </form>
     </div>
 
-    <!--script>
+    <script>
+
       $(function () {
         $("#datetimepicker1").datetimepicker({
             format: 'DD-MM-YYYY',
             startDate: '-3y'
         });
       });
-
       $(function () {
         $("#datetimepicker2").datetimepicker({
             format: 'DD-MM-YYYY',
             startDate: '-3y'
         });
       });
-        $("#ViewActivitydiv1").on("keydown keypress keyup click contextmenu", false);
-        $("#ViewActivitydiv2").on("keydown keypress keyup click contextmenu", false);
 
+      $("#ViewActivitydiv1").on(
+          "keydown keypress keyup click contextmenu", false
+      );
+      $("#ViewActivitydiv2").on(
+          "keydown keypress keyup click contextmenu", false
+      );
 
-    </script-->
+    </script>
 
 {% endblock %}

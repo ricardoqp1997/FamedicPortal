@@ -28,7 +28,10 @@ from django.contrib.auth.decorators import login_required
 from portal_radicaciones import views as portal_views
 from portal_radicaciones.views import (
     ListaRadicados,
-    RadicadoDetail
+    RadicadoDetail,
+    LoginFamedic,
+    TokenAccess,
+    Registration
 )
 
 # librerías de django para configuración de alojamiento de archivos estaticos cargados en la radicación
@@ -93,12 +96,14 @@ urlpatterns = [
     path('', portal_views.index, name='index'),
 
     # Vistas de inicio de sesión cargadas directamente desde las librerías de Django
-    path('login/', portal_views.login_famedic, name='login'),
+    # path('login/', portal_views.login_famedic, name='login'),
+    path('login/', LoginFamedic.as_view(), name='login'),
+    path('ending-session', portal_views.logout_redirect, name='pre-logout'),
     path('logout/', auth_views.LogoutView.as_view(template_name='FamedicDesign/LogOut.html'), name='logout'),
 
     # Vistas de registro y validación creadas en el views.py de la app "portal_radicaciones"
-    path('registro/', portal_views.register_famedic, name='register'),
-    path('verificacion/', portal_views.token_famedic, name='token_access'),
+    path('registro/', Registration.as_view(), name='register'),
+    path('verificacion/', TokenAccess.as_view(), name='token_access'),
     path('resend-token', portal_views.resend_token, name='resend'),
 
     # Acceso al panel administrativo

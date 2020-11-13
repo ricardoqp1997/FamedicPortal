@@ -41,11 +41,15 @@ INSTALLED_APPS = [
 
     'portal_radicaciones',
     'famedic_users',
-    'bootstrap_admin',
-    'django_otp',
-    'django_otp.plugins.otp_totp',
+
     'crispy_forms',
+
     'import_export',
+
+    'django_otp',
+    'django_otp.plugins.otp_static',
+    'django_otp.plugins.otp_totp',
+    'two_factor',
 
 ]
 
@@ -64,6 +68,9 @@ MIDDLEWARE = [
 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django_session_timeout.middleware.SessionTimeoutMiddleware',
+
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django_otp.middleware.OTPMiddleware',
 ]
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -100,7 +107,7 @@ WSGI_APPLICATION = 'FAMEDIC_Dev.wsgi.application'
 DATABASES = {
     'default': dict(
         ENGINE='django.db.backends.mysql',
-        NAME='db_famedic',
+        NAME='qa_famedic',
         USER='awx4g5ommavf',
         PASSWORD='O>0H3r|-',
         HOST='a2plcpnl0835.prod.iad2.secureserver.net',

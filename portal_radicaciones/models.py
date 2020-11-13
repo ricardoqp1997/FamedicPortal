@@ -158,7 +158,7 @@ class RadicacionModel(models.Model):
     radicador = models.ForeignKey(FamedicUser, blank=True, null=True, on_delete=models.SET_NULL)
 
     # Números identificadores únicos de la factura
-    id_factura = models.IntegerField(verbose_name='número de factura')
+    id_factura = models.CharField(verbose_name='número de factura', max_length=50)
 
     # Monto de factura a radicar
     monto_factura = models.IntegerField(verbose_name='monto de la factura')

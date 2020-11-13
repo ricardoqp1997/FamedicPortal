@@ -13,30 +13,32 @@ from famedic_users.models import (
 
 import secrets
 
-from django.conf import  settings
+from django.conf import settings
 from django.core.mail import (
     EmailMultiAlternatives
 )
 
 # Librería personalizada para el uso del modelo de radicación
 from .models import RadicacionModel, Sedes
+from django.contrib.auth.forms import AuthenticationForm
 
 
 # Form de inicio de sesión para usuarios
-class UserLoginForm(forms.Form):
-
-    email = forms.CharField(label='Correo electrónico')
+class UserLoginForm(AuthenticationForm):
+    username = forms.CharField(label='Correo electrónico')
     id_famedic = forms.CharField(label='Cédula/NIT', widget=forms.NumberInput, max_length=10)
     password = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
 
+    field_order = ['username', 'id_famedic', 'password']
+
     def clean(self, *args, **kwargs):
 
-        email = self.cleaned_data.get('email')
+        username = self.cleaned_data.get('email')
         id_famedic = self.cleaned_data.get('id_famedic')
         password = self.cleaned_data.get('password')
 
-        if email and id_famedic and password:
-            user = authenticate(email=email, id_famedic=id_famedic, password=password)
+        if username and id_famedic and password:
+            user = authenticate(email=username, id_famedic=id_famedic, password=password)
 
             try:
                 if user.get_id() != id_famedic:
@@ -55,6 +57,12 @@ class UserLoginForm(forms.Form):
 
 # Form de registro de usuarios (añadiendole el campo de email al form base de registro de Django)
 class UserRegisterForm(forms.ModelForm):
+
+    def __init__(self, request=None, *args, **kwargs):
+
+        self.request = request
+        self.user_cache = None
+        super().__init__(*args, **kwargs)
 
     first_name = forms.CharField(label='Nombre(s)', max_length=25)
     last_name = forms.CharField(label='Apellido(s)', max_length=25)
@@ -132,13 +140,11 @@ class UserRegisterForm(forms.ModelForm):
 
 # Form de registro de administradores
 class UserAdminCreationForm(forms.ModelForm):
-
     id_famedic = forms.CharField(label='Cédula/NIT', widget=forms.NumberInput, max_length=10)
     location = forms.CharField(label='Entidad a la que pertenece', max_length=50)
     email = forms.EmailField(label='Correo electrónico')
 
     class Meta:
-
         model = FamedicUser
         fields = [
             'id_famedic',
@@ -176,11 +182,11 @@ class UserAdminCreationForm(forms.ModelForm):
 
                  '\nSe han creado sus nuevas credenciales para el ingreso al portal de radicación.\n'
                  'Sus credenciales de acceso serán: ' + receptor + ' con la contraseña: ' + str(random_password) + '.\n'
-                 '\nPara ingresar será requerido inicialmente que actualice los datos de su cuenta desde el portal '
-                 'proveedores.famedicips.co, luego de dicha actualización podrá acceder y usar el portal de '
-                 'proveedores de Famedic IPS.'
+                                                                                                                   '\nPara ingresar será requerido inicialmente que actualice los datos de su cuenta desde el portal '
+                                                                                                                   'proveedores.famedicips.co, luego de dicha actualización podrá acceder y usar el portal de '
+                                                                                                                   'proveedores de Famedic IPS.'
 
-                 '\n\n Este es un mensaje automático y no es necesario responder.',
+                                                                                                                   '\n\n Este es un mensaje automático y no es necesario responder.',
         )
 
         access_mail.send()
@@ -196,11 +202,9 @@ class UserAdminCreationForm(forms.ModelForm):
 
 # Form de cambios a administradores
 class UserAdminChangeForm(forms.ModelForm):
-
     password = ReadOnlyPasswordHashField()
 
     class Meta:
-
         model = FamedicUser
         fields = [
             'email',
@@ -210,16 +214,22 @@ class UserAdminChangeForm(forms.ModelForm):
         ]
 
     def clean_password(self):
-
         return self.initial['password']
 
 
 # Form de ingreso del token de acceso (Solo obtención del token, la validación se hace en views.py)
 class TokenAccessForm(forms.Form):
 
+    def __init__(self, request=None, *args, **kwargs):
+
+        self.request = request
+        self.user_cache = None
+        super().__init__(*args, **kwargs)
+
     token = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
+                'onkeypress': 'return isNumberKey(event)',
                 'id': 'bloquear'
             }
         ),
@@ -227,45 +237,53 @@ class TokenAccessForm(forms.Form):
         required=True
     )
 
+    def clean(self):
+        token = self.cleaned_data.get('token')
+
+        if token is None:
+            raise self.get_invalid_login_error()
+
+        return self.cleaned_data
+
 
 # Form de radicacion de facturas
 class RadicacionForm(forms.ModelForm):
-
     radicador = forms.IntegerField(
         widget=forms.HiddenInput(),
         required=False
     )
 
     datetime_factura1 = forms.DateField(
-        input_formats=settings.DATE_INPUT_FORMATS,
+        # input_formats=settings.DATE_INPUT_FORMATS,
         widget=forms.DateInput(
+            # format='%d-%m-%Y',
             attrs={
-                'placeholder': 'DD-MM-YYYY',
-                'class': 'form-control datetimepicker-input InputBlock1',
-                'data-target': '#datetimepicker1',
-                'height': '40px'
+                'placeholder': 'MM/DD/YYYY HH:mm',
+                'class': 'form-control',
+                'height': '40px',
+                # 'data-format': 'DD-MM-YYYY'
             }
         ),
         required=True,
     )
 
     datetime_factura2 = forms.DateField(
-        input_formats=settings.DATE_INPUT_FORMATS,
+        # input_formats=settings.DATE_INPUT_FORMATS,
         widget=forms.DateInput(
+            # format='%d-%m-%Y',
             attrs={
-                'placeholder': 'DD-MM-YYYY',
-                'class': 'form-control datetimepicker-input InputBlock2',
-                'data-target': '#datetimepicker2',
-                'height': '40px'
+                'placeholder': 'MM-DD-YYYY  HH:mm',
+                'class': 'form-control',
+                'height': '40px',
             }
         ),
         required=True,
     )
 
     id_factura = forms.CharField(
-        widget=forms.NumberInput(
+        widget=forms.TextInput(
             attrs={
-                'placeholder': 'Ingrese un número',
+                'placeholder': 'Ingrese su consecutivo',
                 'class': 'form-control monto_field',
                 'aria-label': ''
             }
@@ -304,7 +322,7 @@ class RadicacionForm(forms.ModelForm):
             }
         ),
         label='Sede correspondiente',
-        queryset=Sedes.objects.filter(sede_status=True),
+        queryset=Sedes.objects.all(),
         required=True
     )
 
@@ -324,10 +342,11 @@ class RadicacionForm(forms.ModelForm):
         required=False
     )
 
-    file_ribs = forms.FileField(required=False)
+    file_ribs = forms.FileField(
+        required=False
+    )
 
     class Meta:
-
         model = RadicacionModel
         fields = [
             'radicador',
@@ -349,13 +368,11 @@ class RadicacionForm(forms.ModelForm):
         ]
 
     def save(self, commit=True):
-
         invoice = super(RadicacionForm, self).save(commit=False)
         invoice.radicador = self.cleaned_data.get('radicador')
         invoice.sede_select = self.cleaned_data.get('sede_select')
 
         if commit:
-
             invoice.save()
 
         return invoice
