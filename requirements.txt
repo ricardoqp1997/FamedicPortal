@@ -13,4 +13,4 @@ dj-static>=0.0.6
 static3>=0.7.0
 mysqlclient>=2.0.1
 django-two-factor-auth>=1.13
-pip install django-two-factor-auth[phonenumbers]
+django-two-factor-auth[phonenumbers]
