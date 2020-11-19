@@ -214,7 +214,7 @@ class Registration(LoginFamedic):
         usr.updated = True
         usr.save()
 
-        messages.success(request, f'Cuenta actualizada correctamente.')
+        messages.success(self.request, f'Cuenta actualizada correctamente.')
         return redirect('/login/')
 
 
