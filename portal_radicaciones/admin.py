@@ -378,3 +378,5 @@ class GlosaAdmin(admin.ModelAdmin):
     search_fields = ['id', 'glosa_name', 'glosa_status']
     ordering = ['id', 'glosa_name', 'glosa_status']
     filter_horizontal = []
+
+

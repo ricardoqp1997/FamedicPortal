@@ -1,7 +1,9 @@
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.core.mail import EmailMultiAlternatives
 
 from .models import FamedicUser as User
 from portal_radicaciones.forms import (
@@ -9,12 +11,47 @@ from portal_radicaciones.forms import (
     UserAdminChangeForm
 )
 
+# Esta función recibe un queryset con los usuarios seleccionados y lanzaremos un update para desactivarlos
+def Reenviar_correo(modeladmin, request, queryset):
+    remitente = settings.EMAIL_HOST_USER
+
+    for user in queryset:
+        user.updated = False
+        user.set_password('Famedic2020')
+        user.phone = None
+        user.save()
+        #Estructura correo
+        access_mail = EmailMultiAlternatives(
+
+            from_email=remitente,
+            to=[user.email],
+
+            subject='Actalización credenciales de acceso - Famedic IPS',
+            body='Sr(a). Usuario(a) del portal de proveedores.\n '
+
+                 '\nSe realizo el correcto registro de sus datos en el portal de radicacones Famedic IPS\n'
+                 '\nel cual le permitira realizar las radicaciones de su facturación, para ingresar dirijase a\n'
+                  '\nhttp://proveedores.famedicips.co/login/ para realizar la actualización de datos e iniciar sesión.\n'
+                 
+                 
+                 '\nSus credenciales de acceso serán: \n' 
+                 '\nusuario: ' + user.email + '\n'
+                 '\nContraseña: Famedic2020 \n'
+
+                 '\n\n Este es un mensaje automático y no es necesario responder.',
+        )
+
+        access_mail.send()
+
+Reenviar_correo.short_description = 'Reenviar correo de actialización'
 
 class UserAdmin(BaseUserAdmin):
 
     # Vinculacion de los formularios personalizados de Famedic al portal admin de Django
     form = UserAdminChangeForm
     add_form = UserAdminCreationForm
+
+    actions = [Reenviar_correo]
 
     # Parametrización de los filtros de búsqueda y de visualización de contenido dentro de Famedic Users
     list_display = ['id_famedic', 'last_name', 'first_name', 'email', 'admin', 'updated']
