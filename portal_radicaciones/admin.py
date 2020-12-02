@@ -22,7 +22,7 @@ from django.core.mail import (
 import xlsxwriter
 
 
-class ForeignRadicado(resources.ModelResource):
+"""class ForeignRadicado(resources.ModelResource):
     radicador = fields.Field(
         column_name='radicador',
         attribute='radicador',
@@ -42,11 +42,91 @@ class ForeignRadicado(resources.ModelResource):
     )
 
     class Meta:
+        model = RadicacionModel"""
+
+class RadicacionDespacho(resources.ModelResource):
+
+    numero_radicado = fields.Field(column_name='Consecutivo del radicado', attribute='id')
+    numero_factura = fields.Field(column_name='Numero de factura', attribute='id_factura')
+    nombre_radicador = fields.Field(column_name='Nombre de radicador')
+    tipo_id_radicador = fields.Field(column_name='Tipo de documento')
+    id_radicador = fields.Field(column_name='Número de documento')
+    telefono_radicador = fields.Field(column_name='Telefono radicador')
+    fecha_factura = fields.Field(column_name='Fecha de radicación de la factura', attribute='datetime_radicado')
+    periodo_factura = fields.Field(column_name='Periodo de facturación')
+    monto_factura = fields.Field(column_name='Monto de factura', attribute='monto_factura')
+    sede_radicado = fields.Field(column_name='Sede radicadora')
+    estado_radicado = fields.Field(column_name='Estado del radicado')
+    glosa_radicado = fields.Field(column_name='Glosa')
+    subglosa_radicado = fields.Field(column_name='Subglosa')
+    valor_glosa = fields.Field(column_name='Valor de glosa', attribute='glosa_valor')
+
+
+    class Meta:
         model = RadicacionModel
+
+        fields = [
+            'nombre_radicador',
+            'tipo_id_radicador',
+            'id_radicador',
+            'telefono_radicador',
+            'numero_radicado',
+            'numero_factura',
+            'fecha_factura',
+            'periodo_factura',
+            'monto_factura',
+            'sede_radicado',
+            'estado_radicado',
+            'glosa_radicado',
+            'subglosa_radicado',
+            'valor_glosa',
+
+        ]
+
+        export_order = fields
+
+    @staticmethod
+    def dehydrate_nombre_radicador(radicado):
+        return radicado.radicador.get_full_name()
+
+    @staticmethod
+    def dehydrate_tipo_id_radicador(radicado):
+        return radicado.radicador.id_type
+
+    @staticmethod
+    def dehydrate_id_radicador(radicado):
+        return radicado.radicador.id_famedic
+
+    @staticmethod
+    def dehydrate_telefono_radicador(radicado):
+        if radicado.radicador.phone:
+            return radicado.radicador.phone
+        else:
+            return 'Sin teléfono inscrito'
+
+    @staticmethod
+    def dehydrate_sede_radicado(radicado):
+        return radicado.sede_selection.sede_name
+
+    @staticmethod
+    def dehydrate_estado_radicado(radicado):
+        return radicado.get_aproved_display()
+
+    @staticmethod
+    def dehydrate_glosa_radicado(radicado):
+        return radicado.glosa_asign.glosa_name
+
+    @staticmethod
+    def dehydrate_subglosa_radicado(radicado):
+        return radicado.subglosa_asign.Subglosa_name
+
+    @staticmethod
+    def dehydrate_periodo_factura(radicado):
+        return str(radicado.datetime_factura1) + ' - ' + str(radicado.datetime_factura2)
 
 
 class RadicacionAdmin(ImportExportModelAdmin):
-    resource_class = ForeignRadicado
+    resource_class = RadicacionDespacho  # ForeignRadicado
 
     change_form_template = 'AdminExtends/RadicadoApproval.html'
 
@@ -58,7 +138,7 @@ class RadicacionAdmin(ImportExportModelAdmin):
         (
             'Revisión de la factura', {
                 'classes': ['wide', 'extrapretty'],
-                'fields': ['glosa_asign', 'aproved', 'obs_admin']
+                'fields': ['glosa_asign', 'subglosa_asign', 'glosa_valor', 'aproved', 'obs_admin']
             }
         ),
         (
@@ -143,6 +223,14 @@ class RadicacionAdmin(ImportExportModelAdmin):
 
         if '_aprove-radicado' in request.POST:
 
+            if (obj.glosa_asign.glosa_name != '0-Aprobada Sin Glosa') \
+                    or (obj.subglosa_asign.Subglosa_name != '0-Aprobada Sin SubGlosa')\
+                    or (obj.glosa_valor is not None):
+                self.message_user(request, 'Esto es una radicación sin glosa'
+                                  ' por favor, desmarque la opció', messages.ERROR)
+
+                return HttpResponseRedirect(".")
+
             if obj.aproved != 'SINAP':
                 self.message_user(request, "El radicado ya ha sido revisado, "
                                            "no es posible cambiar su estado.", messages.ERROR)
@@ -158,7 +246,7 @@ class RadicacionAdmin(ImportExportModelAdmin):
                 mail_to_user = EmailMultiAlternatives(
 
                     from_email=sender_mail,
-                    to=[user.email, test_mail],
+                    to=[user.email],
 
                     subject='Proceso Exitoso de Auditoria',
 
@@ -193,6 +281,69 @@ class RadicacionAdmin(ImportExportModelAdmin):
             self.message_user(request, "Se ha cambiado el estado del radicado a: Aprobado")
             return HttpResponseRedirect(".")
 
+        # ------------ Aprobación con glosa ---------------------
+
+
+        if '_glosa-radicado' in request.POST:
+
+            if (obj.glosa_asign.glosa_name == '0-Aprobada Sin Glosa') \
+                    or (obj.subglosa_asign.Subglosa_name == '0-Aprobada Sin SubGlosa') \
+                    or (obj.glosa_valor is None):
+                self.message_user(request, 'Debe asignar una glosa al radicado y especificarle un valor', messages.ERROR)
+
+                return HttpResponseRedirect(".")
+
+            if obj.aproved != 'SINAP':
+                self.message_user(request, "El radicado ya ha sido revisado, "
+                                           "no es posible cambiar su estado.", messages.ERROR)
+
+                return HttpResponseRedirect(".")
+
+            obj.aproved = 'RADSI'
+            obj.save()
+
+            # Correo enviado al usuario radicador
+            if obj.glosa_asign:  # != 0 - sin glosa
+
+                mail_to_user = EmailMultiAlternatives(
+
+                    from_email=sender_mail,
+                    to=[user.email],
+
+                    subject='Proceso Exitoso de Auditoria',
+
+                    body='Sr(a). Usuario(a)  ' + user.get_full_name() + ', el proceso de auditoria a su solicitud de '
+                                                                        'pago con numero de radicación bajo el consecutivo ' + str(
+                        obj.id) + ', culminó exitosamente '
+                                  'con las siguientes observaciones:'
+
+                                  '\n\n' + obj.obs_admin + '\n\n'
+
+                                                           '\n\nDe no haberse generado diferencia contractual alguna descrita en observaciones, su '
+                                                           'solicitud continua con el proceso para pago.\n\n'
+
+                                                           '\n\nDe haberse generado glosa descrita en observaciones SERVICIOS MEDICOS FAMEDIC SAS se '
+                                                           'permite notificar que la presente glosa que se relaciona a continuación, debe ser subsanada '
+                                                           'dentro de los quince (15) días hábiles siguientes a su recepción, o se dará como aceptada. '
+                                                           'De acuerdo al decreto Numero 4747 de diciembre de 2007, por medio del cual se regulan '
+                                                           'algunos aspectos de las relaciones entre los prestadores de servicios de salud y las '
+                                                           'entidades responsables del pago de la población a su cargo. \n\n'
+
+                                                           '\n\n Este es un mensaje automático y no es necesario responder.',
+                )
+
+            else:  # == 0 - sin glosa
+
+                self.message_user(request,
+                                  "Es necesario seleccionar un elemento de la lista glosa si va a realizar la aprobación del radicado. Para aprobar sin glosa, seleccione el elemento: 0-Aprobada Sin Glosa")
+                return HttpResponseRedirect(".")
+
+            mail_to_user.send()
+
+            self.message_user(request, "Se ha cambiado el estado del radicado a: Aprobado")
+            return HttpResponseRedirect(".")
+
+
         if '_reject-radicado' in request.POST:
 
             if obj.aproved != 'SINAP':
@@ -210,7 +361,7 @@ class RadicacionAdmin(ImportExportModelAdmin):
                 mail_to_user = EmailMultiAlternatives(
 
                     from_email=sender_mail,
-                    to=[user.email, test_mail],
+                    to=[user.email],
 
                     subject='Proceso Devolución solicitud bajo radicado Nro ' + str(obj.id) + '.',
 
@@ -234,7 +385,7 @@ class RadicacionAdmin(ImportExportModelAdmin):
                 mail_to_user = EmailMultiAlternatives(
 
                     from_email=sender_mail,
-                    to=[user.email, test_mail],
+                    to=[user.email],
 
                     subject='Proceso Devolución solicitud bajo radicado Nro ' + str(obj.id) + '.',
 
@@ -268,7 +419,7 @@ class RadicacionAdmin(ImportExportModelAdmin):
             mail_to_user = EmailMultiAlternatives(
 
                 from_email=sender_mail,
-                to=[user.email, test_mail],
+                to=[user.email],
 
                 subject='Estado de revisión de radicado restaurado - Famedic IPS',
                 body='Sr(a). Moderador(a).\n '
@@ -357,7 +508,7 @@ class SedesAdmin(admin.ModelAdmin):
 class GlosaAdmin(admin.ModelAdmin):
     # Parametrización de los filtros de búsqueda y de visualización de contenido
     list_display = ['id', 'glosa_name', 'glosa_status']
-    list_filter = ['id', 'glosa_name', 'glosa_status']
+    list_filter = ['id', 'glosa_name',  'glosa_status']
 
     fieldsets = (
         (
@@ -380,3 +531,28 @@ class GlosaAdmin(admin.ModelAdmin):
     filter_horizontal = []
 
 
+class SubglosaAdmin(admin.ModelAdmin):
+
+    # Parametrización de los filtros de búsqueda y de visualización de contenido
+    list_display = ['id', 'Subglosa_name', 'subglosa_status']
+    list_filter = ['id', 'Subglosa_name',  'subglosa_status']
+
+    fieldsets = (
+        (
+            'Datos básicos de la Subglosa', {
+                'classes': ['wide', ],
+                'fields': ['glosa', 'Subglosa_name']
+            }
+        ),
+        (
+            'Revisión de estado de la Subglosa', {
+                'classes': ['wide', ],
+                'fields': ['subglosa_status']
+            }
+        )
+    )
+
+    # Parametros de filtrado y busqueda
+    search_fields = ['id', 'Subglosa_name', 'subglosa_status']
+    ordering = ['id', 'Subglosa_name', 'subglosa_status']
+    filter_horizontal = []

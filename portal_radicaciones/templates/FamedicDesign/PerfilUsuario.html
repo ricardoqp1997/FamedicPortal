@@ -106,6 +106,9 @@
                 {% if user.is_admin %}
                     <br>
                     <a href="{% url 'admin' %}" class="btn btn-primary">Administrar perfil</a>
+                    <a href="{% url 'passwordchangesave' %}" class="btn btn-primary">Cambiar contraseña</a>
+                {% else %}
+                    <a href="{% url 'passwordchangesave' %}" class="btn btn-primary">Cambiar contraseña</a>
                 {% endif %}
             </div>
 

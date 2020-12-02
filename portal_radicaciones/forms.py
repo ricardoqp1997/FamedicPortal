@@ -5,6 +5,8 @@ from django.utils import timezone
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
+from bootstrap_datepicker_plus import DatePickerInput
+
 # Librería personalizada para el uso de los modelos propios de usuarios Famedic
 from famedic_users.models import (
     FamedicUser,
@@ -39,6 +41,7 @@ class UserLoginForm(AuthenticationForm):
 
         if username and id_famedic and password:
             user = authenticate(email=username, id_famedic=id_famedic, password=password)
+            print("Hola mundo 1")
 
             try:
                 if user.get_id() != id_famedic:
@@ -46,6 +49,12 @@ class UserLoginForm(AuthenticationForm):
                 if not user:
                     raise forms.ValidationError('Por favor verifique los datos de usuario ingresados.')
                 if not user.check_password(password):
+                    print("Hola mundo2")
+                    usuario = FamedicUser.objects.get(id_famedic=id_famedic)
+                    usuario.intentos_acceso = user.intentos_acceso + 1
+                    if usuario.intentos_acceso >= 5:
+                        usuario.bloqueado = True
+                    usuario.save()
                     raise forms.ValidationError('Por favor verifique la contraseña ingresada.')
                 if not user.is_active:
                     raise forms.ValidationError('El usuario ingresado no está activo.')
@@ -248,32 +257,29 @@ class TokenAccessForm(forms.Form):
 
 # Form de radicacion de facturas
 class RadicacionForm(forms.ModelForm):
+
     radicador = forms.IntegerField(
         widget=forms.HiddenInput(),
         required=False
     )
 
     datetime_factura1 = forms.DateField(
-        # input_formats=settings.DATE_INPUT_FORMATS,
-        widget=forms.DateInput(
-            # format='%d-%m-%Y',
+
+        widget=DatePickerInput(
+            format='%d-%m-%Y',
             attrs={
                 'placeholder': 'MM/DD/YYYY HH:mm',
-                'class': 'form-control',
                 'height': '40px',
-                # 'data-format': 'DD-MM-YYYY'
             }
         ),
         required=True,
     )
 
     datetime_factura2 = forms.DateField(
-        # input_formats=settings.DATE_INPUT_FORMATS,
-        widget=forms.DateInput(
-            # format='%d-%m-%Y',
+        widget=DatePickerInput(
+            format='%d-%m-%Y',
             attrs={
-                'placeholder': 'MM-DD-YYYY  HH:mm',
-                'class': 'form-control',
+                'placeholder': 'MM/DD/YYYY HH:mm',
                 'height': '40px',
             }
         ),
@@ -367,6 +373,11 @@ class RadicacionForm(forms.ModelForm):
             'observaciones',
         ]
 
+        widgets = {
+            'datetime_factura1': DatePickerInput(format='%Y-%m-%d'),  # default date-format %m/%d/%Y will be used
+            'datetime_factura2': DatePickerInput(format='%Y-%m-%d'),  # specify date-frmat
+        }
+
     def save(self, commit=True):
         invoice = super(RadicacionForm, self).save(commit=False)
         invoice.radicador = self.cleaned_data.get('radicador')
@@ -376,3 +387,4 @@ class RadicacionForm(forms.ModelForm):
             invoice.save()
 
         return invoice
+

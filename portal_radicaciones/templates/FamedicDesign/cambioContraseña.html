@@ -1,0 +1,83 @@
+{% extends 'BaseMainPage/BaseMain.html' %}
+{% load static %}
+
+{% block titulo %} {{ page_title }} {% endblock %}
+
+<!-- Bloque de contenido para la tarjeta 2 (derecha)-->
+{% block panel_main %}
+
+    <style>
+       .Radicado_main_box{
+
+           margin: 5%;
+           padding: 3%;
+           width: 655px;
+           height: auto;
+           background-color: #c8ced9;
+           border-radius: 3px;
+           -webkit-box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
+           -moz-box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
+           box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
+       }
+       .shadow_card_profile{
+           -webkit-box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
+           -moz-box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
+           box-shadow: 0 0 5px 1px rgba(0,0,0,0.75);
+       }
+       hr.perfil{
+            margin-left: 5%;
+            margin-right: 5%;
+            border-top: 1px solid #16254C;
+            width: 550px;
+       }
+       .monto_content{
+           padding-left: 30px;
+           text-align: left;
+           font-size: 20px;
+       }
+       .aligment_text{
+           text-align: left;
+       }
+    </style>
+
+    <div class="Radicado_main_box">
+
+
+        <div class="card shadow_card_profile">
+            <div class="card-header" style="font-size: 20px">
+                Cambio de contraseña
+            </div>
+            <img src="{% static 'resouces/cover_profile.jpeg' %}" class="card-img-top" alt="...">
+            <div class="card-body">
+                <p>{{ form.non_field_errors.as_text }}</p>
+                <p class="card-text">Por favor ingrese los datos correspondientes</p>
+                <br>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                        <label for="oldpassword">Contraseña antigua: </label>
+                        <br>
+                            {{ form.old_password }}
+                        <br>
+                        <label>Nueva contraseña</label>
+                        <br>
+                            {{form.new_password1}}
+                        <br>
+
+                        <label for="password2">Confirmar contraseña</label>
+                        <br>
+                            {{form.new_password2}}
+                        <br>
+
+                        <br>
+                         <div class="form-group centrado_elementos">
+                            <button class="btn btn-primary btn-lg active boton_login" type="submit">Actualizar</button>
+                         </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}

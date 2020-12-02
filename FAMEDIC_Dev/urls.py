@@ -23,6 +23,7 @@ from django.conf.urls.static import static
 # class views para manejo de inicio y cierre de sesión (se usa solo para cierre)
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
+from django.urls import include
 
 # class views para manejo de listado y detalle de radicados
 from portal_radicaciones import views as portal_views
@@ -31,7 +32,10 @@ from portal_radicaciones.views import (
     RadicadoDetail,
     LoginFamedic,
     TokenAccess,
-    Registration
+    Registration,
+    passwordchangesave,
+    capacitacion
+
 )
 
 # librerías de django para configuración de alojamiento de archivos estaticos cargados en la radicación
@@ -62,7 +66,7 @@ class OTPAdminSite(AdminSite):
     login_template = django_otp.admin._admin_template_for_django_version()
 
     def has_permission(self, request):
-        return super().has_permission(request) and request.user.is_authenticated
+        return super().has_permission(request) and request.user.is_authenticated and request.user.is_admin
 
 
 # Llamado de la clase (class admin) para el manejo del portal admin cin OTP
@@ -82,7 +86,7 @@ admin_site.register(Locacion, LocacionAdmin)
 admin_site.register(RadicacionModel, RadicacionAdmin)
 admin_site.register(Sedes, SedesAdmin)
 admin_site.register(Glosa, GlosaAdmin)
-
+admin_site.register(Subglosa, SubglosaAdmin)
 
 # Personalización de titulo y nombre del sitio de administración Django acorde a Famedic IPS
 admin_site.site_header = 'Panel administrativo: Famedic'
@@ -96,8 +100,12 @@ urlpatterns = [
     path('', portal_views.index, name='index'),
 
     # Vistas de inicio de sesión cargadas directamente desde las librerías de Django
+    # Defender
+    # path('defender/', include('defender.urls'), name='defender'),
+
     # path('login/', portal_views.login_famedic, name='login'),
     path('login/', LoginFamedic.as_view(), name='login'),
+    path('capacitacion/', portal_views.capacitacion, name="capacitacion"),
     path('ending-session', portal_views.logout_redirect, name='pre-logout'),
     path('logout/', auth_views.LogoutView.as_view(template_name='FamedicDesign/LogOut.html'), name='logout'),
 
@@ -118,7 +126,12 @@ urlpatterns = [
     path('main/detalles/<int:pk>', login_required(RadicadoDetail.as_view(), login_url='/login/'), name='radicado_detail'),
 
     # Vista al haber realizado radicación exitosa
-    path('main/done/', portal_views.radicacion_finish, name='radicado_finished')
+    path('main/done/', portal_views.radicacion_finish, name='radicado_finished'),
+
+    # Vista cambio de contraseña
+    path('passwordchangesave/', portal_views.passwordchangesave, name='passwordchangesave'),
+
+    # url(r'datetimepicker/', include('datetimepicker.urls'))
 ]
 
 # Configuración del flujo de archivos multimedia cargados en cada formulario de radicación

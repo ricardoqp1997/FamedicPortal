@@ -93,6 +93,32 @@ class Glosa(models.Model):
         return self.glosa_name
 
 
+class Subglosa(models.Model):
+
+    # Selección de estado activo de la glosa
+    SUBGLOSA_ACTIVA = True
+    SUBGLOSA_INACTIVA = False
+
+    STATUS_CHOICES = [
+        (SUBGLOSA_ACTIVA, 'Sublosa activa'),
+        (SUBGLOSA_INACTIVA, 'Subglosa inactiva')
+    ]
+
+    glosa = models.ForeignKey(Glosa, on_delete=models.CASCADE, verbose_name='Glosa correspondiente')
+    Subglosa_name = models.CharField(verbose_name='Nombre de Subglosa', max_length=255, default='Subglosa')
+    subglosa_status = models.BooleanField(verbose_name='estado de la subglosa',
+                                       choices=STATUS_CHOICES, default=SUBGLOSA_ACTIVA)
+
+    REQUIRED_FIELD = [
+        'Subglosa_name'
+    ]
+
+    class Meta:
+        verbose_name = 'Subglosa'
+
+    def __str__(self):
+        return self.Subglosa_name
+
 # Clase para el manejo de formularios de radicación
 class RadicacionModel(models.Model):
 
@@ -189,16 +215,18 @@ class RadicacionModel(models.Model):
 
     # Campo para asignacion de glosa
     glosa_asign = models.ForeignKey(Glosa, blank=True, null=True, on_delete=models.SET_NULL, verbose_name='glosa')
+    subglosa_asign = models.ForeignKey(Subglosa, blank=True, null=True, on_delete=models.SET_NULL, verbose_name='subglosa')
 
+    glosa_valor = models.IntegerField(verbose_name='valor asignar a la glosa', null=True, blank=True)
     # Fecha de registro del radicado
     datetime_radicado = models.DateField(default=valiador_dias_habiles(), blank=True, verbose_name='fecha de radicación')
 
     # Fecha inicial del periodo de la factura a radicar
-    datetime_factura1 = models.DateField(auto_now_add=False, auto_now=False,
+    datetime_factura1 = models.DateTimeField(auto_now_add=False, auto_now=False,
                                          blank=True, null=True, verbose_name='fecha inicial de la factura')
 
     # Fecha final del periodo de la factura a radicar
-    datetime_factura2 = models.DateField(auto_now_add=False, auto_now=False,
+    datetime_factura2 = models.DateTimeField(auto_now_add=False, auto_now=False,
                                          blank=True, null=True, verbose_name='fecha final de la factura')
 
     REQUIRED_FIELDS = [

@@ -14,3 +14,7 @@ static3>=0.7.0
 mysqlclient>=2.0.1
 django-two-factor-auth>=1.13
 django-two-factor-auth[phonenumbers]
+django-axes
+pytz
+django-datetimepicker
+django-defender

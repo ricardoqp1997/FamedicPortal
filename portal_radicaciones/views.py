@@ -1,10 +1,13 @@
 # Librerías de Django para el manejo de las vistas, plantillas y navegación
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+# from django.http import HttpResponse
 from django.contrib import messages
 from django.utils import timezone
 from datetime import date, time, datetime, timedelta
-
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+from django.utils.decorators import method_decorator
 # Librería para restricción de vistas con autenticación realizada
 from django.contrib.auth.decorators import login_required, user_passes_test
 
@@ -21,7 +24,7 @@ from famedic_users.models import (
     FamedicUser,
     UserManager,
 
-    TokenAccess
+    #    TokenAccess
 )
 
 # Librería para la manipulación de usuarios
@@ -99,8 +102,7 @@ def verification_required(user_auth):
 
 
 class LoginFamedic(LoginView):
-
-    logged_mail = logged_pass = logged_idnt = user_logged = None
+    logged_mail = logged_pass = logged_id = user_logged = None
 
     authentication_form = UserLoginForm
     form_class = UserLoginForm
@@ -116,14 +118,20 @@ class LoginFamedic(LoginView):
 
         self.user_logged = form.get_user()
 
+        print('intentos: ', self.user_logged.intentos_acceso)
+        print('bloqueado: ', self.user_logged.bloqueado)
+
         cc = self.user_logged.id_famedic
-        self.logged_idnt = form.cleaned_data.get('id_famedic')
+        self.logged_id = form.cleaned_data.get('id_famedic')
+        self.logged_mail = form.cleaned_data.get('username')
+
+        print(self.logged_mail, self.logged_id)
 
         if self.user_logged.is_validated:
             self.user_logged.authenticated = False
             self.user_logged.save()
 
-        if cc != self.logged_idnt:
+        if cc != self.logged_id:
             messages.warning(self.request, 'Por favor verifique el número de identificación ingresado.')
             logout(self.request)
 
@@ -150,14 +158,14 @@ class LoginFamedic(LoginView):
 
                  '\nSe ha detectado un intento de acceso al portal de radicación de facturas.'
                  ' Su token de acceso para esta sesión es ' + str(token) + '. Si usted no trató de'
-                 ' ingresar recientemente por favor contactese con un administrador del portal'
-                 ' para revisar y garantizar la seguridad de su cuenta.'
+                                                                           ' ingresar recientemente por favor contactese con un administrador del portal'
+                                                                           ' para revisar y garantizar la seguridad de su cuenta.'
 
-                 '\n\n Este es un mensaje automático y no es necesario responder.',
+                                                                           '\n\n Este es un mensaje automático y no es necesario responder.',
         )
 
-        # print(token_mail.message())
         token_mail.send()
+        print(token_mail.message())
 
         self.request.session['member_id'] = self.user_logged.id
 
@@ -169,7 +177,6 @@ class LoginFamedic(LoginView):
 
 
 class TokenAccess(LoginFamedic):
-
     user_mail = user_pass = user_tokn = None
 
     template_name = 'FamedicDesign/TokenAccess.html'
@@ -177,7 +184,6 @@ class TokenAccess(LoginFamedic):
     authentication_form = TokenAccessForm
 
     def form_valid(self, form):
-
         self.user_tokn = FamedicUser.objects.get(id=self.request.session['member_id']).token
         print(self.user_tokn)
 
@@ -196,13 +202,11 @@ class TokenAccess(LoginFamedic):
 
 
 class Registration(LoginFamedic):
-
     template_name = 'FamedicDesign/Registro.html'
     form_class = UserRegisterForm
     authentication_form = UserRegisterForm
 
     def form_valid(self, form):
-
         usr = FamedicUser.objects.get(id=self.request.session['member_id'])
 
         usr.first_name = form.cleaned_data.get('first_name')
@@ -220,7 +224,6 @@ class Registration(LoginFamedic):
 
 # envío de nuevo del token
 def resend_token(request):
-
     usr_id = request.session['member_id']
     usr = FamedicUser.objects.get(id=usr_id)
 
@@ -335,6 +338,7 @@ def radicacion(request):
                 messages.warning(request, 'Fechas ingresadas incorrectamente')
 
         else:
+            print(form.errors)
             form = RadicacionForm()
             messages.warning(request, 'Error validando formulario')
 
@@ -381,17 +385,18 @@ def radicacion_finish(request):
                 subject='Asunto: Confirmación De Radicación Exitosa',
 
                 body='Sr(a). Usuario(a)' + request.user.get_full_name() + ', su solicitud de pago fue registrada '
-                     'exitosamente con numero de radicación.' + str(invoice_id) + '\n'
+                                                                          'exitosamente con numero de radicación.' + str(
+                    invoice_id) + '\n'
 
-                     '\nSERVICIOS MEDICOS FAMEDIC SAS notifica que dentro de los treinta (20) días hábiles siguientes '
-                     'a la presentación de la presente factura o cuenta de cobro, comunicará el resultado de la '
-                     'auditoria realizada a la presente solicitud. Lo anterior de acuerdo al decreto Numero 4747 de '
-                     'diciembre de 2007, por medio del cual se regulan algunos aspectos de las relaciones entre los '
-                     'prestadores de servicios de salud y las entidades responsables del pago de la población a su '
-                     'cargo.\n'
-                     
-                     '\n\n Cualquier duda o inquietud con gusto será resuelta en el correo.'
-                     '\n\n Este es un mensaje automático y no es necesario responder.',
+                                  '\nSERVICIOS MEDICOS FAMEDIC SAS notifica que dentro de los treinta (20) días hábiles siguientes '
+                                  'a la presentación de la presente factura o cuenta de cobro, comunicará el resultado de la '
+                                  'auditoria realizada a la presente solicitud. Lo anterior de acuerdo al decreto Numero 4747 de '
+                                  'diciembre de 2007, por medio del cual se regulan algunos aspectos de las relaciones entre los '
+                                  'prestadores de servicios de salud y las entidades responsables del pago de la población a su '
+                                  'cargo.\n'
+
+                                  '\n\n Cualquier duda o inquietud con gusto será resuelta en el correo.'
+                                  '\n\n Este es un mensaje automático y no es necesario responder.',
             )
 
             # Correo enviado al usuario administrador
@@ -477,3 +482,29 @@ def search_radicados(request):
         'user_name': request.user.get_full_name()
     }
     return render(request, 'FamedicDesign/ListaRadicados.html', form_search_rad)
+
+
+def capacitacion(request):
+
+    return render(request, "FamedicDesign/capacitacion.html")
+
+
+def passwordchangesave(request):
+
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            usuario = FamedicUser.objects.get(id=request.user.id)
+            usuario.set_password(form.cleaned_data.get('new_password2'))
+            usuario.save()
+            update_session_auth_hash(request, usuario)
+            messages.success(request, "Contraseña actualizada")
+            return redirect('/login/')
+        else:
+            messages.error(request, "Error en cambiar contraseña")
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'FamedicDesign/cambioContraseña.html', {
+        'form': form
+    })
+

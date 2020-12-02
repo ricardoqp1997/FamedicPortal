@@ -1,0 +1,15 @@
+{% extends 'BaseLogonUsers/BaseCapacitaciones.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+
+
+{% block contenido_video %}
+
+
+   {% load static %}
+    <div class="row justify-content-center capacitacion">
+           <video width='1060' height= '600' controls>
+                <source src="{% static 'Videos/Capacitacion-Famedic.mp4' type='video/mp4' %}">
+           </video>
+    </div>
+{% endblock %}

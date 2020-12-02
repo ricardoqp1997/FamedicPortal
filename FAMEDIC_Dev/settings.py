@@ -50,11 +50,26 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
     'two_factor',
-
+    'bootstrap_datepicker_plus',
+    'bootstrap4',
+    # 'defender',
 ]
+
+BOOTSTRAP4 = {
+    'include_jquery': False,
+}
 
 AUTH_USER_MODEL = 'famedic_users.FamedicUser'
 
+'''AUTHENTICATION_BACKENDS = [
+    # AxesBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
+    'axes.backends.AxesBackend',
+
+    # Django ModelBackend is the default authentication backend.
+    'django.contrib.auth.backends.ModelBackend',
+
+]
+AXES_ENABLED = False'''
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -71,6 +86,8 @@ MIDDLEWARE = [
 
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django_otp.middleware.OTPMiddleware',
+    'defender.middleware.FailedLoginMiddleware',
+
 ]
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -100,7 +117,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'FAMEDIC_Dev.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
@@ -109,7 +125,7 @@ DATABASES = {
         ENGINE='django.db.backends.mysql',
         NAME='qa_famedic',
         USER='awx4g5ommavf',
-        PASSWORD='O>0H3r|-',
+        PASSWORD='NLx=D4Ff',
         HOST='a2plcpnl0835.prod.iad2.secureserver.net',
         PORT='3306'
     )

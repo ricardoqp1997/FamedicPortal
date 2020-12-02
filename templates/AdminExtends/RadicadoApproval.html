@@ -3,7 +3,8 @@
 {% block submit_buttons_bottom %}
     {{ block.super }}
     <div class="submit-row">
-            <input type="submit" value="Aprobar radicado" name="_aprove-radicado">
+            <input type="submit" value="Aprobar radicado sin glosa" name="_aprove-radicado">
+            <input type="submit" value="Aprobar radicado con glosa" name="_glosa-radicado">
             <input type="submit" value="Rechazar radicado" name="_reject-radicado">
 
             {% if original.aproved != 'SINAP' %}
