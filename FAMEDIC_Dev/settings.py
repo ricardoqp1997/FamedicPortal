@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'two_factor',
     'bootstrap_datepicker_plus',
     'bootstrap4',
-    # 'defender',
 ]
 
 BOOTSTRAP4 = {
@@ -86,8 +85,6 @@ MIDDLEWARE = [
 
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django_otp.middleware.OTPMiddleware',
-    'defender.middleware.FailedLoginMiddleware',
-
 ]
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True

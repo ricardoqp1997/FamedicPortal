@@ -100,9 +100,6 @@ urlpatterns = [
     path('', portal_views.index, name='index'),
 
     # Vistas de inicio de sesión cargadas directamente desde las librerías de Django
-    # Defender
-    # path('defender/', include('defender.urls'), name='defender'),
-
     # path('login/', portal_views.login_famedic, name='login'),
     path('login/', LoginFamedic.as_view(), name='login'),
     path('capacitacion/', portal_views.capacitacion, name="capacitacion"),
