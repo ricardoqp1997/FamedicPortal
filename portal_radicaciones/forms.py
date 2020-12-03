@@ -5,8 +5,6 @@ from django.utils import timezone
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from bootstrap_datepicker_plus import DatePickerInput
-
 # Librería personalizada para el uso de los modelos propios de usuarios Famedic
 from famedic_users.models import (
     FamedicUser,
@@ -22,26 +20,22 @@ from django.core.mail import (
 
 # Librería personalizada para el uso del modelo de radicación
 from .models import RadicacionModel, Sedes
-from django.contrib.auth.forms import AuthenticationForm
 
 
 # Form de inicio de sesión para usuarios
-class UserLoginForm(AuthenticationForm):
-    username = forms.CharField(label='Correo electrónico')
+class UserLoginForm(forms.Form):
+    email = forms.CharField(label='Correo electrónico')
     id_famedic = forms.CharField(label='Cédula/NIT', widget=forms.NumberInput, max_length=10)
     password = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
 
-    field_order = ['username', 'id_famedic', 'password']
-
     def clean(self, *args, **kwargs):
 
-        username = self.cleaned_data.get('email')
+        email = self.cleaned_data.get('email')
         id_famedic = self.cleaned_data.get('id_famedic')
         password = self.cleaned_data.get('password')
 
-        if username and id_famedic and password:
-            user = authenticate(email=username, id_famedic=id_famedic, password=password)
-            print("Hola mundo 1")
+        if email and id_famedic and password:
+            user = authenticate(email=email, id_famedic=id_famedic, password=password)
 
             try:
                 if user.get_id() != id_famedic:
@@ -49,12 +43,6 @@ class UserLoginForm(AuthenticationForm):
                 if not user:
                     raise forms.ValidationError('Por favor verifique los datos de usuario ingresados.')
                 if not user.check_password(password):
-                    print("Hola mundo2")
-                    usuario = FamedicUser.objects.get(id_famedic=id_famedic)
-                    usuario.intentos_acceso = user.intentos_acceso + 1
-                    if usuario.intentos_acceso >= 5:
-                        usuario.bloqueado = True
-                    usuario.save()
                     raise forms.ValidationError('Por favor verifique la contraseña ingresada.')
                 if not user.is_active:
                     raise forms.ValidationError('El usuario ingresado no está activo.')
@@ -66,13 +54,6 @@ class UserLoginForm(AuthenticationForm):
 
 # Form de registro de usuarios (añadiendole el campo de email al form base de registro de Django)
 class UserRegisterForm(forms.ModelForm):
-
-    def __init__(self, request=None, *args, **kwargs):
-
-        self.request = request
-        self.user_cache = None
-        super().__init__(*args, **kwargs)
-
     first_name = forms.CharField(label='Nombre(s)', max_length=25)
     last_name = forms.CharField(label='Apellido(s)', max_length=25)
     phone = forms.CharField(label='Teléfono celular', widget=forms.NumberInput, max_length=10)
@@ -228,17 +209,9 @@ class UserAdminChangeForm(forms.ModelForm):
 
 # Form de ingreso del token de acceso (Solo obtención del token, la validación se hace en views.py)
 class TokenAccessForm(forms.Form):
-
-    def __init__(self, request=None, *args, **kwargs):
-
-        self.request = request
-        self.user_cache = None
-        super().__init__(*args, **kwargs)
-
     token = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                'onkeypress': 'return isNumberKey(event)',
                 'id': 'bloquear'
             }
         ),
@@ -246,41 +219,35 @@ class TokenAccessForm(forms.Form):
         required=True
     )
 
-    def clean(self):
-        token = self.cleaned_data.get('token')
-
-        if token is None:
-            raise self.get_invalid_login_error()
-
-        return self.cleaned_data
-
 
 # Form de radicacion de facturas
 class RadicacionForm(forms.ModelForm):
-
     radicador = forms.IntegerField(
         widget=forms.HiddenInput(),
         required=False
     )
 
     datetime_factura1 = forms.DateField(
-
-        widget=DatePickerInput(
-            format='%d-%m-%Y',
+        input_formats=settings.DATE_INPUT_FORMATS,
+        widget=forms.DateInput(
             attrs={
-                'placeholder': 'MM/DD/YYYY HH:mm',
-                'height': '40px',
+                'placeholder': 'DD-MM-YYYY',
+                'class': 'form-control datetimepicker-input InputBlock1',
+                'data-target': '#datetimepicker1',
+                'height': '40px'
             }
         ),
         required=True,
     )
 
     datetime_factura2 = forms.DateField(
-        widget=DatePickerInput(
-            format='%d-%m-%Y',
+        input_formats=settings.DATE_INPUT_FORMATS,
+        widget=forms.DateInput(
             attrs={
-                'placeholder': 'MM/DD/YYYY HH:mm',
-                'height': '40px',
+                'placeholder': 'DD-MM-YYYY',
+                'class': 'form-control datetimepicker-input InputBlock2',
+                'data-target': '#datetimepicker2',
+                'height': '40px'
             }
         ),
         required=True,
@@ -328,7 +295,7 @@ class RadicacionForm(forms.ModelForm):
             }
         ),
         label='Sede correspondiente',
-        queryset=Sedes.objects.all(),
+        queryset=Sedes.objects.filter(sede_status=True),
         required=True
     )
 
@@ -373,11 +340,6 @@ class RadicacionForm(forms.ModelForm):
             'observaciones',
         ]
 
-        widgets = {
-            'datetime_factura1': DatePickerInput(format='%Y-%m-%d'),  # default date-format %m/%d/%Y will be used
-            'datetime_factura2': DatePickerInput(format='%Y-%m-%d'),  # specify date-frmat
-        }
-
     def save(self, commit=True):
         invoice = super(RadicacionForm, self).save(commit=False)
         invoice.radicador = self.cleaned_data.get('radicador')
@@ -387,4 +349,3 @@ class RadicacionForm(forms.ModelForm):
             invoice.save()
 
         return invoice
-

@@ -4,27 +4,7 @@
 {% load crispy_forms_filters %}
 {% load crispy_forms_tags %}
 
-{% load bootstrap4 %}       {# import bootstrap4/bootstrap3 #}
-{% bootstrap_css %}         {# Embed Bootstrap CSS #}
-{% bootstrap_javascript %}  {# Embed Bootstrap JS+jQuery #}
-
-{% block extrahead %}
-{{ form.media }}
-{% endblock %}
-
 {% block titulo %} {{ page_title }} {% endblock %}
-{% block script %}  {% endblock script %}
-
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" crossorigin="anonymous" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" crossorigin="anonymous" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"></script>
-
-<!-- date time picket -->
-<link rel="stylesheet" href="{% static 'jquery-ui.css' %}">
-<link rel="stylesheet" href="{% static 'jquery-ui-timepicker-addon.css' %}">
-
-{{ form.media }}
-
 
 <!-- Bloque de contenido para la tarjeta 2 (derecha)-->
 {% block panel_main %}
@@ -153,8 +133,6 @@
 
             {{ form.non_field_errors }}
 
-            {{ form.datetime_factura2.error_messages }}
-            {{ form.media }}
 
             <div class="monto_content row input-group">
                 <p class="col-sm-6 col-form-label"><strong>Fecha de radicado: </strong>{{ timezone_rad }}</p>
@@ -175,6 +153,8 @@
 
             </div>
             <br>
+            <br>
+
 
             <div class="monto_content row input-group">
                 {{ form.monto_factura.error_messages }}
@@ -188,24 +168,34 @@
                 </div>
             </div>
             <br>
-
             <br>
 
             <div class="monto_content row input-group">
-                {{ form.datetime_factura1.error_messages }}
+                <label for="colFormLabel" class="col-sm-5 col-form-label"><b>Fechas de prestaci贸n</b></label>
+            </div>
+            <br>
+
+            <div class="monto_content row input-group">
+                {{ form.id_factura.error_messages }}
                 <label for="colFormLabel" class="col-sm-3 col-form-label">Fecha inicial de factura*</label>
+
                 <div class="input-group date monto_field" id="datetimepicker1" data-target-input="nearest">
                     {{ form.datetime_factura1 }}
+                    <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                        <div class="input-group-text"  style="height: 38px"><i class="fa fa-calendar"></i></div>
+                    </div>
                 </div>
             </div>
             <br>
+
             <div class="monto_content row input-group">
-                {{ form.datetime_factura2.error_messages }}
+                {{ form.id_factura.error_messages }}
                 <label for="colFormLabel" class="col-sm-3 col-form-label">Fecha final de factura*</label>
 
                 <div class="input-group date monto_field" id="datetimepicker2" data-target-input="nearest">
                     {{ form.datetime_factura2 }}
-                    <div class="input-group-append datepicker" data-target="#datetimepicker2" data-toggle="datetimepicker">
+                    <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker">
+                        <div class="input-group-text"  style="height: 38px"><i class="fa fa-calendar"></i></div>
                     </div>
                 </div>
             </div>
@@ -247,6 +237,7 @@
                         {{ form.file_soporte }}
                     </div>
                 </div>
+
             </div>
             <br>
 
@@ -269,7 +260,7 @@
 
             <div class="form-group label_textarea">
                 {{ form.regimen_type.error_messages }}
-                <label for="regimen1" class="">Régimen</label>
+                <label for="regimen1" class="">R茅gimen</label>
                 {{ form.regimen_type }}
             </div>
 
@@ -288,27 +279,29 @@
             {{ form.datetime_radicado }}
         </form>
     </div>
-    <!-- Date Time Picker JS -->
-      <script src="{% static 'jquery-ui.js' %}" ></script>
-      <script src="{% static 'jquery-ui-timepicker-addon.js' %}"></script>
-
-      <script>
-        $( function() {
-            // $( "#id_birth_date" ).datetimepicker({ dateFormat: 'yy-mm-dd', maxDate: 0, controlType: 'select'}).attr("autocomplete", "off") ;
-            // $( "#id_birth_date" ).timepicker({ dateFormat: 'yy-mm-dd', maxDate: 0, controlType: 'select'}).attr("autocomplete", "off") ;
-            $( " #id_birth_date " ).datepicker({ dateFormat: 'yy-mm-dd' }).attr("autocomplete", "off") ;
-        });
-      </script>
-      <!-- Date Time Picker JS -->
 
     <script>
-      $("#ViewActivitydiv1").on(
-          "keydown keypress keyup click contextmenu", false
-      );
-      $("#ViewActivitydiv2").on(
-          "keydown keypress keyup click contextmenu", false
-      );
+      $(function () {
+        $("#datetimepicker1").datetimepicker({
+            format: 'DD-MM-YYYY',
+            startDate: '-3y'
+        });
+      });
 
+      $(function () {
+        $("#datetimepicker2").datetimepicker({
+            format: 'DD-MM-YYYY',
+            startDate: '-3y'
+        });
+      });
+
+      $(".InputBlock1").keydown(function(event) {
+            return false;
+        });
+        $(".InputBlock2").keydown(function(event) {
+            return false;
+        });
     </script>
+
 
 {% endblock %}
