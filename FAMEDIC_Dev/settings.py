@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'two_factor',
     'bootstrap_datepicker_plus',
     'bootstrap4',
+    'axes',
 ]
 
 BOOTSTRAP4 = {
@@ -60,7 +61,8 @@ BOOTSTRAP4 = {
 
 AUTH_USER_MODEL = 'famedic_users.FamedicUser'
 
-'''AUTHENTICATION_BACKENDS = [
+"""
+AUTHENTICATION_BACKENDS = [
     # AxesBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
     'axes.backends.AxesBackend',
 
@@ -68,7 +70,10 @@ AUTH_USER_MODEL = 'famedic_users.FamedicUser'
     'django.contrib.auth.backends.ModelBackend',
 
 ]
-AXES_ENABLED = False'''
+
+AXES_ENABLED = False
+"""
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -85,6 +90,8 @@ MIDDLEWARE = [
 
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django_otp.middleware.OTPMiddleware',
+
+    'axes.middleware.AxesMiddleware',
 ]
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True

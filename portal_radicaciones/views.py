@@ -10,6 +10,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.utils.decorators import method_decorator
 # Librería para restricción de vistas con autenticación realizada
 from django.contrib.auth.decorators import login_required, user_passes_test
+# from axes.decorators import axes_dispatch
 
 # Librería con los formularios requeridos para el C.R.U.D
 from .forms import (
@@ -37,7 +38,7 @@ from django.contrib.auth import (
 
 # Librerías para generar y enviar por SMS las OTP y correos de confirmación de formularios
 import secrets
-from twilio.rest import Client
+# from twilio.rest import Client
 from django.core.mail import (
     send_mail,
     EmailMessage,
