@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'two_factor',
     'bootstrap_datepicker_plus',
     'bootstrap4',
-    'axes',
 ]
 
 BOOTSTRAP4 = {
@@ -90,8 +89,6 @@ MIDDLEWARE = [
 
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django_otp.middleware.OTPMiddleware',
-
-    'axes.middleware.AxesMiddleware',
 ]
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
