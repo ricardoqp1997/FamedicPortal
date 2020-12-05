@@ -13,5 +13,16 @@
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://a2plcpnl0835.prod.iad2.secureserver.net:3306/qa_famedic</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="db_damedic_alternativa" uuid="46bdcb91-77db-45f6-9a32-93d4f1a6adcf">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\Users\RicardoQuintana\Desktop\FamedicPortal\db_damedic_alternativa.sqlite3</jdbc-url>
+      <libraries>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.31.1/sqlite-jdbc-3.31.1.jar</url>
+        </library>
+      </libraries>
+    </data-source>
   </component>
 </project>

@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'two_factor',
     'bootstrap_datepicker_plus',
     'bootstrap4',
+    'dbbackup',
 ]
 
 BOOTSTRAP4 = {
@@ -121,6 +122,7 @@ WSGI_APPLICATION = 'FAMEDIC_Dev.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+"""
 DATABASES = {
     'default': dict(
         ENGINE='django.db.backends.mysql',
@@ -130,6 +132,14 @@ DATABASES = {
         HOST='a2plcpnl0835.prod.iad2.secureserver.net',
         PORT='3306'
     )
+}
+"""
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db_damedic_alternativa.sqlite3'),
+    }
 }
 
 SITE_ID = 1
