@@ -251,7 +251,7 @@ class RadicacionAdmin(ImportExportModelAdmin):
     get_nombre_radicador.short_description = 'Nombre de radicador'
     get_tipo_id_radicador.short_description = 'Tipo de documento'
     get_id_radicador.short_description = 'Número de documento'
-    get_telefono_radicador.short_description = 'Teléfono del radicador'
+    get_telefono_radicador.short_description = 'Teléfono del contacto'
     get_sede_radicado.short_description = 'Sede de radicación'
     get_estado_radicado.short_description = 'Estado del radicado'
     get_glosa_radicado.short_description = 'Glosa'
