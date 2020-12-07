@@ -14,7 +14,7 @@ from portal_radicaciones.forms import (
 
 # Función de desbloqueo de usuarios
 
-
+"""
 def desbloquearUsuarios(modeladmin, request, queryset):
 
     for user in queryset:
@@ -23,6 +23,7 @@ def desbloquearUsuarios(modeladmin, request, queryset):
         user.save()
 
 desbloquearUsuarios.short_description = 'Desbloquear usuario/s'
+"""
 
 
 # Esta función recibe un queryset con los usuarios seleccionados
@@ -66,7 +67,10 @@ class UserAdmin(BaseUserAdmin):
     form = UserAdminChangeForm
     add_form = UserAdminCreationForm
 
-    actions = [Reenviar_correo, desbloquearUsuarios]
+    actions = [
+        Reenviar_correo,
+        # desbloquearUsuarios
+    ]
 
     # Parametrización de los filtros de búsqueda y de visualización de contenido dentro de Famedic Users
     list_display = ['id_famedic', 'last_name', 'first_name', 'email', 'admin', 'updated', 'get_usuario_bloqueado']
