@@ -114,11 +114,17 @@ class RadicacionDespacho(resources.ModelResource):
 
     @staticmethod
     def dehydrate_glosa_radicado(radicado):
-        return radicado.glosa_asign.glosa_name
+        try:
+            return radicado.glosa_asign.glosa_name
+        except:
+            return 'Sin glosa asignada'
 
     @staticmethod
     def dehydrate_subglosa_radicado(radicado):
-        return radicado.subglosa_asign.Subglosa_name
+        try:
+            return radicado.subglosa_asign.Subglosa_name
+        except:
+            return 'Sin subglosa asignada'
 
     @staticmethod
     def dehydrate_periodo_factura(radicado):
