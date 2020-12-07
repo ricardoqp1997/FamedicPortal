@@ -368,7 +368,7 @@ def radicacion_finish(request):
     tz = timezone.localdate()
 
     # invoice_mail = 'ricardoq@tics-sas.com'
-    invoice_mail = 'direccioninformatica@famedicips.com'
+    invoice_mail = 'radicacion@famedicips.com'
     user_mail = request.user.get_username()
     user_fullname = request.user.get_full_name()
 
@@ -389,14 +389,14 @@ def radicacion_finish(request):
                                                                           'exitosamente con numero de radicación.' + str(
                     invoice_id) + '\n'
 
-                                  '\nSERVICIOS MEDICOS FAMEDIC SAS notifica que dentro de los treinta (20) días hábiles siguientes '
+                                  '\nSERVICIOS MEDICOS FAMEDIC SAS notifica que dentro de los veinte (20) días hábiles siguientes '
                                   'a la presentación de la presente factura o cuenta de cobro, comunicará el resultado de la '
                                   'auditoria realizada a la presente solicitud. Lo anterior de acuerdo al decreto Numero 4747 de '
                                   'diciembre de 2007, por medio del cual se regulan algunos aspectos de las relaciones entre los '
                                   'prestadores de servicios de salud y las entidades responsables del pago de la población a su '
                                   'cargo.\n'
 
-                                  '\n\n Cualquier duda o inquietud con gusto será resuelta en el correo.'
+                                  '\n\n Cualquier duda o inquietud con gusto será resuelta en los correos direccionoperativa@famedicips.com y radicacion@famedicips.com.'
                                   '\n\n Este es un mensaje automático y no es necesario responder.',
             )
 
@@ -500,7 +500,7 @@ def passwordchangesave(request):
             usuario.save()
             update_session_auth_hash(request, usuario)
             messages.success(request, "Contraseña actualizada")
-            return redirect('/login/')
+            return redirect('/main/perfil/')
         else:
             messages.error(request, "Error en cambiar contraseña")
     else:

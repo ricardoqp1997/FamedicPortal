@@ -132,7 +132,7 @@ class RadicacionAdmin(ImportExportModelAdmin):
 
     # Parametrización de los filtros de búsqueda y de visualización de contenido
     list_display = ['id', 'id_factura', 'datetime_radicado', 'radicador', 'monto_factura', 'sede_selection', 'aproved']
-    list_filter = ['aproved', 'id', 'sede_selection', 'regimen_type']
+    list_filter = ['aproved', 'id', 'radicador__id_famedic', 'sede_selection', 'regimen_type']
 
     fieldsets = (
         (
@@ -198,7 +198,7 @@ class RadicacionAdmin(ImportExportModelAdmin):
         'radicador__phone',
         'sede_selection__sede_name',
         'sede_selection__locacion_sede',
-        'glosa_asign__glosa_name'
+        'glosa_asign__glosa_name',
     ]
     ordering = ['id', 'id_factura', 'radicador']
     filter_horizontal = []
@@ -219,15 +219,15 @@ class RadicacionAdmin(ImportExportModelAdmin):
         sender_mail = settings.EMAIL_HOST_USER
         user = FamedicUser.objects.get(email=obj.radicador)
         # test_mail = 'ricardoq@tics-sas.com'
-        test_mail = 'direccioninformatica@famedicips.com'
+        test_mail = 'radicacion@famedicips.com'
 
         if '_aprove-radicado' in request.POST:
-
+            
             if (obj.glosa_asign.glosa_name != '0-Aprobada Sin Glosa') \
                     or (obj.subglosa_asign.Subglosa_name != '0-Aprobada Sin SubGlosa')\
                     or (obj.glosa_valor is not None):
                 self.message_user(request, 'Esto es una radicación sin glosa'
-                                  ' por favor, desmarque la opció', messages.ERROR)
+                                  ' por favor, desmarque la opción', messages.ERROR)
 
                 return HttpResponseRedirect(".")
 
@@ -253,19 +253,15 @@ class RadicacionAdmin(ImportExportModelAdmin):
                     body='Sr(a). Usuario(a)  ' + user.get_full_name() + ', el proceso de auditoria a su solicitud de '
                                                                         'pago con numero de radicación bajo el consecutivo ' + str(
                         obj.id) + ', culminó exitosamente '
-                                  'con las siguientes observaciones:'
+                                  'sin diferencia contractual alguna. Se procederá a remitir al proceso de auditoria médica'
 
                                   '\n\n' + obj.obs_admin + '\n\n'
 
-                                                           '\n\nDe no haberse generado diferencia contractual alguna descrita en observaciones, su '
-                                                           'solicitud continua con el proceso para pago.\n\n'
+                                                           '\n\n Si posterior a este mensaje no recibe glosa por auditoria médica, el valor total '
+                                                           'se remitirá a procesamiento para pago.\n\n'
 
-                                                           '\n\nDe haberse generado glosa descrita en observaciones SERVICIOS MEDICOS FAMEDIC SAS se '
-                                                           'permite notificar que la presente glosa que se relaciona a continuación, debe ser subsanada '
-                                                           'dentro de los quince (15) días hábiles siguientes a su recepción, o se dará como aceptada. '
-                                                           'De acuerdo al decreto Numero 4747 de diciembre de 2007, por medio del cual se regulan '
-                                                           'algunos aspectos de las relaciones entre los prestadores de servicios de salud y las '
-                                                           'entidades responsables del pago de la población a su cargo. \n\n'
+                                                           '\n\nCualquier duda o inquietud con gusto será resuleta en los correos '
+                                                           'direccionoperativa@famedicips.com y radicacion@famedicips.com \n\n'
 
                                                            '\n\n Este es un mensaje automático y no es necesario responder.',
                 )
@@ -284,13 +280,18 @@ class RadicacionAdmin(ImportExportModelAdmin):
         # ------------ Aprobación con glosa ---------------------
 
 
-        if '_glosa-radicado' in request.POST:
+        if '_glosa-radicado' in request.POST: 
 
             if (obj.glosa_asign.glosa_name == '0-Aprobada Sin Glosa') \
                     or (obj.subglosa_asign.Subglosa_name == '0-Aprobada Sin SubGlosa') \
                     or (obj.glosa_valor is None):
-                self.message_user(request, 'Debe asignar una glosa al radicado y especificarle un valor', messages.ERROR)
-
+                    self.message_user(request, 'Debe asignar una glosa al radicado y especificarle un valor', messages.ERROR)
+                        
+                    return HttpResponseRedirect(".")
+                
+            if (obj.glosa_valor > obj.monto_factura):
+                self.message_user(request, 'Asigne un valor inferior al valor'
+                                       ' de la facturación correspondiente', messages.ERROR)
                 return HttpResponseRedirect(".")
 
             if obj.aproved != 'SINAP':
@@ -310,32 +311,37 @@ class RadicacionAdmin(ImportExportModelAdmin):
                     from_email=sender_mail,
                     to=[user.email],
 
-                    subject='Proceso Exitoso de Auditoria',
+                    subject='Proceso de Auditoria con diferencias contractuales o normativas (glosa)',
 
-                    body='Sr(a). Usuario(a)  ' + user.get_full_name() + ', el proceso de auditoria a su solicitud de '
-                                                                        'pago con numero de radicación bajo el consecutivo ' + str(
-                        obj.id) + ', culminó exitosamente '
-                                  'con las siguientes observaciones:'
+                    body='Sr(a). Usuario(a)  ' + user.get_full_name() + ', su solicitud de pago con numero de radicación bajo el consecutivo '
+                                                                        + str(
+                        obj.id) + ', presenta glosa por valor de: \n\n' + str(obj.glosa_valor) + 
+                                    '\n\n Observaciones del administrador: \n\n'
+                                    '\n\n' + obj.obs_admin + '\n\n'
 
-                                  '\n\n' + obj.obs_admin + '\n\n'
+                                                           '\n\nSERVICIOS MEDICOS FAMEDIC SAS se permite notificar que la presente glosa '
+                                                           ' que se relaciona a continuación, debe ser subsanada dentro de los quince (15) días '
+                                                           ' hábiles siguientes a su recepción, o se dará como aceptada. '
+                                                           ' Los soportes que subsanen la glosa se deben remitir al correo: direccionoperativa@famedicips.com '
+                                                           ' radicacion@famedicips.com \n\n'
+                                                           
+                                                           '\n\nCausal y subcausal escogida '
+                                                          
+                                                           ' De acuerdo al decreto Numero 4747 de diciembre de 2007, '
+                                                           ' por medio del cual se regulan algunos aspectos de las '
+                                                           ' relaciones entre los prestadores de servicios de salud '
+                                                           ' y las entidades responsables del pago de la población a '
+                                                           ' su cargo. \n\n'
 
-                                                           '\n\nDe no haberse generado diferencia contractual alguna descrita en observaciones, su '
-                                                           'solicitud continua con el proceso para pago.\n\n'
-
-                                                           '\n\nDe haberse generado glosa descrita en observaciones SERVICIOS MEDICOS FAMEDIC SAS se '
-                                                           'permite notificar que la presente glosa que se relaciona a continuación, debe ser subsanada '
-                                                           'dentro de los quince (15) días hábiles siguientes a su recepción, o se dará como aceptada. '
-                                                           'De acuerdo al decreto Numero 4747 de diciembre de 2007, por medio del cual se regulan '
-                                                           'algunos aspectos de las relaciones entre los prestadores de servicios de salud y las '
-                                                           'entidades responsables del pago de la población a su cargo. \n\n'
-
+                                                           
                                                            '\n\n Este es un mensaje automático y no es necesario responder.',
                 )
 
-            else:  # == 0 - sin glosa
-
-                self.message_user(request,
-                                  "Es necesario seleccionar un elemento de la lista glosa si va a realizar la aprobación del radicado. Para aprobar sin glosa, seleccione el elemento: 0-Aprobada Sin Glosa")
+            else:# == 0 - sin glosa
+                self.message_user(request,'Es necesario seleccionar un elemento de la lista '
+                    ' glosa si va a realizar la aprobación del radicado. Para aprobar sin glosa, '
+                    ' seleccione el elemento: 0-Aprobada Sin Glosa \n\n')
+                    
                 return HttpResponseRedirect(".")
 
             mail_to_user.send()

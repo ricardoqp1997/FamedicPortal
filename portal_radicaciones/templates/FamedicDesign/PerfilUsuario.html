@@ -41,6 +41,14 @@
     </style>
 
     <div class="Radicado_main_box">
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" style="margin-top: 15px">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
 
         <h2>{{ user.get_full_name }}</h2>
         <img src="{% if user.profile_foto %} {{ user.profile_foto.url }} {% else %} {% static 'resouces/no_photo_famedic.svg' %} {% endif %}" width="150" height="150" alt="">

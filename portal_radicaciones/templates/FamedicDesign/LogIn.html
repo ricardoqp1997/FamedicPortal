@@ -13,6 +13,13 @@
             font-weight: bold;
             font-size: 25px;
         }
+        .titulo_login2{
+            text-align: center;
+            padding-top: 25px;
+            padding-bottom: 25px;
+            font-weight: bold;
+            font-size: 20px;
+        }
         .centrado_elementos{
             text-align: center;
         }
@@ -27,11 +34,14 @@
 
         {% csrf_token %}
         <p class="titulo_login">INGRESO AL PORTAL DE RADICACIÓN DE FACTURAS</p>
+        
 
         {{ form | crispy }}
 
         <div class="form-group centrado_elementos">
             <button class="btn btn-primary btn-lg active boton_login" type="submit">Iniciar Sesion</button>
+            <h6 class="titulo_login2">Contactos de soporte.</h6>
+            <h6 class="titulo_login2">direccionoperativa@famedicips.com - radicacion@famedicips.com</h6>
         </div>
         <br>
 
