@@ -240,10 +240,16 @@ class RadicacionAdmin(ImportExportModelAdmin):
         return obj.get_aproved_display()
 
     def get_glosa_radicado(self, obj):
-        return obj.glosa_asign.glosa_name
+        try:
+            return obj.glosa_asign.glosa_name
+        except:
+            return 'Sin glosa asignada'
 
     def get_subglosa_radicado(self, obj):
-        return obj.subglosa_asign.Subglosa_name
+        try:
+            return obj.subglosa_asign.Subglosa_name
+        except:
+            return 'Sin subglosa asignada'
 
     def get_periodo_factura(self, obj):
         return str(obj.datetime_factura1.date()) + ' - ' + str(obj.datetime_factura2.date())
