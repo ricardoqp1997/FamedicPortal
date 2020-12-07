@@ -130,9 +130,27 @@ class RadicacionAdmin(ImportExportModelAdmin):
 
     change_form_template = 'AdminExtends/RadicadoApproval.html'
 
+    subglosa_radicado = fields.Field(column_name='Subglosa')
+    valor_glosa = fields.Field(column_name='Valor de glosa', attribute='glosa_valor')
+
     # Parametrización de los filtros de búsqueda y de visualización de contenido
-    list_display = ['id', 'id_factura', 'datetime_radicado', 'radicador', 'monto_factura', 'sede_selection', 'aproved']
-    list_filter = ['aproved', 'id', 'radicador__id_famedic', 'sede_selection', 'regimen_type']
+    list_display = [
+        'id',
+        'id_factura',
+        'get_nombre_radicador',
+        'get_tipo_id_radicador',
+        'get_id_radicador',
+        'get_telefono_radicador',
+        'datetime_radicado',
+        'get_periodo_factura',
+        'monto_factura',
+        'get_sede_radicado',
+        'aproved',
+        'get_glosa_radicado',
+        'get_subglosa_radicado',
+        'glosa_valor',
+    ]
+    list_filter = ['aproved', 'radicador__id_famedic', 'id', 'sede_selection', 'regimen_type']
 
     fieldsets = (
         (
@@ -187,23 +205,58 @@ class RadicacionAdmin(ImportExportModelAdmin):
 
     # Parametros de filtrado y busqueda
     search_fields = [
-        'id',
-        'id_factura',
-        'aproved',
-        'radicador__id',
-        'radicador__id_famedic',
-        'radicador__first_name',
-        'radicador__last_name',
-        'radicador__email',
-        'radicador__phone',
-        'sede_selection__sede_name',
-        'sede_selection__locacion_sede',
-        'glosa_asign__glosa_name',
+        'id',                         # Consecutovo
+        'id_factura',                 # Numero asignado de factura
+        'aproved',                    # Radicados aprobados
+        'radicador__id_famedic',      # Cedula
+        'radicador__email',           # Correo electronico
+        'sede_selection__sede_name',  # Sede
+        'regimen_type',               # Regimen
     ]
     ordering = ['id', 'id_factura', 'radicador']
     filter_horizontal = []
 
     # save_on_top = True
+
+    def get_nombre_radicador(self, obj):
+        return obj.radicador.get_full_name()
+
+    def get_tipo_id_radicador(self, obj):
+        return obj.radicador.id_type
+
+    def get_id_radicador(self, obj):
+        return obj.radicador.id_famedic
+
+    def get_telefono_radicador(self, obj):
+        if obj.radicador.phone:
+            return obj.radicador.phone
+        else:
+            return 'Sin teléfono inscrito'
+
+    def get_sede_radicado(self, obj):
+        return obj.sede_selection.sede_name
+
+    def get_estado_radicado(self, obj):
+        return obj.get_aproved_display()
+
+    def get_glosa_radicado(self, obj):
+        return obj.glosa_asign.glosa_name
+
+    def get_subglosa_radicado(self, obj):
+        return obj.subglosa_asign.Subglosa_name
+
+    def get_periodo_factura(self, obj):
+        return str(obj.datetime_factura1.date()) + ' - ' + str(obj.datetime_factura2.date())
+
+    get_nombre_radicador.short_description = 'Nombre de radicador'
+    get_tipo_id_radicador.short_description = 'Tipo de documento'
+    get_id_radicador.short_description = 'Número de documento'
+    get_telefono_radicador.short_description = 'Teléfono del radicador'
+    get_sede_radicado.short_description = 'Sede de radicación'
+    get_estado_radicado.short_description = 'Estado del radicado'
+    get_glosa_radicado.short_description = 'Glosa'
+    get_subglosa_radicado.short_description = 'Subglosa'
+    get_periodo_factura.short_description = 'Periodo de facturación'
 
     def active(self, obj):
         return obj.aproved == 1
@@ -257,13 +310,13 @@ class RadicacionAdmin(ImportExportModelAdmin):
 
                                   '\n\n' + obj.obs_admin + '\n\n'
 
-                                                           '\n\n Si posterior a este mensaje no recibe glosa por auditoria médica, el valor total '
-                                                           'se remitirá a procesamiento para pago.\n\n'
+                                  '\n\n Si posterior a este mensaje no recibe glosa por auditoria médica, el valor total '
+                                  'se remitirá a procesamiento para pago.\n\n'
 
-                                                           '\n\nCualquier duda o inquietud con gusto será resuleta en los correos '
-                                                           'direccionoperativa@famedicips.com y radicacion@famedicips.com \n\n'
+                                  '\n\nCualquier duda o inquietud con gusto será resuleta en los correos '
+                                  'direccionoperativa@famedicips.com y radicacion@famedicips.com \n\n'
 
-                                                           '\n\n Este es un mensaje automático y no es necesario responder.',
+                                  '\n\n Este es un mensaje automático y no es necesario responder.',
                 )
 
             else:  # == 0 - sin glosa

@@ -1,23 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="db_famedic" uuid="e28274db-a17a-44bc-8960-5459368702f1">
-      <driver-ref>mysql.8</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://a2plcpnl0835.prod.iad2.secureserver.net:3306/db_famedic</jdbc-url>
-    </data-source>
-    <data-source source="LOCAL" name="qa_famedic" uuid="4350ee1f-d6c8-4521-9b0f-ee10d23708c2">
-      <driver-ref>mysql.8</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://a2plcpnl0835.prod.iad2.secureserver.net:3306/qa_famedic</jdbc-url>
-    </data-source>
-    <data-source source="LOCAL" name="db_damedic_alternativa" uuid="46bdcb91-77db-45f6-9a32-93d4f1a6adcf">
+    <data-source source="LOCAL" name="db_damedic_alternativa [2]" uuid="4e10a963-ed1e-4368-9c99-a5a54376c437">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\RicardoQuintana\Desktop\FamedicPortal\db_damedic_alternativa.sqlite3</jdbc-url>
+      <jdbc-url>jdbc:sqlite:C:\Users\RicardoQuintana\PycharmProjects\FamedicPortal\db_damedic_alternativa.sqlite3</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
         <library>
           <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.31.1/sqlite-jdbc-3.31.1.jar</url>
