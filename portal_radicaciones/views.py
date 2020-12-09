@@ -110,6 +110,40 @@ class LoginFamedic(LoginView):
 
     template_name = 'FamedicDesign/LogIn.html'
 
+    def form_invalid(self, form):
+
+        user_accessing = FamedicUser.objects.get(id_famedic=form.cleaned_data.get('id_famedic'))
+
+        try:
+
+            user_accessing.intentos_acceso += 1
+
+            if user_accessing.intentos_acceso == 5:
+                user_accessing.bloqueado = True
+                user_accessing.intentos_acceso = 5
+
+            user_accessing.save()
+
+            if user_accessing.intentos_acceso < 5:
+
+                messages.warning(self.request, 'Ha ingresado sus datos incorrectamente, le queda(n) '
+                                 + str(5 - user_accessing.intentos_acceso) + ' intento(s)')
+            else:
+
+                messages.warning(self.request, 'Ya no le quedan intentos para acceder, '
+                                               'por favor contacte a su administrador para desbloquear '
+                                               'su cuenta.')
+
+            print('usuario intento acceder de forma erronea: ', user_accessing.get_full_name())
+            print('intentos: ', user_accessing.intentos_acceso)
+            print('bloqueado: ', user_accessing.bloqueado)
+
+        except:
+            pass
+
+        # return self.render_to_response(self.get_context_data(form=form))
+        return redirect('/login/')
+
     def form_valid(self, form):
 
         secret_otp = secrets.SystemRandom()
@@ -118,9 +152,6 @@ class LoginFamedic(LoginView):
         print(token)
 
         self.user_logged = form.get_user()
-
-        print('intentos: ', self.user_logged.intentos_acceso)
-        print('bloqueado: ', self.user_logged.bloqueado)
 
         cc = self.user_logged.id_famedic
         self.logged_id = form.cleaned_data.get('id_famedic')
@@ -131,6 +162,13 @@ class LoginFamedic(LoginView):
         if self.user_logged.is_validated:
             self.user_logged.authenticated = False
             self.user_logged.save()
+
+        if self.user_logged.bloqueado:
+            messages.warning(self.request, 'Usuario bloqueado por múltiples intentos fallidos de autenticación. '
+                                           'Por favor contactar a los administradores del portal.')
+            logout(self.request)
+
+            return redirect('/login/')
 
         if cc != self.logged_id:
             messages.warning(self.request, 'Por favor verifique el número de identificación ingresado.')
@@ -145,6 +183,7 @@ class LoginFamedic(LoginView):
             return redirect('/registro/')
 
         self.user_logged.token = token
+        self.user_logged.intentos_acceso = 0
         self.user_logged.save()
 
         sender_mail = settings.EMAIL_HOST_USER
@@ -185,16 +224,29 @@ class TokenAccess(LoginFamedic):
     authentication_form = TokenAccessForm
 
     def form_valid(self, form):
-        self.user_tokn = FamedicUser.objects.get(id=self.request.session['member_id']).token
-        print(self.user_tokn)
+
+        try:
+            self.user_tokn = FamedicUser.objects.get(id=self.request.session['member_id']).token
+            print(self.user_tokn)
+        except:
+            messages.warning(self.request, 'Se ha agotado el tiempo de verificación e ingreso del usuario,'
+                                           'intentelo nuevamente.')
+            return redirect('/login/')
 
         if form.cleaned_data.get('token') == self.user_tokn:
-            usr = FamedicUser.objects.get(id=self.request.session['member_id'])
-            usr.token = None
-            usr.authenticated = True
-            usr.save()
 
-            login(self.request, usr)
+            try:
+
+                usr = FamedicUser.objects.get(id=self.request.session['member_id'])
+
+                usr.token = None
+                usr.authenticated = True
+                usr.save()
+
+                login(self.request, usr)
+            except:
+                messages.warning(self.request, 'Se ha agotado el tiempo de verificación e ingreso del usuario,'
+                                               'intentelo nuevamente.')
 
             return redirect('/main/')
 

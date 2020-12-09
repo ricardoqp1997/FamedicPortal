@@ -4,6 +4,7 @@ from django.contrib.auth.models import (
     BaseUserManager
 )
 
+
 # Clase para manipulacion, creacion, edicion de usuarios de Famedic User
 class UserManager(BaseUserManager):
 
@@ -88,7 +89,7 @@ class FamedicUser(AbstractBaseUser):
     token = models.CharField(null=True, max_length=6)
     authenticated = models.BooleanField(default=False)
 
-    intentos_acceso = models.IntegerField(null=True, default=0)
+    intentos_acceso = models.IntegerField(default=0)
     bloqueado = models.BooleanField(default=False)
 
     # Parametro desactivado

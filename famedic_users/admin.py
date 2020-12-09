@@ -4,6 +4,7 @@ from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.core.mail import EmailMultiAlternatives
+from django.contrib import messages
 
 from .models import FamedicUser as User
 from portal_radicaciones.forms import (
@@ -13,21 +14,19 @@ from portal_radicaciones.forms import (
 
 
 # Función de desbloqueo de usuarios
-
-"""
-def desbloquearUsuarios(modeladmin, request, queryset):
+def desbloquear_usuarios(modeladmin, request, queryset):
 
     for user in queryset:
-        user.bloqueado = user.is_active = True
+        user.bloqueado = False
         user.intentos_acceso = 0
         user.save()
 
-desbloquearUsuarios.short_description = 'Desbloquear usuario/s'
-"""
+
+desbloquear_usuarios.short_description = 'Desbloquear usuario/s'
 
 
 # Esta función recibe un queryset con los usuarios seleccionados
-def Reenviar_correo(modeladmin, request, queryset):
+def reenviar_correo(modeladmin, request, queryset):
     remitente = settings.EMAIL_HOST_USER
 
     for user in queryset:
@@ -59,7 +58,7 @@ def Reenviar_correo(modeladmin, request, queryset):
         access_mail.send()
 
 
-Reenviar_correo.short_description = 'Reenviar correo de actualización'
+reenviar_correo.short_description = 'Reenviar correo de actualización'
 
 
 class UserAdmin(BaseUserAdmin):
@@ -68,13 +67,13 @@ class UserAdmin(BaseUserAdmin):
     add_form = UserAdminCreationForm
 
     actions = [
-        Reenviar_correo,
-        # desbloquearUsuarios
+        reenviar_correo,
+        desbloquear_usuarios
     ]
 
     # Parametrización de los filtros de búsqueda y de visualización de contenido dentro de Famedic Users
     list_display = ['id_famedic', 'last_name', 'first_name', 'email', 'admin', 'updated', 'get_usuario_bloqueado']
-    list_filter = ['active', 'admin', 'id_famedic', 'email']
+    list_filter = ['bloqueado', 'admin', 'id_famedic', 'email']
 
     # Campos de información del usuario a mostrar en el panel de Famedic Users (Creación)
     add_fieldsets = (

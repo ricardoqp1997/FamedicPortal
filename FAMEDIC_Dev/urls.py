@@ -66,7 +66,9 @@ class OTPAdminSite(AdminSite):
     login_template = django_otp.admin._admin_template_for_django_version()
 
     def has_permission(self, request):
-        return super().has_permission(request) and request.user.is_authenticated and request.user.is_admin
+        return super().has_permission(request) and \
+               request.user.is_authenticated and \
+               request.user.is_admin and not request.user.bloqueado
 
 
 # Llamado de la clase (class admin) para el manejo del portal admin cin OTP

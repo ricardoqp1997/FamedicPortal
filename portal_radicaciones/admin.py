@@ -44,6 +44,7 @@ import xlsxwriter
     class Meta:
         model = RadicacionModel"""
 
+
 class RadicacionDespacho(resources.ModelResource):
 
     numero_radicado = fields.Field(column_name='Consecutivo del radicado', attribute='id')
@@ -60,7 +61,7 @@ class RadicacionDespacho(resources.ModelResource):
     glosa_radicado = fields.Field(column_name='Glosa')
     subglosa_radicado = fields.Field(column_name='Subglosa')
     valor_glosa = fields.Field(column_name='Valor de glosa', attribute='glosa_valor')
-
+    neto_a_pagar = fields.Field(column_name='Neto a pagar')
 
     class Meta:
         model = RadicacionModel
@@ -130,6 +131,13 @@ class RadicacionDespacho(resources.ModelResource):
     def dehydrate_periodo_factura(radicado):
         return str(radicado.datetime_factura1) + ' - ' + str(radicado.datetime_factura2)
 
+    @staticmethod
+    def dehydrate_neto_a_pagar(radicado):
+        try:
+            return radicado.monto_factura - radicado.glosa_valor
+        except:
+            return radicado.monto_factura
+
 
 class RadicacionAdmin(ImportExportModelAdmin):
     resource_class = RadicacionDespacho  # ForeignRadicado
@@ -155,6 +163,7 @@ class RadicacionAdmin(ImportExportModelAdmin):
         'get_glosa_radicado',
         'get_subglosa_radicado',
         'glosa_valor',
+        'get_neto_a_pagar'
     ]
     list_filter = ['aproved', 'radicador__id_famedic', 'id', 'sede_selection', 'regimen_type']
 
@@ -260,6 +269,12 @@ class RadicacionAdmin(ImportExportModelAdmin):
     def get_periodo_factura(self, obj):
         return str(obj.datetime_factura1.date()) + ' - ' + str(obj.datetime_factura2.date())
 
+    def get_neto_a_pagar(self, obj):
+        try:
+            return obj.monto_factura - obj.glosa_valor
+        except:
+            return obj.monto_factura
+
     get_nombre_radicador.short_description = 'Nombre de radicador'
     get_tipo_id_radicador.short_description = 'Tipo de documento'
     get_id_radicador.short_description = 'Número de documento'
@@ -269,6 +284,7 @@ class RadicacionAdmin(ImportExportModelAdmin):
     get_glosa_radicado.short_description = 'Glosa'
     get_subglosa_radicado.short_description = 'Subglosa'
     get_periodo_factura.short_description = 'Periodo de facturación'
+    got_get_neto_a_pagar = 'Neto a pagar'
 
     def active(self, obj):
         return obj.aproved == 1
