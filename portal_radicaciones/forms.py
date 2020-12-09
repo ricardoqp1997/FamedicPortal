@@ -196,7 +196,7 @@ class UserAdminCreationForm(forms.ModelForm):
                  ''
                  'Correo: ' + receptor +
                  '\nIdentificación: ' + id_acceso +
-                 '\nContraseña: ' + str(random_password) + '.\n'
+                 '\nContraseña: ' + str(random_password) + '\n'
                  '\nPara ingresar será requerido inicialmente que actualice los datos de su cuenta desde el portal '
                  'proveedores.famedicips.co, luego de dicha actualización podrá acceder y usar el portal de '
                  'proveedores de Famedic IPS.'
