@@ -197,11 +197,11 @@ class LoginFamedic(LoginView):
             body='Sr(a). Usuario(a) del portal de proveedores.\n'
 
                  '\nSe ha detectado un intento de acceso al portal de radicación de facturas.'
-                 ' Su token de acceso para esta sesión es ' + str(token) + '. Si usted no trató de'
-                                                                           ' ingresar recientemente por favor contactese con un administrador del portal'
-                                                                           ' para revisar y garantizar la seguridad de su cuenta.'
+                 ' Su token de acceso para esta sesión es: \n\n' + str(token) + '\n\nSi usted no trató de'
+                 ' ingresar recientemente por favor contactese con un administrador del portal'
+                 ' para revisar y garantizar la seguridad de su cuenta.'
 
-                                                                           '\n\n Este es un mensaje automático y no es necesario responder.',
+                 '\n\n Este es un mensaje automático y no es necesario responder.',
         )
 
         token_mail.send()

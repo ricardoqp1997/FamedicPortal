@@ -177,6 +177,7 @@ class UserAdminCreationForm(forms.ModelForm):
         print(random_password)
 
         receptor = self.cleaned_data.get('email')
+        id_acceso = self.cleaned_data.get('id_famedic')
         print(receptor)
 
         sender_mail = settings.EMAIL_HOST_USER
@@ -190,12 +191,16 @@ class UserAdminCreationForm(forms.ModelForm):
             body='Sr(a). Usuario(a) del portal de proveedores.\n '
 
                  '\nSe han creado sus nuevas credenciales para el ingreso al portal de radicación.\n'
-                 'Sus credenciales de acceso serán: ' + receptor + ' con la contraseña: ' + str(random_password) + '.\n'
-                                                                                                                   '\nPara ingresar será requerido inicialmente que actualice los datos de su cuenta desde el portal '
-                                                                                                                   'proveedores.famedicips.co, luego de dicha actualización podrá acceder y usar el portal de '
-                                                                                                                   'proveedores de Famedic IPS.'
+                 'Sus credenciales de acceso serán:\n\n '
+                 ''
+                 'Correo: ' + receptor +
+                 '\nIdentificación: ' + id_acceso +
+                 '\nContraseña: ' + str(random_password) + '.\n'
+                 '\nPara ingresar será requerido inicialmente que actualice los datos de su cuenta desde el portal '
+                 'proveedores.famedicips.co, luego de dicha actualización podrá acceder y usar el portal de '
+                 'proveedores de Famedic IPS.'
 
-                                                                                                                   '\n\n Este es un mensaje automático y no es necesario responder.',
+                 '\n\n Este es un mensaje automático y no es necesario responder.',
         )
 
         access_mail.send()

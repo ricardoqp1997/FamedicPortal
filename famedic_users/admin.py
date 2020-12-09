@@ -43,16 +43,16 @@ def reenviar_correo(modeladmin, request, queryset):
             subject='Actalización credenciales de acceso - Famedic IPS',
             body='Sr(a). Usuario(a) del portal de proveedores.\n '
 
-                 '\nSe realizo el correcto registro de sus datos en el portal de radicacones Famedic IPS\n'
-                 '\nel cual le permitira realizar las radicaciones de su facturación, para ingresar dirijase a\n'
-                 '\nhttp://proveedores.famedicips.co/login/ para realizar la actualización de datos e iniciar sesión.\n'
-
+                 '\nSe realizo el correcto registro de sus datos en el portal de radicacones Famedic IPS '
+                 'el cual le permitira realizar las radicaciones de su facturación, para ingresar dirijase a '
+                 'http://proveedores.famedicips.co/login/ para realizar la actualización de datos e iniciar sesión.\n'
 
                  '\nSus credenciales de acceso serán: \n'
-                 '\nusuario: ' + user.email + '\n'
-                                              '\nContraseña: Famedic2020 \n'
+                 '\nUsuario: ' + user.email + '\n'
+                 'Identificación: ' + user.id_famedic + '\n'
+                 'Contraseña: Famedic2020 \n'
 
-                                              '\n\n Este es un mensaje automático y no es necesario responder.',
+                 '\nEste es un mensaje automático y no es necesario responder.',
         )
 
         access_mail.send()
