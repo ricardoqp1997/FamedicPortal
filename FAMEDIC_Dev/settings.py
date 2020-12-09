@@ -212,6 +212,7 @@ STATICFILES_DIRS = [
 """
 
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 EMAIL_HOST = 'famedicips.co'
 EMAIL_PORT = '465'
 EMAIL_HOST_USER = 'notificaciones@famedicips.co'
