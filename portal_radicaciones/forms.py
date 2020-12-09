@@ -190,7 +190,8 @@ class UserAdminCreationForm(forms.ModelForm):
             subject='Creación de credenciales de acceso - Famedic IPS',
             body='Sr(a). Usuario(a) del portal de proveedores.\n '
 
-                 '\nSe han creado sus nuevas credenciales para el ingreso al portal de radicación.\n'
+                 '\nSe han creado sus nuevas credenciales para el ingreso al portal de radicación '
+                 'http://proveedores.famedicips.co/login/.\n'
                  'Sus credenciales de acceso serán:\n\n '
                  ''
                  'Correo: ' + receptor +
