@@ -122,11 +122,10 @@ WSGI_APPLICATION = 'FAMEDIC_Dev.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-"""
 DATABASES = {
     'default': dict(
         ENGINE='django.db.backends.mysql',
-        NAME='qa_famedic',
+        NAME='db_famedic_produccion',
         USER='awx4g5ommavf',
         PASSWORD='NLx=D4Ff',
         HOST='a2plcpnl0835.prod.iad2.secureserver.net',
@@ -141,6 +140,7 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db_damedic_alternativa.sqlite3'),
     }
 }
+"""
 
 SITE_ID = 1
 
