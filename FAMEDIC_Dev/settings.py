@@ -122,7 +122,7 @@ WSGI_APPLICATION = 'FAMEDIC_Dev.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-"""
+
 DATABASES = {
     'default': dict(
         ENGINE='django.db.backends.mysql',
@@ -142,7 +142,7 @@ DATABASES = {
     }
 }
 
-
+"""
 SITE_ID = 1
 
 # Password validation
