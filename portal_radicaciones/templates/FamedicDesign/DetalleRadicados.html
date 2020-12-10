@@ -316,7 +316,7 @@
         }
 
         {% if radicacionmodel.file_ribs %}
-            // Descarga de archivo de rips
+            // Descarga de archivo de rips, si están disponibles
             document.getElementById("linkRips").onclick = function(){
                 location.href = "{{ radicacionmodel.file_ribs.url }}"
             }
