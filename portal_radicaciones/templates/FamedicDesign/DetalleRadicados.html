@@ -315,10 +315,12 @@
             location.href = "{{ radicacionmodel.file_soporte.url }}"
         }
 
-        // Descarga de archivo de rips
-        document.getElementById("linkRips").onclick = function(){
-            location.href = "{{ radicacionmodel.file_ribs.url }}"
-        }
+        {% if radicacionmodel.file_ribs %}
+            // Descarga de archivo de rips
+            document.getElementById("linkRips").onclick = function(){
+                location.href = "{{ radicacionmodel.file_ribs.url }}"
+            }
+        {% endif %}
 
 
 
