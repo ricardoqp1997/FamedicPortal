@@ -127,10 +127,6 @@ urlpatterns = [
     # Vista al haber realizado radicación exitosa
     path('main/done/', portal_views.radicacion_finish, name='radicado_finished'),
 
-    # Vista cambio de contraseña
-    path('passwordchangesave/', portal_views.passwordchangesave, name='passwordchangesave'),
-
-    # url(r'datetimepicker/', include('datetimepicker.urls'))
 ]
 
 # Configuración del flujo de archivos multimedia cargados en cada formulario de radicación
