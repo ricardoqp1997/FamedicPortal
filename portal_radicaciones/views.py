@@ -112,10 +112,8 @@ class LoginFamedic(LoginView):
 
     def form_invalid(self, form):
 
-        user_accessing = FamedicUser.objects.get(id_famedic=form.cleaned_data.get('id_famedic'))
-
         try:
-
+            user_accessing = FamedicUser.objects.get(id_famedic=form.cleaned_data.get('id_famedic'))
             user_accessing.intentos_acceso += 1
 
             if user_accessing.intentos_acceso == 5:
@@ -139,7 +137,9 @@ class LoginFamedic(LoginView):
             print('bloqueado: ', user_accessing.bloqueado)
 
         except:
-            pass
+            messages.warning(self.request, 'Error de autenticación. Revise los datos de acceso o contactese con el'
+                                           'administrador del portal.')
+            return redirect('/login/')
 
         # return self.render_to_response(self.get_context_data(form=form))
         return redirect('/login/')
