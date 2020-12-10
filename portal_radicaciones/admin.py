@@ -186,6 +186,7 @@ class RadicacionAdmin(ImportExportModelAdmin):
         'glosa_valor',
         'get_neto_a_pagar'
     ]
+
     list_filter = ['aproved', 'radicador__id_famedic', 'id', 'sede_selection', 'regimen_type']
 
     fieldsets = (
