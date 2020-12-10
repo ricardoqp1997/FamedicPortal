@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '7_m6!*0(%8059)tigvo%cxcy4jhyz8by%__&l^8$0z_+67^0!m'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 # DEBUG = False
 
 ALLOWED_HOSTS = ['*']
@@ -184,6 +184,8 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+STATIC_ROOT = '../media/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

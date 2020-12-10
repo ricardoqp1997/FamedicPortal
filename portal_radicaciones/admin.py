@@ -88,55 +88,76 @@ class RadicacionDespacho(resources.ModelResource):
 
     @staticmethod
     def dehydrate_nombre_radicador(radicado):
-        return radicado.radicador.get_full_name()
+        try:
+            return radicado.radicador.get_full_name()
+        except:
+            return '-'
 
     @staticmethod
     def dehydrate_tipo_id_radicador(radicado):
-        return radicado.radicador.id_type
+        try:
+            return radicado.radicador.id_type
+        except:
+            return '-'
 
     @staticmethod
     def dehydrate_id_radicador(radicado):
-        return radicado.radicador.id_famedic
+        try:
+            return radicado.radicador.id_famedic
+        except:
+            return '-'
 
     @staticmethod
     def dehydrate_telefono_radicador(radicado):
-        if radicado.radicador.phone:
+        try:
             return radicado.radicador.phone
-        else:
-            return 'Sin teléfono inscrito'
+        except:
+            return '-'
 
     @staticmethod
     def dehydrate_sede_radicado(radicado):
-        return radicado.sede_selection.sede_name
+        try:
+            return radicado.sede_selection.sede_name
+        except:
+            return '-'
 
     @staticmethod
     def dehydrate_estado_radicado(radicado):
-        return radicado.get_aproved_display()
+        try:
+            return radicado.get_aproved_display()
+        except:
+            return '-'
 
     @staticmethod
     def dehydrate_glosa_radicado(radicado):
         try:
             return radicado.glosa_asign.glosa_name
         except:
-            return 'Sin glosa asignada'
+            return '-'
 
     @staticmethod
     def dehydrate_subglosa_radicado(radicado):
         try:
             return radicado.subglosa_asign.Subglosa_name
         except:
-            return 'Sin subglosa asignada'
+            return '-'
 
     @staticmethod
     def dehydrate_periodo_factura(radicado):
-        return str(radicado.datetime_factura1) + ' - ' + str(radicado.datetime_factura2)
+        try:
+            return str(radicado.datetime_factura1) + ' - ' + str(radicado.datetime_factura2)
+        except:
+            return '-'
 
     @staticmethod
     def dehydrate_neto_a_pagar(radicado):
         try:
-            return radicado.monto_factura - radicado.glosa_valor
+            try:
+                return radicado.monto_factura - radicado.glosa_valor
+            except:
+                return radicado.monto_factura
         except:
-            return radicado.monto_factura
+            return '-'
 
 
 class RadicacionAdmin(ImportExportModelAdmin):
@@ -234,25 +255,40 @@ class RadicacionAdmin(ImportExportModelAdmin):
     # save_on_top = True
 
     def get_nombre_radicador(self, obj):
-        return obj.radicador.get_full_name()
+        try:
+            return obj.radicador.get_full_name()
+        except:
+            return 'Nombre no especificado o no encontrado'
 
     def get_tipo_id_radicador(self, obj):
-        return obj.radicador.id_type
+        try:
+            return obj.radicador.id_type
+        except:
+            return 'Id de documento no encontrado'
 
     def get_id_radicador(self, obj):
-        return obj.radicador.id_famedic
+        try:
+            return obj.radicador.id_famedic
+        except:
+            return 'Documento no encontrado'
 
     def get_telefono_radicador(self, obj):
-        if obj.radicador.phone:
+        try:
             return obj.radicador.phone
-        else:
+        except:
             return 'Sin teléfono inscrito'
 
     def get_sede_radicado(self, obj):
-        return obj.sede_selection.sede_name
+        try:
+            return obj.sede_selection.sede_name
+        except:
+            return 'Sede no encontrada'
 
     def get_estado_radicado(self, obj):
-        return obj.get_aproved_display()
+        try:
+            return obj.get_aproved_display()
+        except:
+            return 'Estado no encontrado'
 
     def get_glosa_radicado(self, obj):
         try:
@@ -267,7 +303,10 @@ class RadicacionAdmin(ImportExportModelAdmin):
             return 'Sin subglosa asignada'
 
     def get_periodo_factura(self, obj):
-        return str(obj.datetime_factura1.date()) + ' - ' + str(obj.datetime_factura2.date())
+        try:
+            return str(obj.datetime_factura1.date()) + ' - ' + str(obj.datetime_factura2.date())
+        except:
+            return 'Periodo no encontrado'
 
     def get_neto_a_pagar(self, obj):
         try:
