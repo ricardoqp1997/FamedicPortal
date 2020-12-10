@@ -74,7 +74,7 @@
         <div class="container dir_tarjeta">
 
             <!-- Título del sitio principal -->
-            <h2 class="titulo_holamundo">Bienvenido al portal, {% if user_name %} {{ user_name }} {% else %} {{ user.get_full_name }} {% endif %}</h2>
+            <h2 class="titulo_holamundo">Bienvenido al portal de facturación, {% if user_name %} {{ user_name }} {% else %} {{ user.get_full_name }} {% endif %}</h2>
             <div class="row justify-content--center">
 
                 <!-- Tarjeta izquierda del sitio principal y su contenido-->
@@ -109,17 +109,6 @@
 
                         {% if user.is_admin %}
 
-                            <!--div class="input-group search_bar_tarjeta">
-                                <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" id="searchbar_famedic">
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Buscar</button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#" id="rad_search">Buscar por radicado</a>
-                                        <a class="dropdown-item" href="#" id="document_search">Buscar por documento</a>
-                                        <a class="dropdown-item" href="#" id="nit_search">Buscar por NIT</a>
-                                    </div>
-                                </div>
-                            </div-->
                         {% endif %}
 
                         {% block hist_radicados %}

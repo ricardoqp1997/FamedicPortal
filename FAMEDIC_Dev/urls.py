@@ -129,8 +129,6 @@ urlpatterns = [
 
     # Vista cambio de contraseña
     path('passwordchangesave/', portal_views.passwordchangesave, name='passwordchangesave'),
-
-    # url(r'datetimepicker/', include('datetimepicker.urls'))
 ]
 
 # Configuración del flujo de archivos multimedia cargados en cada formulario de radicación
