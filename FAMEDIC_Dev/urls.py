@@ -127,7 +127,7 @@ urlpatterns = [
     # Vista al haber realizado radicación exitosa
     path('main/done/', portal_views.radicacion_finish, name='radicado_finished'),
 
-    # Vista cambio de contraseña
+    # Vista cambio de contraseña del usuario
     path('passwordchangesave/', portal_views.passwordchangesave, name='passwordchangesave'),
 ]
 
