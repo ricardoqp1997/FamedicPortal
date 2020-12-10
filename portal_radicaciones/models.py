@@ -195,7 +195,7 @@ class RadicacionModel(models.Model):
     file_soporte = models.FileField(verbose_name='soportes de factura')
 
     # Rips adjuntos al radicado
-    file_ribs = models.FileField(verbose_name='rip 1', blank=True, validators=[validate_file_extension])
+    file_ribs = models.FileField(verbose_name='rip 1', blank=True, validators=[validate_file_extension], null=True)
 
     # Campo para asignación de tipo de regimen
     regimen_type = models.CharField(verbose_name='regimen', max_length=2, choices=REGIMEN_CHOICES,
