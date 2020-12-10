@@ -122,7 +122,6 @@ WSGI_APPLICATION = 'FAMEDIC_Dev.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-"""
 DATABASES = {
     'default': dict(
         ENGINE='django.db.backends.mysql',
@@ -133,6 +132,7 @@ DATABASES = {
         PORT='3306'
     )
 }
+
 """
 
 DATABASES = {
@@ -141,7 +141,7 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db_damedic_alternativa.sqlite3'),
     }
 }
-
+"""
 
 SITE_ID = 1
 
