@@ -32,9 +32,6 @@ from portal_radicaciones.views import (
     LoginFamedic,
     TokenAccess,
     Registration,
-    passwordchangesave,
-    capacitacion
-
 )
 
 # librerías de django para configuración de alojamiento de archivos estaticos cargados en la radicación
