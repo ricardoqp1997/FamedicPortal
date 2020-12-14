@@ -14,7 +14,6 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-
 # librerías estandar para el manejo de accesos, URLs y panel administrativo
 from django.contrib import admin
 from django.urls import path
