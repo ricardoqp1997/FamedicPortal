@@ -133,8 +133,8 @@ DATABASES = {
         PORT='3306'
     )
 }
-"""
 
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -143,6 +143,7 @@ DATABASES = {
 }
 
 """
+
 SITE_ID = 1
 
 # Password validation
