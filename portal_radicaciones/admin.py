@@ -22,7 +22,8 @@ from django.core.mail import (
 import xlsxwriter
 
 
-"""class ForeignRadicado(resources.ModelResource):
+"""
+class ForeignRadicado(resources.ModelResource):
     radicador = fields.Field(
         column_name='radicador',
         attribute='radicador',
@@ -42,7 +43,9 @@ import xlsxwriter
     )
 
     class Meta:
-        model = RadicacionModel"""
+        model = RadicacionModel
+        
+"""
 
 
 class RadicacionDespacho(resources.ModelResource):
@@ -440,22 +443,22 @@ class RadicacionAdmin(ImportExportModelAdmin):
                                     '\n\n Observaciones del administrador: \n\n'
                                     '\n\n' + obj.obs_admin + '\n\n'
 
-                                                           '\n\nSERVICIOS MEDICOS FAMEDIC SAS se permite notificar que la presente glosa '
-                                                           ' que se relaciona a continuación, debe ser subsanada dentro de los quince (15) días '
-                                                           ' hábiles siguientes a su recepción, o se dará como aceptada. '
-                                                           ' Los soportes que subsanen la glosa se deben remitir al correo: direccionoperativa@famedicips.com '
-                                                           ' radicacion@famedicips.com \n\n'
+                                    '\n\nSERVICIOS MEDICOS FAMEDIC SAS se permite notificar que la presente glosa '
+                                    ' que se relaciona a continuación, debe ser subsanada dentro de los quince (15) días '
+                                    ' hábiles siguientes a su recepción, o se dará como aceptada. '
+                                    ' Los soportes que subsanen la glosa se deben remitir al correo: direccionoperativa@famedicips.com '
+                                    ' radicacion@famedicips.com \n\n'
                                                            
-                                                           '\n\nCausal y subcausal escogida '
-                                                          
-                                                           ' De acuerdo al decreto Numero 4747 de diciembre de 2007, '
-                                                           ' por medio del cual se regulan algunos aspectos de las '
-                                                           ' relaciones entre los prestadores de servicios de salud '
-                                                           ' y las entidades responsables del pago de la población a '
-                                                           ' su cargo. \n\n'
+                                    '\n\nCausal y subcausal escogida '
+                                  
+                                    ' De acuerdo al decreto Numero 4747 de diciembre de 2007, '
+                                    ' por medio del cual se regulan algunos aspectos de las '
+                                    ' relaciones entre los prestadores de servicios de salud '
+                                    ' y las entidades responsables del pago de la población a '
+                                    ' su cargo. \n\n'
 
                                                            
-                                                           '\n\n Este es un mensaje automático y no es necesario responder.',
+                                    '\n\n Este es un mensaje automático y no es necesario responder.',
                 )
 
             else:# == 0 - sin glosa
