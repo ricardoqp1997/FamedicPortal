@@ -31,4 +31,4 @@ jobs:
       with:
         app-name: 'famedicqa'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_04688985a91c4ca6964e3432e4000c1f }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_64a234f39e09471c9381454e362e887d }}
