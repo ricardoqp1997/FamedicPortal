@@ -378,6 +378,12 @@ def radicacion(request):
 
                 data_form = form.save(commit=False)
                 data_form.radicador = request.user
+
+                if (data_form.datetime_radicado >= date(2021, 1, 1)) and \
+                   (data_form.datetime_radicado <= date(2021, 1, 15)):
+
+                    data_form.datetime_radicado = date(2020, 12, 31)
+
                 data_form.save()
 
                 invoice_id = data_form.pk
