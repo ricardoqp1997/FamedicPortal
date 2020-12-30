@@ -368,8 +368,6 @@ def radicacion(request):
 
             fecha1 = form.cleaned_data.get('datetime_factura1')
             fecha2 = form.cleaned_data.get('datetime_factura2')
-            # print(str(fecha1) + ' - ini')
-            # print(str(fecha2) + ' - fin')
 
             if fecha1 < fecha2:
 
