@@ -119,6 +119,7 @@ class Subglosa(models.Model):
     def __str__(self):
         return self.Subglosa_name
 
+
 # Clase para el manejo de formularios de radicación
 class RadicacionModel(models.Model):
 
