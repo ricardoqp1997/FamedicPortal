@@ -360,6 +360,8 @@ def radicacion(request):
     form = RadicacionForm(request.POST or None, request.FILES, pk_user)
     invoice_finished = False
 
+    # print(date(2020, 12, 31))
+
     if request.method == 'POST':
 
         if form.is_valid():
@@ -381,6 +383,14 @@ def radicacion(request):
                    (data_form.datetime_radicado <= date(2021, 1, 15)):
 
                     data_form.datetime_radicado = date(2020, 12, 31)
+
+                    if data_form.datetime_radicado == date(2020, 12, 30):
+                        try:
+                            data_form.datetime_radicado = data_form.datetime_radicado + timedelta(1)
+                        except:
+                            data_form.datetime_radicado = date(2020, 12, 31)
+
+                    print('Fecha nueva del radicado: ', data_form.datetime_radicado)
 
                 data_form.save()
 
