@@ -304,6 +304,7 @@ def resend_token(request):
     )
 
     token_mail.send()
+    print(token_mail.message())
 
     usr.token = token
     usr.save()
