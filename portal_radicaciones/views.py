@@ -138,7 +138,7 @@ class LoginFamedic(LoginView):
 
         except:
             messages.warning(self.request, 'Error de autenticación. Revise los datos de acceso o contactese con el'
-                                           'administrador del portal.')
+                                           ' administrador del portal.')
             return redirect('/login/')
 
         # return self.render_to_response(self.get_context_data(form=form))
