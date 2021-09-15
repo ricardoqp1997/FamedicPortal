@@ -1,17 +1,37 @@
 # Librerías de Django para el manejo de las vistas, plantillas y navegación
-from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+# Librerías para generar y enviar por SMS las OTP y correos de confirmación de formularios
+import secrets
+from datetime import date, timedelta
+
+from django.conf import settings
 # from django.http import HttpResponse
 from django.contrib import messages
-from django.utils import timezone
-from datetime import date, time, datetime, timedelta
+# Librería para la manipulación de usuarios
+from django.contrib.auth import (
+    login,
+    logout
+)
 from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash
-from django.utils.decorators import method_decorator
 # Librería para restricción de vistas con autenticación realizada
 from django.contrib.auth.decorators import login_required, user_passes_test
-# from axes.decorators import axes_dispatch
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.views import LoginView
+# from twilio.rest import Client
+from django.core.mail import (
+    EmailMultiAlternatives
+)
+from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
+from django.views.generic import (
+    ListView,
+    DetailView
+)
 
+# Librería con los models requeridos para los formularios
+from famedic_users.models import (
+    FamedicUser,
+    #    TokenAccess
+)
 # Librería con los formularios requeridos para el C.R.U.D
 from .forms import (
     UserRegisterForm,
@@ -19,42 +39,10 @@ from .forms import (
     UserLoginForm,
     RadicacionForm
 )
-
-# Librería con los models requeridos para los formularios
-from famedic_users.models import (
-    FamedicUser,
-    UserManager,
-
-    #    TokenAccess
-)
-
-# Librería para la manipulación de usuarios
-from django.contrib.auth import (
-    authenticate,
-    get_user_model,
-    login,
-    logout
-)
-
-# Librerías para generar y enviar por SMS las OTP y correos de confirmación de formularios
-import secrets
-# from twilio.rest import Client
-from django.core.mail import (
-    send_mail,
-    EmailMessage,
-    EmailMultiAlternatives
-)
-from django.conf import settings
-
 # Librerías para la vista blog (lista de radicados)
 from .models import RadicacionModel, Sedes
-from django.views.generic import (
-    ListView,
-    DetailView,
-    View
-)
 
-from django.contrib.auth.views import LoginView
+# from axes.decorators import axes_dispatch
 
 # variables globales para el paso de información entre vistas
 loged_user = False

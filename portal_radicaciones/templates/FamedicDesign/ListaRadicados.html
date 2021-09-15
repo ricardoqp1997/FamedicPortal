@@ -55,7 +55,7 @@
         {% for radicado in object_list %}
             <div class="card card_rad_style">
                 <div class="card-header">
-                    <i>Radicado Número {{ radicado.id }}</i>
+                    <i>Radicado Número {{ radicado.id }} | Estado: {{ radicado.get_aproved_display }}</i>
                 </div>
 
                 <div class="card-body">
